@@ -1,0 +1,105 @@
+{% extends 'account/admin_dashboard_base.html' %}
+
+{% block title %}Dashboard | Global Vision Admin{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+
+{% block dashboard_content %}
+<div
+    style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 25px; margin-bottom: 40px;">
+    <!-- Orange Card (Categories) -->
+    <div
+        style="background: white; border-radius: 10px; display: flex; align-items: stretch; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+        <div
+            style="background: #f39c12; width: 80px; display: flex; align-items: center; justify-content: center; color: white; font-size: 30px;">
+            <i class="fa-regular fa-copy"></i>
+        </div>
+        <div style="flex: 1; padding: 20px; text-align: right;">
+            <p style="color: var(--text-light); font-size: 13px; margin-bottom: 5px;">Total Categories</p>
+            <h2 style="font-size: 28px;">8</h2>
+            <a href="#"
+                style="font-size: 11px; color: #e74c3c; text-decoration: none; margin-top: 10px; display: block;">
+                <i class="fa-solid fa-triangle-exclamation"></i> View Items
+            </a>
+        </div>
+    </div>
+
+    <!-- Green Card (Inventory) -->
+    <div
+        style="background: white; border-radius: 10px; display: flex; align-items: stretch; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+        <div
+            style="background: #27ae60; width: 80px; display: flex; align-items: center; justify-content: center; color: white; font-size: 30px;">
+            <i class="fa-solid fa-store"></i>
+        </div>
+        <div style="flex: 1; padding: 20px; text-align: right;">
+            <p style="color: var(--text-light); font-size: 13px; margin-bottom: 5px;">Total Inventory</p>
+            <h2 style="font-size: 28px;">{{ total_vehicles|add:total_equipment }}</h2>
+            <a href="{% url 'account:manage_products' %}"
+                style="font-size: 11px; color: #8e44ad; text-decoration: none; margin-top: 10px; display: block;">
+                <i class="fa-regular fa-calendar"></i> View Items
+            </a>
+        </div>
+    </div>
+
+    <!-- Red Card (Blog) -->
+    <div
+        style="background: white; border-radius: 10px; display: flex; align-items: stretch; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+        <div
+            style="background: #e74c3c; width: 80px; display: flex; align-items: center; justify-content: center; color: white; font-size: 30px;">
+            <i class="fa-solid fa-circle-info"></i>
+        </div>
+        <div style="flex: 1; padding: 20px; text-align: right;">
+            <p style="color: var(--text-light); font-size: 13px; margin-bottom: 5px;">Total Blog Posts</p>
+            <h2 style="font-size: 28px;">{{ total_blog_posts }}</h2>
+            <a href="{% url 'account:manage_blog' %}"
+                style="font-size: 11px; color: #8e44ad; text-decoration: none; margin-top: 10px; display: block;">
+                <i class="fa-solid fa-tag"></i> View Posts
+            </a>
+        </div>
+    </div>
+
+    <!-- Blue Card (System Status) -->
+    <div
+        style="background: white; border-radius: 10px; display: flex; align-items: stretch; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+        <div
+            style="background: #16a085; width: 80px; display: flex; align-items: center; justify-content: center; color: white; font-size: 30px;">
+            <i class="fa-brands fa-twitter"></i>
+        </div>
+        <div style="flex: 1; padding: 20px; text-align: right;">
+            <p style="color: var(--text-light); font-size: 13px; margin-bottom: 5px;">Users Active</p>
+            <h2 style="font-size: 28px;">12</h2>
+            <a href="#"
+                style="font-size: 11px; color: #8e44ad; text-decoration: none; margin-top: 10px; display: block;">
+                <i class="fa-solid fa-rotate-left"></i> Refresh
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Purple Banner (Simulating the banner in mockup) -->
+<div
+    style="background: #9b59b6; border-radius: 10px; padding: 20px 30px; color: white; display: flex; align-items: center; gap: 30px; box-shadow: 0 10px 30px rgba(155, 89, 182, 0.3);">
+    <div style="font-weight: 500;">Status:</div>
+    <div style="display: flex; gap: 10px;">
+        <div
+            style="background: rgba(255,255,255,0.2); padding: 5px 15px; border-radius: 5px; font-size: 12px; display: flex; align-items: center; gap: 8px;">
+            <i class="fa-solid fa-bolt"></i> TODAY
+        </div>
+        <div style="padding: 5px 15px; font-size: 12px; display: flex; align-items: center; gap: 8px;">
+            <i class="fa-solid fa-code-merge"></i> WEBSITE
+        </div>
+        <div style="padding: 5px 15px; font-size: 12px; display: flex; align-items: center; gap: 8px;">
+            <i class="fa-solid fa-cloud"></i> SERVER
+        </div>
+    </div>
+</div>
+
+<div
+    style="margin-top: 40px; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.02);">
+    <h3 style="margin-bottom: 20px; color: var(--text-dark);">Admin Quick Start</h3>
+    <p style="color: var(--text-light); font-size: 14px; line-height: 1.8;">
+        Welcome to the Global Vision Management System. Use the sidebar to navigate through your inventory, blog posts,
+        and site content.
+        Changes made here will be reflected on the frontend immediately for all users.
+    </p>
+</div>
+{% endblock %}

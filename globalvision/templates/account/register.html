@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Create Account | Global Vision</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: "Segoe UI", Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: linear-gradient(rgba(0, 0, 0, 0.55),
+                    rgba(0, 0, 0, 0.55)),
+                url("https://images.unsplash.com/photo-1500530855697-b586d89ba3ee");
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            width: 420px;
+            background: #ffffff;
+            border-radius: 14px;
+            padding: 32px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        .header span {
+            font-size: 11px;
+            letter-spacing: 1px;
+            color: #888;
+        }
+
+        .header h2 {
+            margin: 6px 0 22px;
+            font-size: 22px;
+            font-weight: 600;
+        }
+
+        .form-group {
+            margin-bottom: 14px;
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            margin-bottom: 6px;
+            color: #444;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            height: 42px;
+            padding: 10px 12px;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            font-size: 14px;
+            background: #fff;
+        }
+
+        input[type="date"] {
+            padding-right: 10px;
+        }
+
+        textarea {
+            height: 70px;
+            resize: none;
+        }
+
+        input:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #17a2b8;
+            background: #f8fcfd;
+        }
+
+        button {
+            width: 100%;
+            height: 44px;
+            background: #17a2b8;
+            color: #ffffff;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background: #138496;
+        }
+
+        .message {
+            font-size: 13px;
+            margin-bottom: 12px;
+        }
+
+        .error {
+            color: #dc3545;
+        }
+
+        .success {
+            color: #28a745;
+        }
+
+        .login-link {
+            text-align: center;
+            font-size: 13px;
+            margin-top: 18px;
+        }
+
+        .login-link a {
+            color: #17a2b8;
+            text-decoration: none;
+            font-weight: 500;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div class="header">
+            <span>LET’S GET YOU STARTED</span>
+            <h2>Create an Account</h2>
+        </div>
+
+        {% if messages %}
+        {% for message in messages %}
+        <div class="message {{ message.tags }}">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="user_name">Username</label>
+                <input type="text" id="user_name" name="user_name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+
+            <div class="form-group">
+                <label for="phone_no">Phone Number</label>
+                <input type="text" id="phone_no" name="phone_no" required>
+            </div>
+
+            <div class="form-group">
+                <label for="dob">Date of Birth</label>
+                <input type="date" id="dob" name="dob" required>
+            </div>
+
+            <div class="form-group">
+                <label for="address">Address</label>
+                <input type="text" id="address" name="address" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+
+            <div class="form-group">
+                <label for="confirm_password">Confirm Password</label>
+                <input type="password" id="confirm_password" name="confirm_password" required>
+            </div>
+
+            <button type="submit">GET STARTED</button>
+        </form>
+
+        <div class="login-link">
+            <p class="auth-footer">Already have an account? <a href="{% url 'account:login' %}">Login</a></p>
+        </div>
+
+    </div>
+
+</body>
+
+</html>

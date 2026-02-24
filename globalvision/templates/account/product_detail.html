@@ -1,0 +1,492 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ product.name }} | Global Vision</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary: #008fa0;
+            --primary-dark: #007685;
+            --secondary: #0ea5e9;
+            --text-dark: #1e293b;
+            --text-light: #64748b;
+            --white: #ffffff;
+            --bg-light: #f8fafc;
+            --esewa: #60bb46;
+            --esewa-dark: #4d9a39;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--text-dark);
+            background-color: var(--white);
+            line-height: 1.6;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+            transition: 0.3s;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* ========== HEADER ========== */
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .logo span {
+            color: var(--text-dark);
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            color: var(--text-light);
+            font-size: 14px;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--primary);
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: var(--white);
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+            border-radius: 4px;
+            top: 100%;
+            left: 0;
+        }
+
+        .dropdown-content a {
+            color: var(--text-dark);
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            font-size: 14px;
+            text-transform: none;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+            color: var(--primary);
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .cta-btn {
+            background-color: var(--secondary);
+            color: var(--white) !important;
+            padding: 10px 24px;
+            border-radius: 50px;
+            font-weight: 600;
+        }
+
+        .auth-links {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .auth-icon {
+            font-size: 18px;
+            color: var(--text-light);
+        }
+
+        /* ========== PRODUCT DETAILS ========== */
+        .product-details {
+            padding: 60px 0;
+            background: #f8fafc;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: start;
+        }
+
+        .product-image-container {
+            background: white;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        .product-image {
+            width: 100%;
+            border-radius: 15px;
+            object-fit: cover;
+        }
+
+        .product-info h1 {
+            font-size: 36px;
+            color: var(--text-dark);
+            margin-bottom: 20px;
+        }
+
+        .price-tag {
+            font-size: 24px;
+            color: var(--primary);
+            font-weight: 700;
+            margin-bottom: 30px;
+            display: block;
+        }
+
+        .description {
+            color: var(--text-light);
+            line-height: 1.8;
+            margin-bottom: 40px;
+        }
+
+        .rent-card {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            outline: none;
+        }
+
+        .payment-options {
+            margin-top: 30px;
+        }
+
+        .payment-option {
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-bottom: 15px;
+        }
+
+        .payment-option.active {
+            border-color: var(--esewa);
+            background: rgba(96, 187, 70, 0.05);
+        }
+
+        .payment-option img {
+            height: 30px;
+        }
+
+        .btn-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: 700;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.3s;
+            border: none;
+            font-size: 16px;
+        }
+
+        .btn-cart {
+            background: #f1f5f9;
+            color: var(--text-dark);
+        }
+
+        .btn-rent {
+            background: var(--primary);
+            color: white;
+        }
+
+        .esewa-btn {
+            background: var(--esewa);
+            color: white;
+            width: 100%;
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        /* ========== FOOTER ========== */
+        footer {
+            padding: 80px 0 20px;
+            background: #fff;
+            font-size: 13px;
+            border-top: 1px solid #eee;
+        }
+
+        .footer-top {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 40px;
+            padding-bottom: 60px;
+        }
+
+        .footer-brand .logo {
+            color: var(--primary);
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .footer-brand p {
+            color: var(--text-light);
+            max-width: 300px;
+        }
+
+        .footer-col h5 {
+            font-size: 16px;
+            margin-bottom: 20px;
+            color: var(--text-dark);
+        }
+
+        .footer-col ul li {
+            margin-bottom: 12px;
+        }
+
+        .footer-col ul li a {
+            color: var(--text-light);
+        }
+
+        .footer-bottom {
+            padding-top: 30px;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            color: var(--text-light);
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="container navbar">
+            <div class="logo">
+                <i class="fa-regular fa-eye"></i> Global <span>Vision</span>
+            </div>
+
+            <nav class="nav-links">
+                <a href="{% url 'home' %}">Home</a>
+                <div class="dropdown">
+                    <a href="#" style="cursor: default;">Rent <i class="fa-solid fa-chevron-down"
+                            style="font-size: 10px; margin-left: 4px;"></i></a>
+                    <div class="dropdown-content">
+                        <a href="{% url 'account:rent_vehicle' %}">Vehicle</a>
+                        <a href="{% url 'account:rent_equipment' %}">Equipment</a>
+                    </div>
+                </div>
+                <a href="{% url 'account:blog' %}">Blog</a>
+                <a href="{% url 'account:contact' %}" class="cta-btn">Contact us</a>
+            </nav>
+
+            <div class="auth-links">
+                <a href="#" style="color: var(--primary);"><i class="fa-solid fa-magnifying-glass"></i></a>
+                {% if user.is_authenticated %}
+                <a href="{% url 'account:dashboard' %}" title="Dashboard" class="auth-icon"><i
+                        class="fa-solid fa-gauge"></i></a>
+                <a href="{% url 'account:profile' %}" title="Profile" class="auth-icon" style="margin-left: 10px;"><i
+                        class="fa-regular fa-user"></i></a>
+                <a href="{% url 'account:logout' %}" title="Logout" class="auth-icon" style="margin-left: 10px;"><i
+                        class="fa-solid fa-right-from-bracket"></i></a>
+                {% else %}
+                <a href="{% url 'account:login' %}"
+                    style="font-size: 14px; font-weight: 600; color: var(--text-dark);">Login</a>
+                <span style="color: rgba(0,0,0,0.1);">|</span>
+                <a href="{% url 'account:register' %}"
+                    style="font-size: 14px; font-weight: 600; color: var(--text-dark);">Register</a>
+                <a href="{% url 'account:login' %}" class="auth-icon"><i class="fa-regular fa-user"></i></a>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    <div class="product-details">
+        <div class="container product-grid">
+            <div class="product-image-container">
+                {% if product.image %}
+                <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image">
+                {% else %}
+                <img src="https://images.unsplash.com/photo-1533619239233-6280475a633a?q=80&w=2070&auto=format&fit=crop"
+                    alt="Standard Equipment" class="product-image">
+                {% endif %}
+            </div>
+
+            <div class="product-info">
+                <span class="badge"
+                    style="background: var(--bg-light); color: var(--primary); padding: 5px 15px; border-radius: 50px; font-size: 12px; font-weight: 600; text-transform: uppercase;">{{
+                    product_type }}</span>
+                <h1>{{ product.name }}</h1>
+                <span class="price-tag">Rs. {{ product.price_per_day }} / Day</span>
+
+                <div class="description">
+                    {{ product.description }}
+                </div>
+
+                <div class="rent-card">
+                    <h3>Rent Options</h3>
+                    <form action="#" method="POST">
+                        <div class="form-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                            <div>
+                                <label>Start Date</label>
+                                <input type="date" required>
+                            </div>
+                            <div>
+                                <label>End Date</label>
+                                <input type="date" required>
+                            </div>
+                        </div>
+
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-cart"><i class="fa-solid fa-cart-plus"></i> Add to
+                                Cart</button>
+                            <button type="submit" class="btn btn-rent">Rent Now</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="footer-top">
+                <div class="footer-brand">
+                    <div class="logo">
+                        <i class="fa-regular fa-eye"></i> Global <span>Vision</span>
+                    </div>
+                    <p>We provide high-quality equipment rentals for construction, logistics, and personal projects.
+                        Explore the possibilities with confidence.</p>
+                </div>
+
+                <div class="footer-col">
+                    <h5>Services</h5>
+                    <ul>
+                        <li><a href="#">Equipment Rental</a></li>
+                        <li><a href="#">Vehicle Leasing</a></li>
+                        <li><a href="#">Project Support</a></li>
+                        <li><a href="#">Consulting</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h5>About</h5>
+                    <ul>
+                        <li><a href="#">Our Story</a></li>
+                        <li><a href="#">Benefits</a></li>
+                        <li><a href="#">Team</a></li>
+                        <li><a href="#">Careers</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h5>Follow Us</h5>
+                    <ul>
+                        <li><a href="#"><i class="fa-brands fa-facebook-f"></i> Facebook</a></li>
+                        <li><a href="#"><i class="fa-brands fa-twitter"></i> Twitter</a></li>
+                        <li><a href="#"><i class="fa-brands fa-instagram"></i> Instagram</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <div>Copyright © 2026 GlobalVision. All rights reserved.</div>
+                <div>
+                    <a href="#" style="margin-right: 20px;">Terms & Conditions</a>
+                    <a href="#">Privacy Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+</body>
+
+</html>

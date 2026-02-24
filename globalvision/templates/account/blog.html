@@ -1,0 +1,476 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adventure Travel Guide 2026 | Global Vision</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary: #008fa0;
+            --primary-dark: #007685;
+            --secondary: #0ea5e9;
+            --text-dark: #1e293b;
+            --text-light: #64748b;
+            --white: #ffffff;
+            --bg-light: #f8fafc;
+            --accent: #f59e0b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--text-dark);
+            background-color: var(--bg-light);
+            background-image: url('https://www.transparenttextures.com/patterns/cubes.png'), linear-gradient(rgba(248, 250, 252, 0.9), rgba(248, 250, 252, 0.9)), url('https://images.unsplash.com/photo-1544735230-c128445789bb?q=80&w=2070&auto=format&fit=crop');
+            background-attachment: fixed;
+            background-size: auto, cover, cover;
+            line-height: 1.8;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-transform: uppercase;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-light);
+            font-weight: 500;
+            transition: 0.3s;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--primary);
+        }
+
+        /* Dropdown CSS */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: var(--white);
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.1);
+            z-index: 1001;
+            border-radius: 8px;
+            overflow: hidden;
+            top: 100%;
+            left: 0;
+        }
+
+        .dropdown-content a {
+            color: var(--text-dark);
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            font-size: 13px;
+            text-transform: none;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .dropdown-content a:last-child {
+            border-bottom: none;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f8fafc;
+            color: var(--primary);
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .auth-links {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-left: 20px;
+        }
+
+        .auth-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .auth-icon:hover {
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        /* Blog Content Styles */
+        .blog-hero {
+            height: 400px;
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://images.unsplash.com/photo-1544735230-c128445789bb?q=80&w=2070&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .blog-hero h1 {
+            font-size: 48px;
+            font-weight: 800;
+            max-width: 700px;
+        }
+
+        .content-card {
+            background: var(--white);
+            padding: 60px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            margin-bottom: 80px;
+        }
+
+        h2 {
+            color: var(--primary-dark);
+            font-size: 28px;
+            margin: 40px 0 20px;
+            border-left: 4px solid var(--secondary);
+            padding-left: 15px;
+        }
+
+        h3 {
+            font-size: 20px;
+            color: var(--text-dark);
+            margin: 30px 0 15px;
+        }
+
+        p {
+            margin-bottom: 20px;
+            color: #475569;
+        }
+
+        .intro-text {
+            font-size: 20px;
+            color: var(--text-light);
+            font-weight: 400;
+            margin-bottom: 40px;
+        }
+
+        ul {
+            margin-bottom: 30px;
+            padding-left: 20px;
+        }
+
+        ul li {
+            margin-bottom: 12px;
+            position: relative;
+        }
+
+        .experience-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .experience-item {
+            background: var(--bg-light);
+            padding: 25px;
+            border-radius: 8px;
+            border-top: 4px solid var(--primary);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            background: var(--secondary);
+            color: white;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        footer {
+            background: var(--white);
+            padding: 60px 0 20px;
+            margin-top: 80px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            color: var(--text-light);
+            font-size: 13px;
+        }
+
+        .cta-section {
+            background: linear-gradient(rgba(0, 143, 160, 0.8), rgba(0, 143, 160, 0.9)), url('https://images.unsplash.com/photo-1520209268518-cac113272293?q=80&w=2150&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 80px 40px;
+            border-radius: 12px;
+            text-align: center;
+            margin: 60px 0;
+        }
+
+        .cta-btn {
+            display: inline-block;
+            padding: 15px 35px;
+            background: var(--white);
+            color: var(--primary);
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: 700;
+            margin-top: 25px;
+            transition: 0.3s;
+        }
+
+        .cta-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        @media (max-width: 768px) {
+            .experience-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .content-card {
+                padding: 30px;
+            }
+
+            .blog-hero h1 {
+                font-size: 32px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="container navbar">
+            <div class="logo">
+                <i class="fa-regular fa-eye"></i> Global <span>Vision</span>
+            </div>
+            <nav class="nav-links">
+                <a href="{% url 'home' %}">Home</a>
+                <div class="dropdown">
+                    <a href="#" style="cursor: default;">Rent <i class="fa-solid fa-chevron-down"
+                            style="font-size: 10px; margin-left: 4px;"></i></a>
+                    <div class="dropdown-content">
+                        <a href="{% url 'account:rent_vehicle' %}">Vehicle</a>
+                        <a href="{% url 'account:rent_equipment' %}">Equipment</a>
+                    </div>
+                </div>
+                <a href="{% url 'account:blog' %}" class="active" style="color: var(--primary);">Blog</a>
+                <a href="{% url 'account:contact' %}">Contact</a>
+            </nav>
+
+            <div class="auth-links">
+                <a href="#" style="color: var(--primary);"><i class="fa-solid fa-magnifying-glass"></i></a>
+                <!-- Authentication Links -->
+                {% if user.is_authenticated %}
+                <a href="{% url 'account:dashboard' %}" title="Dashboard" class="auth-icon"><i
+                        class="fa-solid fa-gauge"></i></a>
+                <a href="{% url 'account:profile' %}" title="Profile" class="auth-icon" style="margin-left: 10px;"><i
+                        class="fa-regular fa-user"></i></a>
+                <a href="{% url 'account:logout' %}" title="Logout" class="auth-icon" style="margin-left: 10px;"><i
+                        class="fa-solid fa-right-from-bracket"></i></a>
+                {% else %}
+                <a href="{% url 'account:login' %}"
+                    style="font-size: 14px; font-weight: 600; color: var(--text-dark); text-decoration: none;">Login</a>
+                <span style="color: rgba(0,0,0,0.1);">|</span>
+                <a href="{% url 'account:register' %}"
+                    style="font-size: 14px; font-weight: 600; color: var(--text-dark); text-decoration: none;">Register</a>
+                <a href="{% url 'account:login' %}" class="auth-icon"><i class="fa-regular fa-user"></i></a>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    <section class="blog-hero">
+        <div class="container">
+            <h1>Explore Nepal with Global Vision: Your Complete Adventure Travel Guide 2026</h1>
+        </div>
+    </section>
+
+    <main class="container">
+        <!-- Dynamic Posts -->
+        {% for post in posts %}
+        <div class="blog-post-dynamic"
+            style="margin-bottom: 60px; padding-bottom: 40px; border-bottom: 1px solid #e2e8f0;">
+            <h2 style="font-size: 28px; color: var(--primary); margin-bottom: 15px;">{{ post.title }}</h2>
+            <div style="font-size: 14px; color: var(--text-light); margin-bottom: 20px;">
+                <i class="fa-regular fa-calendar"></i> {{ post.created_at|date:"F d, Y" }} |
+                <i class="fa-regular fa-user"></i> {{ post.author.user_name }}
+            </div>
+            {% if post.image %}
+            <img src="{{ post.image.url }}" alt="{{ post.title }}"
+                style="width: 100%; height: 400px; object-fit: cover; border-radius: 20px; margin-bottom: 25px;">
+            {% endif %}
+            <div style="font-size: 16px; line-height: 1.8; color: var(--text-dark);">
+                {{ post.content|linebreaks }}
+            </div>
+        </div>
+        {% endfor %}
+
+        <!-- Original Static Content (Below dynamic posts) -->
+        <hr style="margin: 80px 0; border: 0; border-top: 2px dashed #cbd5e1;">
+
+        <p class="intro-text">
+            Adventure is more than just travel it is about experiencing nature, culture, and unforgettable
+            moments. At Global Vision, our mission is to make adventure travel simple, safe, and accessible through
+            a smart online booking platform.
+        </p>
+
+        <p>Whether you want to book trekking packages, rent adventure equipment, hire travel guides, or customize
+            your own travel experience, Global Vision provides a complete digital solution for modern travelers.</p>
+
+        <h2>About Global Vision</h2>
+        <p>Global Vision is a travel and adventure booking system designed to:</p>
+        <ul>
+            <li>Provide verified travel packages</li>
+            <li>Allow online equipment rental</li>
+            <li>Offer car and bike rental services</li>
+            <li>Connect travelers with professional guides</li>
+            <li>Enable personalized package customization</li>
+            <li>Ensure secure online booking</li>
+        </ul>
+        <p>Our platform combines technology and tourism to create a smooth user experience.</p>
+
+        <h2>Top Adventure Experiences</h2>
+
+        <div class="experience-grid">
+            <div class="experience-item">
+                <span class="badge">Trending</span>
+                <h3>1. Trekking Packages</h3>
+                <p>Explore Nepal’s most popular trekking destinations with secure booking options.</p>
+                <ul>
+                    <li>Everest Base Camp Trek</li>
+                    <li>Annapurna Circuit Trek</li>
+                    <li>Langtang Valley Trek</li>
+                    <li>Mardi Himal Trek</li>
+                </ul>
+            </div>
+
+            <div class="experience-item">
+                <span class="badge">Essential</span>
+                <h3>2. Equipment Rental System</h3>
+                <p>Adventure requires proper gear. Rent top-quality equipment online.</p>
+                <ul>
+                    <li>Trekking boots & Sleeping bags</li>
+                    <li>Jackets & Backpacks</li>
+                    <li>Climbing gear</li>
+                </ul>
+            </div>
+
+            <div class="experience-item">
+                <span class="badge">Freedom</span>
+                <h3>3. Vehicle Rental Services</h3>
+                <p>Get where you need to go with our flexible rental options.</p>
+                <ul>
+                    <li>Bike rental for city and off-road</li>
+                    <li>Car rental for group tours</li>
+                </ul>
+            </div>
+
+            <div class="experience-item">
+                <span class="badge">Unique</span>
+                <h3>4. Personalized Packages</h3>
+                <p>Customize your journey from start to finish based on your specific needs.</p>
+            </div>
+        </div>
+
+        <h2>Safety and Trust</h2>
+        <p>Global Vision prioritizes safety and transparency by working with verified travel guides and providing
+            clear pricing details. Users can track bookings and manage their travel plans directly from their
+            dashboard.</p>
+
+        <div class="cta-section">
+            <h2>Start Your Adventure Today</h2>
+            <p>Ready to experience Nepal in a smarter way? Explore our packages and gear up for the journey of a
+                lifetime.</p>
+            <a href="{% url 'home' %}" class="cta-btn">View All Packages</a>
+        </div>
+
+        <h2>Best Season to Plan Your Trip</h2>
+        <p>For most trekking and adventure activities in Nepal, the best seasons are:</p>
+        <ul>
+            <li><strong>Spring (March to May):</strong> Clear skies and blooming rhododendrons.</li>
+            <li><strong>Autumn (September to November):</strong> Stable weather and magnificent mountain views.</li>
+        </ul>
+
+        <h2>Conclusion</h2>
+        <p>Global Vision is more than a booking platform it is a complete adventure management system designed to
+            simplify travel planning. By combining technology with tourism services, we ensure that users can plan,
+            customize, and book their journeys efficiently and securely.</p>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container footer-bottom">
+            <div>Copyright © 2026 GlobalVision. All rights reserved.</div>
+        </div>
+    </footer>
+
+</body>
+
+</html>

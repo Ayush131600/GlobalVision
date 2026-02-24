@@ -1,0 +1,872 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Global Vision | Trekking & Adventure Rental{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    :root {
+      --primary: #008fa0;
+      --primary-dark: #007685;
+      --secondary: #4b81af;
+      --text-dark: #0f172a;
+      --text-light: #64748b;
+      --white: #ffffff;
+      --bg-light: #f8fafc;
+      --accent: #2dd4bf;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      color: var(--text-dark);
+      background-color: var(--white);
+      line-height: 1.6;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+      transition: 0.3s;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* HEADER */
+    header {
+      padding: 20px 0;
+      position: absolute;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--white);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo span {
+      color: var(--accent);
+      display: block;
+      font-size: 14px;
+      margin-top: -5px;
+      letter-spacing: 1px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 40px;
+    }
+
+    .nav-links a {
+      color: var(--white);
+      font-size: 14px;
+      font-weight: 500;
+      opacity: 0.8;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      opacity: 1;
+      color: var(--accent);
+    }
+
+    .cta-btn {
+      background-color: var(--accent);
+      color: var(--text-dark) !important;
+      padding: 10px 25px;
+      border-radius: 12px;
+      font-weight: 700;
+      opacity: 1 !important;
+    }
+
+    .auth-links {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      color: var(--white);
+    }
+
+    .auth-links i {
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    /* HERO */
+    .hero {
+      height: 90vh;
+      background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.2)), url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=2070&auto=format&fit=crop');
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      align-items: center;
+      color: white;
+      position: relative;
+    }
+
+    .hero-content {
+      max-width: 600px;
+    }
+
+    .hero h1 {
+      font-size: 64px;
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 30px;
+    }
+
+    /* FLOATING CARD */
+    .search-card-container {
+      position: absolute;
+      bottom: -50px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 1000px;
+      z-index: 100;
+    }
+
+    .search-card {
+      background: white;
+      border-radius: 0;
+      display: flex;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+
+    .card-info {
+      padding: 30px;
+      flex: 1;
+      border-right: 1px solid #f1f5f9;
+    }
+
+    .card-info h3 {
+      font-size: 18px;
+      color: #1e293b;
+      margin-bottom: 5px;
+    }
+
+    .card-info p {
+      font-size: 12px;
+      color: #64748b;
+      max-width: 250px;
+    }
+
+    .card-categories {
+      display: flex;
+      padding: 30px;
+      gap: 40px;
+      align-items: center;
+    }
+
+    .cat-item {
+      text-align: center;
+      color: #1e293b;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .cat-item:hover {
+      color: var(--primary);
+    }
+
+    .cat-item i {
+      font-size: 24px;
+      display: block;
+      margin-bottom: 8px;
+      color: #64748b;
+    }
+
+    .cat-item span {
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .rent-now-split {
+      background: var(--secondary);
+      width: 130px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      cursor: pointer;
+      transition: 0.3s;
+      position: relative;
+    }
+
+    .rent-now-split:hover {
+      background: #3b6d94;
+    }
+
+    .rent-now-split i {
+      font-size: 24px;
+      margin-bottom: 5px;
+    }
+
+    .rent-now-split span {
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .rent-now-split small {
+      font-size: 10px;
+      opacity: 0.8;
+      margin-top: 5px;
+    }
+
+    .dropdown-menu {
+      position: absolute;
+      bottom: 100%;
+      right: 0;
+      background: white;
+      box-shadow: 0 -10px 20px rgba(0, 0, 0, 0.1);
+      border-radius: 8px 8px 0 0;
+      display: none;
+      width: 200px;
+      overflow: hidden;
+    }
+
+    .dropdown-menu a {
+      padding: 15px 20px;
+      display: block;
+      color: var(--text-dark);
+      font-size: 13px;
+      font-weight: 600;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .dropdown-menu a:hover {
+      background: #f8fafc;
+      color: var(--primary);
+    }
+
+    .dropdown-menu.active {
+      display: block;
+    }
+
+    /* WHAT WE DO */
+    .what-we-do {
+      padding: 150px 0 80px;
+      text-align: center;
+    }
+
+    .what-we-do h2 {
+      font-size: 42px;
+      color: #0c4a6e;
+      margin-bottom: 60px;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+
+    .feature-card {
+      background: #f8fafc;
+      padding: 40px 20px;
+      border-radius: 4px;
+      transition: 0.3s;
+    }
+
+    /* PRODUCT LISTINGS */
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 80px 0 40px;
+    }
+
+    .section-header h2 {
+      font-size: 32px;
+      color: #0c4a6e;
+    }
+
+    .view-all {
+      color: var(--primary);
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 30px;
+      margin-bottom: 60px;
+    }
+
+    .product-card {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+      transition: 0.3s;
+      border: 1px solid #f1f5f9;
+    }
+
+    .product-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .product-img-wrapper {
+      height: 200px;
+      width: 100%;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .product-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: 0.5s;
+    }
+
+    .product-card:hover .product-img {
+      transform: scale(1.1);
+    }
+
+    .product-badge {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      background: var(--accent);
+      color: var(--text-dark);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .product-info {
+      padding: 20px;
+    }
+
+    .product-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 8px;
+    }
+
+    .product-price {
+      color: var(--primary);
+      font-weight: 700;
+      font-size: 16px;
+      margin-bottom: 20px;
+    }
+
+    .product-btn {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      background: #f1f5f9;
+      color: #475569;
+      text-align: center;
+      font-weight: 600;
+      font-size: 14px;
+      transition: 0.3s;
+    }
+
+    .product-card:hover .product-btn {
+      background: var(--primary);
+      color: white;
+    }
+
+    .feature-icon-circle {
+      width: 50px;
+      height: 50px;
+      background: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+      color: var(--primary);
+    }
+
+    .feature-card h4 {
+      font-size: 18px;
+      color: #0c4a6e;
+      margin-bottom: 15px;
+    }
+
+    .feature-card p {
+      font-size: 13px;
+      color: #64748b;
+      line-height: 1.5;
+    }
+
+    /* RENT IT SECTION */
+    .rent-it-section {
+      background: #4b81af;
+      padding: 80px 0;
+      color: white;
+    }
+
+    .rent-it-section h2 {
+      font-size: 32px;
+      margin-bottom: 40px;
+      text-transform: uppercase;
+      font-weight: 400;
+    }
+
+    .category-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 25px;
+    }
+
+    .cat-card {
+      border-radius: 20px;
+      overflow: hidden;
+      height: 350px;
+      position: relative;
+      cursor: pointer;
+    }
+
+    .cat-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: 0.5s;
+    }
+
+    .cat-card:hover img {
+      transform: scale(1.1);
+    }
+
+    .cat-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      padding: 20px;
+      background: linear-gradient(transparent, rgba(0, 0, 0, 0.6));
+      text-align: center;
+    }
+
+    .cat-overlay h4 {
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    /* FOOTER */
+    footer {
+      padding: 80px 0 40px;
+      background: white;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 50px;
+      margin-bottom: 60px;
+    }
+
+    .footer-logo {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--primary);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .footer-about p {
+      color: #64748b;
+      font-size: 13px;
+      max-width: 300px;
+    }
+
+    .footer-col h5 {
+      font-size: 16px;
+      margin-bottom: 25px;
+      color: #1e293b;
+    }
+
+    .footer-col ul {
+      list-style: none;
+    }
+
+    .footer-col ul li {
+      margin-bottom: 12px;
+    }
+
+    .footer-col ul li a {
+      color: #64748b;
+      font-size: 13px;
+    }
+
+    .footer-col ul li a:hover {
+      color: var(--primary);
+    }
+
+    .social-links a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #64748b;
+      font-size: 13px;
+      margin-bottom: 15px;
+    }
+
+    .footer-bottom {
+      border-top: 1px solid #f1f5f9;
+      padding-top: 30px;
+      display: flex;
+      justify-content: space-between;
+      color: #94a3b8;
+      font-size: 12px;
+    }
+
+    /* SEARCH MODAL (Hidden by default) */
+    .search-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.9);
+      z-index: 2000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .search-modal-content {
+      width: 100%;
+      max-width: 600px;
+      padding: 20px;
+    }
+
+    .search-modal-content input {
+      width: 100%;
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid var(--accent);
+      color: white;
+      font-size: 32px;
+      padding: 10px;
+      outline: none;
+    }
+
+    .close-search {
+      position: absolute;
+      top: 40px;
+      right: 40px;
+      color: white;
+      font-size: 30px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Search Modal -->
+  <div class="search-modal" id="searchModal">
+    <span class="close-search" onclick="closeSearch()">&times;</span>
+    <div class="search-modal-content">
+      <form action="{% url 'home' %}" method="GET">
+        <input type="text" name="q" placeholder="What are you looking for?" autofocus>
+      </form>
+    </div>
+  </div>
+
+  <header>
+    <div class="container navbar">
+      <a href="{% url 'home' %}" class="logo">
+        <i class="fa-solid fa-eye"></i>
+        <div>GLOBAL<br><span>VISION</span></div>
+      </a>
+      <nav class="nav-links">
+        <a href="{% url 'home' %}" class="active">Home</a>
+        <a href="{% url 'account:rent_vehicle' %}">RENT</a>
+        <a href="{% url 'account:blog' %}">Blog</a>
+        <a href="{% url 'account:contact' %}" class="cta-btn">Contact us</a>
+      </nav>
+      <div class="auth-links">
+        <i class="fa-solid fa-magnifying-glass" onclick="openSearch()"></i>
+        {% if user.is_authenticated %}
+        <a href="{% url 'account:dashboard' %}" style="color: white;"><i class="fa-solid fa-user-gear"></i></a>
+        {% else %}
+        <a href="{% url 'account:login' %}" style="color: white;"><i class="fa-regular fa-circle-user"></i></a>
+        {% endif %}
+      </div>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="container">
+      <div class="hero-content">
+        <h1>Rent Premium <br> Trekking <br> Equipment for <br> Your Next <br> Journey</h1>
+      </div>
+    </div>
+
+    <div class="search-card-container">
+      <div class="search-card container">
+        <div class="card-info">
+          <h3>The local experience</h3>
+          <p>From backpacks to boots, we have the reliable gear needed for your safe and comfortable trekking, available
+            for rent at great prices.</p>
+        </div>
+        <div class="card-categories">
+          <a href="{% url 'account:rent_equipment' %}?category=gear" class="cat-item">
+            <i class="fa-regular fa-calendar-check"></i>
+            <span>Backpacks</span>
+          </a>
+          <a href="{% url 'account:rent_equipment' %}?category=essentials" class="cat-item">
+            <i class="fa-solid fa-house-chimney"></i>
+            <span>Tents</span>
+          </a>
+          <a href="{% url 'account:rent_equipment' %}?category=clothing" class="cat-item">
+            <i class="fa-solid fa-person-running"></i>
+            <span>Shoes</span>
+          </a>
+          <a href="{% url 'account:rent_vehicle' %}" class="cat-item">
+            <i class="fa-solid fa-car-side"></i>
+            <span>Vehicle</span>
+          </a>
+          <div class="rent-now-split" onclick="toggleRentDropdown(event)">
+            <i class="fa-solid fa-right-to-bracket"></i>
+            <span>Rent It</span>
+            <small>VIEW MORE</small>
+            <div class="dropdown-menu" id="rentDropdown">
+              <a href="{% url 'account:rent_equipment' %}">Rent Equipment</a>
+              <a href="{% url 'account:rent_vehicle' %}">Rent Vehicle</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="what-we-do container">
+    <h2>What we do ?</h2>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon-circle"><i class="fa-solid fa-gear"></i></div>
+        <h4>Quality Gear</h4>
+        <p>High-performance trekking equipment, maintained and tested for mountain conditions.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon-circle"><i class="fa-solid fa-heart-pulse"></i></div>
+        <h4>Reliable Service</h4>
+        <p>Clean, safe, and inspected gear ready whenever you need it.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon-circle"><i class="fa-solid fa-forward-step"></i></div>
+        <h4>Fast Process</h4>
+        <p>Quick booking and pickup to save your time before the trek.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon-circle"><i class="fa-solid fa-users"></i></div>
+        <h4>For Everyone</h4>
+        <p>From beginners to pros—gear options for every type of trekker.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="container" style="margin-top: 50px;">
+    <div class="section-header">
+      <h2>Featured Vehicles</h2>
+      <a href="{% url 'account:rent_vehicle' %}" class="view-all">View All <i class="fa-solid fa-arrow-right"></i></a>
+    </div>
+    <div class="product-grid">
+      {% for vehicle in vehicles %}
+      <div class="product-card">
+        <div class="product-img-wrapper">
+          <span class="product-badge">{{ vehicle.get_category_display }}</span>
+          {% if vehicle.image %}
+          <img src="{{ vehicle.image.url }}" alt="{{ vehicle.name }}" class="product-img">
+          {% else %}
+          <img src="https://images.unsplash.com/photo-1494976388531-d1058494cdd8?q=80&w=2070&auto=format&fit=crop"
+            alt="{{ vehicle.name }}" class="product-img">
+          {% endif %}
+        </div>
+        <div class="product-info">
+          <div class="product-title">{{ vehicle.name }}</div>
+          <div class="product-price">Rs. {{ vehicle.price_per_day }} / day</div>
+          <a href="{% url 'account:product_detail' 'vehicle' vehicle.id %}" class="product-btn">Rent Now</a>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <div class="section-header">
+      <h2>Top Equipment</h2>
+      <a href="{% url 'account:rent_equipment' %}" class="view-all">View All <i class="fa-solid fa-arrow-right"></i></a>
+    </div>
+    <div class="product-grid">
+      {% for item in equipment %}
+      <div class="product-card">
+        <div class="product-img-wrapper">
+          <span class="product-badge">{{ item.get_category_display }}</span>
+          {% if item.image %}
+          <img src="{{ item.image.url }}" alt="{{ item.name }}" class="product-img">
+          {% else %}
+          <img src="https://images.unsplash.com/photo-1551632811-561732d1e306?q=80&w=2070&auto=format&fit=crop"
+            alt="{{ item.name }}" class="product-img">
+          {% endif %}
+        </div>
+        <div class="product-info">
+          <div class="product-title">{{ item.name }}</div>
+          <div class="product-price">Rs. {{ item.price_per_day }} / day</div>
+          <a href="{% url 'account:product_detail' 'equipment' item.id %}" class="product-btn">Rent Now</a>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="rent-it-section">
+    <div class="container">
+      <h2>RENT IT</h2>
+      <div class="category-grid">
+        <a href="{% url 'account:rent_equipment' %}?category=clothing" class="cat-card">
+          <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=2070&auto=format&fit=crop"
+            alt="Trekking Shoes">
+          <div class="cat-overlay">
+            <h4>Trekking Shoes</h4>
+          </div>
+        </a>
+        <a href="{% url 'account:rent_equipment' %}?category=gear" class="cat-card">
+          <img src="https://images.unsplash.com/photo-1551632811-561732d1e306?q=80&w=2070&auto=format&fit=crop"
+            alt="Trekking Bag">
+          <div class="cat-overlay">
+            <h4>Trekking Bag</h4>
+          </div>
+        </a>
+        <a href="{% url 'account:rent_equipment' %}?category=gear" class="cat-card">
+          <img src="https://images.unsplash.com/photo-1544735230-c128445789bb?q=80&w=2070&auto=format&fit=crop"
+            alt="Trekking Sticks">
+          <div class="cat-overlay">
+            <h4>Trekking Sticks</h4>
+          </div>
+        </a>
+        <a href="{% url 'account:rent_equipment' %}?category=essentials" class="cat-card">
+          <img src="https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?q=80&w=2070&auto=format&fit=crop"
+            alt="Tents">
+          <div class="cat-overlay">
+            <h4>Tents</h4>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container footer-grid">
+      <div class="footer-about">
+        <div class="footer-logo">
+          <i class="fa-solid fa-eye"></i> GLOBAL VISION
+        </div>
+        <p>We provide high-quality trekking and camping gear for rent, offering affordable and reliable equipment for
+          beginners and experienced trekkers. Explore the mountains with confidence.</p>
+      </div>
+      <div class="footer-col">
+        <h5>Services</h5>
+        <ul>
+          <li><a href="#">Email Marketing</a></li>
+          <li><a href="#">Campaigns</a></li>
+          <li><a href="#">Branding</a></li>
+          <li><a href="#">Offline</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>About</h5>
+        <ul>
+          <li><a href="#">Our Story</a></li>
+          <li><a href="#">Benefits</a></li>
+          <li><a href="#">Team</a></li>
+          <li><a href="#">Careers</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Follow Us</h5>
+        <div class="social-links">
+          <a href="#"><i class="fa-brands fa-facebook-f"></i> Facebook</a>
+          <a href="#"><i class="fa-brands fa-twitter"></i> Twitter</a>
+          <a href="#"><i class="fa-brands fa-instagram"></i> Instagram</a>
+        </div>
+      </div>
+    </div>
+    <div class="container footer-bottom">
+      <p>Copyright © 2026 Legalpum. All rights reserved.</p>
+      <div>
+        <a href="#" style="margin-right: 20px;">Terms & Conditions</a>
+        <a href="#">Privacy Policy</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    function openSearch() {
+      document.getElementById('searchModal').style.display = 'flex';
+      document.querySelector('.search-modal input').focus();
+    }
+
+    function closeSearch() {
+      document.getElementById('searchModal').style.display = 'none';
+    }
+
+    function toggleRentDropdown(event) {
+      event.stopPropagation();
+      document.getElementById('rentDropdown').classList.toggle('active');
+    }
+
+    // Close on outside click
+    document.addEventListener('click', function (e) {
+      const dropdown = document.getElementById('rentDropdown');
+      const button = document.querySelector('.rent-now-split');
+      if (!button.contains(e.target)) {
+        dropdown.classList.remove('active');
+      }
+    });
+
+    // Close on esc key
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') {
+        closeSearch();
+        document.getElementById('rentDropdown').classList.remove('active');
+      }
+    });
+  </script>
+</body>
+
+</html>
