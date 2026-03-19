@@ -1,0 +1,135 @@
+{% extends 'dashboard/base_dashboard.html' %}
+
+{% block page_title %}About Us Editor{% endblock %}
+
+{% block content %}
+<form method="POST" enctype="multipart/form-data" id="aboutForm">
+    {% csrf_token %}
+    <input type="hidden" name="delete_members" id="delete_members" value="">
+    
+    <div style="background:white; padding:28px; border-radius:var(--radius); box-shadow:var(--shadow); margin-bottom:24px;">
+        <h3 class="section-title">Hero Content</h3>
+        <div class="form-group">
+            <label>Tagline</label>
+            <input type="text" name="tagline" class="form-control" value="{{ about.tagline|default:'' }}">
+        </div>
+        <div class="form-group">
+            <label>Company Story (Shown in About Body)</label>
+            <div class="summernote-wrapper">
+                <textarea name="company_story" class="form-control">{{ about.company_story|default:'' }}</textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Mission Statement</label>
+            <textarea name="mission_statement" class="form-control" style="min-height:80px;">{{ about.mission_statement|default:'' }}</textarea>
+        </div>
+    </div>
+
+    <div class="stats-grid-about">
+        <div class="form-group" style="text-align:center;">
+            <label>Happy Trekkers</label>
+            <input type="number" name="stat_trekkers" class="form-control" value="{{ about.stat_trekkers }}" style="text-align:center; font-size:1.5rem; font-family:var(--font-display);">
+        </div>
+        <div class="form-group" style="text-align:center;">
+            <label>Total Vehicles</label>
+            <input type="number" name="stat_vehicles" class="form-control" value="{{ about.stat_vehicles }}" style="text-align:center; font-size:1.5rem; font-family:var(--font-display);">
+        </div>
+        <div class="form-group" style="text-align:center;">
+            <label>Equipment Items</label>
+            <input type="number" name="stat_equipment" class="form-control" value="{{ about.stat_equipment }}" style="text-align:center; font-size:1.5rem; font-family:var(--font-display);">
+        </div>
+    </div>
+
+    <h3 class="section-title">Team Members</h3>
+    <div class="team-grid" id="members-container">
+        {% for member in team_members %}
+        <div class="member-card" id="member_card_{{ member.id }}">
+            <button type="button" class="btn-remove-member" onclick="removeExistingMember({{ member.id }})">&times;</button>
+            <div>
+                <label for="member_{{ member.id }}_photo_input" style="cursor:pointer; display:block;">
+                    {% if member.photo %}
+                    <img src="{{ member.photo.url }}" class="member-photo" id="member_{{ member.id }}_preview">
+                    {% else %}
+                    <div class="member-photo" style="background:#eee;" id="member_{{ member.id }}_preview"></div>
+                    {% endif %}
+                </label>
+                <input type="file" name="member_{{ member.id }}_photo" id="member_{{ member.id }}_photo_input" style="display:none;" onchange="previewMemberImage(this, 'member_{{ member.id }}_preview')">
+            </div>
+            <div>
+                <input type="text" name="member_{{ member.id }}_name" class="form-control" placeholder="Name" value="{{ member.name }}" style="margin-bottom:8px;">
+                <input type="text" name="member_{{ member.id }}_role" class="form-control" placeholder="Role" value="{{ member.role }}" style="margin-bottom:8px;">
+                <input type="text" name="member_{{ member.id }}_fav" class="form-control" placeholder="Favorite Trek" value="{{ member.favorite_trek }}" style="margin-bottom:8px;">
+                <textarea name="member_{{ member.id }}_bio" class="form-control" placeholder="Bio" style="min-height:60px;">{{ member.bio }}</textarea>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    
+    <button type="button" class="btn-add-member" onclick="addMember()">+ Add Team Member</button>
+    
+    <div style="margin-top:40px; text-align:right;">
+        <button type="submit" class="btn btn-secondary" style="background:var(--gold); padding: 14px 40px; font-size:1rem;">Save All Changes</button>
+    </div>
+</form>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    let newMemberCount = 0;
+    const deleteInput = document.getElementById('delete_members');
+    
+    function removeExistingMember(id) {
+        if(confirm('Remove this team member?')) {
+            document.getElementById('member_card_' + id).style.display = 'none';
+            let current = deleteInput.value;
+            deleteInput.value = current ? current + ',' + id : id;
+        }
+    }
+
+    function removeNewMember(btn) {
+        btn.closest('.member-card').remove();
+    }
+
+    function addMember() {
+        newMemberCount++;
+        const card = document.createElement('div');
+        card.className = 'member-card';
+        card.innerHTML = `
+            <button type="button" class="btn-remove-member" onclick="removeNewMember(this)">&times;</button>
+            <div>
+                <label for="new_member_photo_${newMemberCount}" style="cursor:pointer; display:block;">
+                    <div class="member-photo" style="background:#eee; display:flex; align-items:center; justify-content:center; text-align:center; font-size:0.7rem; color:gray;" id="new_member_preview_${newMemberCount}">Upload Photo</div>
+                </label>
+                <input type="file" name="new_member_photo_${newMemberCount}" id="new_member_photo_${newMemberCount}" style="display:none;" onchange="previewMemberImage(this, 'new_member_preview_${newMemberCount}')">
+            </div>
+            <div>
+                <input type="text" name="new_member_name_${newMemberCount}" class="form-control" placeholder="Name" required style="margin-bottom:8px;">
+                <input type="text" name="new_member_role_${newMemberCount}" class="form-control" placeholder="Role" style="margin-bottom:8px;">
+                <input type="text" name="new_member_fav_${newMemberCount}" class="form-control" placeholder="Favorite Trek" style="margin-bottom:8px;">
+                <textarea name="new_member_bio_${newMemberCount}" class="form-control" placeholder="Bio" style="min-height:60px;"></textarea>
+            </div>
+        `;
+        document.getElementById('members-container').appendChild(card);
+    }
+
+    function previewMemberImage(input, previewId) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const preview = document.getElementById(previewId);
+                if (preview.tagName === 'IMG') {
+                    preview.src = e.target.result;
+                } else {
+                    const img = document.createElement('img');
+                    img.className = 'member-photo';
+                    img.id = previewId;
+                    img.src = e.target.result;
+                    preview.replaceWith(img);
+                }
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
+<!-- Summernote Init could be done here if needed manually, or rendered via form widget -->
+{% endblock %}\n

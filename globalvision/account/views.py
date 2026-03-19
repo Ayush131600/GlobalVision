@@ -294,6 +294,9 @@ def blog(request):
 def contact(request):
     return render(request, 'account/contact.html')
 
+def about(request):
+    return render(request, 'account/about.html')
+
 
 
 def product_detail(request, product_type, product_id):

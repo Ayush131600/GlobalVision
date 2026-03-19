@@ -1,0 +1,306 @@
+{% extends 'account/base.html' %}
+{% load static %}
+
+{% block title %}About Us | Global Vision{% endblock %}
+
+{% block extra_body_style %}
+            background-color: var(--bg-light);
+            background-image: url('https://www.transparenttextures.com/patterns/cubes.png'), linear-gradient(rgba(248, 250, 252, 0.95), rgba(248, 250, 252, 0.95)), url('https://images.unsplash.com/photo-1544735230-c128445789bb?q=80&w=2070&auto=format&fit=crop');
+            background-attachment: fixed;
+            background-size: auto, cover, cover;
+{% endblock %}
+
+{% block extra_css %}
+/* 4. Your Adventure Starts Here Hero */
+        .hero {
+            position: relative;
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1544735230-c128445789bb?q=80&w=2070&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            padding: 120px 20px;
+            color: white;
+            text-align: center;
+        }
+
+        .hero h1 { font-size: 56px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 15px; }
+        .hero p { font-size: 20px; font-weight: 300; max-width: 600px; margin: 0 auto; color: #e2e8f0; }
+
+        .stats-wrapper {
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+            margin-top: 50px;
+            flex-wrap: wrap;
+        }
+
+        .stat-item { text-align: center; }
+        .stat-number { font-size: 42px; font-weight: 800; color: var(--accent); line-height: 1; margin-bottom: 8px;}
+        .stat-label { font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: #cbd5e1; }
+
+        /* 1 & 2. Born from the trails & Local Guide */
+        .story-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            margin: 80px auto;
+            align-items: center;
+        }
+
+        .story-img-container { position: relative; }
+        .story-img {
+            width: 100%;
+            height: 450px;
+            object-fit: cover;
+            border-radius: 12px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        .story-badge {
+            position: absolute;
+            bottom: -20px;
+            right: -20px;
+            background: var(--white);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            max-width: 250px;
+        }
+
+        .story-badge i { color: var(--accent); font-size: 24px; margin-bottom: 10px; }
+        .story-badge p { font-size: 14px; font-weight: 600; font-style: italic; color: var(--text-dark); line-height: 1.4; margin: 0;}
+
+        .story-content h2 { font-size: 36px; color: var(--primary-dark); margin-bottom: 20px; }
+        .story-content p { color: var(--text-light); margin-bottom: 15px; font-size: 16px; }
+        
+        /* 6. Mission + Values */
+        .values-section { margin: 80px 0; text-align: center; }
+        .values-section h2 { font-size: 36px; color: var(--text-dark); margin-bottom: 50px; }
+        
+        .values-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; }
+        .value-card { background: white; padding: 40px 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: 0.3s; border-bottom: 4px solid transparent; }
+        .value-card:hover { transform: translateY(-10px); border-bottom-color: var(--primary); }
+        .value-icon { font-size: 40px; color: var(--primary); margin-bottom: 25px; }
+        .value-card h3 { font-size: 20px; margin-bottom: 15px; color: var(--text-dark); }
+        .value-card p { font-size: 14px; color: var(--text-light); }
+
+        /* 3. Interactive Timeline */
+        .timeline-section { margin: 100px 0; }
+        .timeline-section h2 { text-align: center; font-size: 36px; margin-bottom: 60px; color: var(--text-dark); }
+        .timeline { position: relative; max-width: 800px; margin: 0 auto; }
+        .timeline::before { content: ''; position: absolute; left: 50%; width: 2px; height: 100%; background: var(--primary); transform: translateX(-50%); }
+        .timeline-item { width: 50%; padding: 0 40px 40px; position: relative; }
+        .timeline-item:nth-child(odd) { left: 0; text-align: right; }
+        .timeline-item:nth-child(even) { left: 50%; text-align: left; }
+        .timeline-dot { position: absolute; top: 0; width: 16px; height: 16px; background: var(--accent); border-radius: 50%; z-index: 10; box-shadow: 0 0 0 4px white, 0 0 0 6px var(--primary); }
+        .timeline-item:nth-child(odd) .timeline-dot { right: -8px; }
+        .timeline-item:nth-child(even) .timeline-dot { left: -8px; }
+        .timeline-content { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .timeline-date { color: var(--primary); font-weight: 800; font-size: 24px; margin-bottom: 10px; }
+        .timeline-title { font-weight: 700; font-size: 18px; margin-bottom: 10px; }
+        .timeline-text { font-size: 14px; color: var(--text-light); }
+
+        /* 7. Why Pokhara */
+        .pokhara-section {
+            background: linear-gradient(rgba(0, 143, 160, 0.85), rgba(0, 143, 160, 0.9)), url('https://images.unsplash.com/photo-1544735230-c128445789bb?q=80&w=2070');
+            background-attachment: fixed;
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 80px 40px;
+            border-radius: 20px;
+            margin: 80px auto;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        .pokhara-section h2 { font-size: 36px; margin-bottom: 20px; }
+        .pokhara-section p { font-size: 18px; max-width: 800px; margin: 0 auto 30px; font-weight: 300; }
+        .pokhara-features { display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; margin-top: 40px; }
+        .p-feature { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 16px; }
+        .p-feature i { color: var(--accent); font-size: 20px; }
+
+        /* 5. Meet the Team */
+        .team-section { text-align: center; margin: 100px 0; }
+        .team-section h2 { font-size: 36px; color: var(--text-dark); margin-bottom: 50px; }
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+        .team-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            text-align: left;
+            transition: 0.3s;
+        }
+        .team-card:hover { transform: translateY(-10px); box-shadow: 0 15px 30px rgba(0,0,0,0.1); }
+        .team-img { width: 100%; height: 300px; object-fit: cover; }
+        .team-info { padding: 25px; }
+        .team-role { color: var(--primary); font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
+        .team-name { font-size: 22px; font-weight: 700; margin-bottom: 15px; color: var(--text-dark); }
+        .fun-fact { background: #f8fafc; padding: 15px; border-radius: 8px; font-size: 13px; color: var(--text-light); border-left: 3px solid var(--accent); }
+        .fun-fact strong { color: var(--text-dark); }
+
+        @media (max-width: 850px) {
+            .story-section, .values-grid, .team-grid { grid-template-columns: 1fr; }
+            .timeline::before { left: 20px; }
+            .timeline-item { width: 100%; padding-left: 60px; padding-right: 0; }
+            .timeline-item:nth-child(odd), .timeline-item:nth-child(even) { left: 0; text-align: left; }
+            .timeline-item:nth-child(odd) .timeline-dot, .timeline-item:nth-child(even) .timeline-dot { left: 12px; right: auto; }
+            .stats-wrapper { flex-direction: column; gap: 30px; }
+        }
+{% endblock %}
+
+{% block content %}
+
+<div class="hero">
+        <h1>Your Adventure Starts Here</h1>
+        <p>Empowering global explorers to safely navigate the Himalayas with premium gear and local expertise.</p>
+        
+        <div class="stats-wrapper">
+            <div class="stat-item">
+                <div class="stat-number">500+</div>
+                <div class="stat-label">Happy Trekkers</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">100+</div>
+                <div class="stat-label">Equipment Items</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">30+</div>
+                <div class="stat-label">Off-road Vehicles</div>
+            </div>
+        </div>
+    </div>
+
+    <main class="container">
+        
+        <div class="story-section">
+            <div class="story-content">
+                <h2>Born From The Trails</h2>
+                <p>We started because a trekker showed up in Pokhara with just a backpack, big dreams, and absolutely zero gear suited for the Annapurna Circuit. He was excited but completely unprepared.</p>
+                <p>We realized then that finding high-quality, trustworthy gear in town could be overwhelming. You shouldn't have to compromise on safety or comfort when you traverse some of the highest peaks on Earth.</p>
+                <p><strong>The Local Guide Angle:</strong> We aren't just a rental shop behind a desk. We are locals. We’ve hiked every single trail we rent equipment for. We test the boots on rocky ascents, and we sleep in the sleeping bags at freezing base camps. This way, we know exactly what you need to stay safe and enjoy the journey.</p>
+            </div>
+            <div class="story-img-container">
+                <img src="https://images.unsplash.com/photo-1544735230-c128445789bb?q=80&w=2070&auto=format&fit=crop" class="story-img" alt="Phewa Lake and Annapurna Range">
+                <div class="story-badge">
+                    <i class="fa-solid fa-mountain-sun"></i>
+                    <p>"We test the gear so you don't have to face surprises at 4,000 meters."</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="values-section">
+            <h2>Our Mission & Values</h2>
+            <div class="values-grid">
+                <div class="value-card">
+                    <i class="fa-solid fa-shield-heart value-icon"></i>
+                    <h3>Safety First</h3>
+                    <p>We rigorously clean and inspect every piece of gear upon return, ensuring it is 100% reliable for your next high-altitude challenge.</p>
+                </div>
+                <div class="value-card">
+                    <i class="fa-solid fa-leaf value-icon"></i>
+                    <h3>Sustainability</h3>
+                    <p>We proudly support local porters, enforce eco-trekking principles, and ensure our rental processes reduce waste in the Himalayas.</p>
+                </div>
+                <div class="value-card">
+                    <i class="fa-solid fa-person-hiking value-icon"></i>
+                    <h3>Simplicity</h3>
+                    <p>Rent online, pick it up upon arrival, and hit the trails. We strip away the complicated logistics so you can focus on the climb.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="timeline-section">
+            <h2>Our Journey</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-date">2020</div>
+                        <div class="timeline-title">The Foundation</div>
+                        <div class="timeline-text">Global Vision launched in Pokhara with a modest inventory of just 20 sleeping bags and a few sturdy tents.</div>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-date">2022</div>
+                        <div class="timeline-title">First 100 Customers</div>
+                        <div class="timeline-text">Word spread among backpackers. We celebrated our first 100 fully-equipped trekkers returning safely from Annapurna Base Camp.</div>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-date">2024</div>
+                        <div class="timeline-title">Vehicle Expansion</div>
+                        <div class="timeline-text">Listening to our adventurers, we introduced off-road vehicles and bikes for those exploring Mustang and Manang valleys.</div>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-date">2026</div>
+                        <div class="timeline-title">Digital Evolution</div>
+                        <div class="timeline-text">Launched our complete online booking ecosystem, creating a seamless connection between travelers and the Himalayas.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="pokhara-section">
+            <h2>Why Pokhara?</h2>
+            <p>Situated beside the tranquil Phewa Lake with the majestic Annapurna range reflecting in its waters, Pokhara is the undeniable gateway to the Himalayas. It’s a city where adrenaline meets serenity.</p>
+            <p>From paragliding to world-class trekking circuits, resting here before or after your journey isn't just convenient—it's essential. We established Global Vision here to provide ground-level support right where your physical journey begins.</p>
+            <div class="pokhara-features">
+                <div class="p-feature"><i class="fa-solid fa-map-location-dot"></i> Gateway to Annapurna</div>
+                <div class="p-feature"><i class="fa-solid fa-water"></i> Scenic Phewa Lake</div>
+                <div class="p-feature"><i class="fa-solid fa-campground"></i> Ultimate Acclimatization</div>
+            </div>
+        </div>
+
+        <div class="team-section">
+            <h2>Meet The Team</h2>
+            <div class="team-grid">
+                <div class="team-card">
+                    <img src="https://images.unsplash.com/photo-1516801700661-bc8ef58dceba?q=80&w=1969&auto=format&fit=crop" alt="Ayush on trail" class="team-img">
+                    <div class="team-info">
+                        <div class="team-role">Founder & Gear Expert</div>
+                        <div class="team-name">Ayush Poudel</div>
+                        <div class="fun-fact">
+                            <strong>Fun Fact:</strong> Ayush has worn the same lucky hiking boots to Everest Base Camp four times.
+                        </div>
+                    </div>
+                </div>
+                <div class="team-card">
+                    <img src="https://images.unsplash.com/photo-1536697479712-421712a43df5?q=80&w=1978&auto=format&fit=crop" alt="Sarah on trail" class="team-img">
+                    <div class="team-info">
+                        <div class="team-role">Head Guide & Route Planner</div>
+                        <div class="team-name">Sarah Jenkins</div>
+                        <div class="fun-fact">
+                            <strong>Favorite Trek:</strong> Upper Mustang. She loves the mysterious, desert-like terrain of the forbidden kingdom.
+                        </div>
+                    </div>
+                </div>
+                <div class="team-card">
+                    <img src="https://images.unsplash.com/photo-1501555088652-021faa106b9b?q=80&w=2073&auto=format&fit=crop" alt="David on trail" class="team-img">
+                    <div class="team-info">
+                        <div class="team-role">Vehicle Operations</div>
+                        <div class="team-name">David Sharma</div>
+                        <div class="fun-fact">
+                            <strong>Fun Fact:</strong> David can fix a 4x4 engine blindfolded on a snowy mountain pass (well, almost).
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+{% endblock %}
+
+{% block extra_scripts %}
+
+{% endblock %}

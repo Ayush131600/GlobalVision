@@ -1,0 +1,122 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+
+:root {
+  --cream: #F5F0E8;
+  --dark: #1A1A14;
+  --forest: #2D4A35;
+  --moss: #4E7A57;
+  --gold: #C8933A;
+  --warm: #E8DCC8;
+  --mist: #8BA89A;
+  --sidebar-bg: #141F17;
+  --sidebar-text: rgba(245,240,232,0.6);
+  --sidebar-active: #C8933A;
+  --card-bg: #FFFFFF;
+  --border: rgba(26,26,20,0.1);
+  --danger: #C0392B;
+  --success: #27AE60;
+  --font-display: 'Playfair Display', serif;
+  --font-body: 'DM Sans', sans-serif;
+  --radius: 6px;
+  --shadow: 0 2px 12px rgba(0,0,0,0.08);
+  --transition: all 0.2s ease;
+}
+
+body {
+    background-color: var(--dark);
+    font-family: var(--font-body);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.login-card {
+    background-color: var(--sidebar-bg);
+    width: 420px;
+    padding: 48px;
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 8px;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.logo {
+    font-family: var(--font-display);
+    color: var(--gold);
+    font-size: 2.2rem;
+    margin: 0;
+}
+
+.portal-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: var(--mist);
+    letter-spacing: 2px;
+    margin-top: 4px;
+    margin-bottom: 32px;
+}
+
+.error-message {
+    background-color: var(--danger);
+    color: white;
+    padding: 10px 16px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    margin-bottom: 24px;
+    display: inline-block;
+}
+
+.form-group {
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--mist);
+    margin-bottom: 8px;
+}
+
+input {
+    background-color: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: white;
+    padding: 14px 16px;
+    border-radius: var(--radius);
+    width: 100%;
+    box-sizing: border-box;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    transition: var(--transition);
+}
+
+input:focus {
+    border-color: var(--gold);
+    outline: none;
+}
+
+.btn-submit {
+    background-color: var(--gold);
+    color: var(--dark);
+    width: 100%;
+    padding: 14px;
+    font-weight: 600;
+    font-size: 1rem;
+    border: none;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: var(--transition);
+    font-family: var(--font-body);
+    margin-top: 12px;
+}
+
+.btn-submit:hover {
+    opacity: 0.9;
+}\n

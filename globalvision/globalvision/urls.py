@@ -20,10 +20,15 @@ from account.views import home
 from django.contrib import admin
 from django.urls import path, include 
 
+from dashboard.views import admin_login_view
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('account/', include('account.urls')),
     path('', home, name='home'), 
+    path('admin-login/', admin_login_view, name='admin_login'),
+    path('dashboard/', include('dashboard.urls')),
+    path('summernote/', include('django_summernote.urls')),
 ]
 
 if settings.DEBUG:

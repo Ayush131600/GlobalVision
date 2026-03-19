@@ -1,127 +1,10 @@
+{% extends 'account/base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{% block title %}Global Vision | Trekking & Adventure Rental{% endblock %}</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
-    rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+{% block title %}Global Vision | Trekking & Adventure Rental{% endblock %}
 
-  <style>
-    :root {
-      --primary: #008fa0;
-      --primary-dark: #007685;
-      --secondary: #4b81af;
-      --text-dark: #0f172a;
-      --text-light: #64748b;
-      --white: #ffffff;
-      --bg-light: #f8fafc;
-      --accent: #2dd4bf;
-    }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Inter', sans-serif;
-      color: var(--text-dark);
-      background-color: var(--white);
-      line-height: 1.6;
-    }
-
-    a {
-      text-decoration: none;
-      color: inherit;
-      transition: 0.3s;
-    }
-
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 20px;
-    }
-
-    /* HEADER */
-    header {
-      padding: 20px 0;
-      position: absolute;
-      top: 0;
-      width: 100%;
-      z-index: 1000;
-    }
-
-    .navbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .logo {
-      font-size: 24px;
-      font-weight: 800;
-      color: var(--white);
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .logo span {
-      color: var(--accent);
-      display: block;
-      font-size: 14px;
-      margin-top: -5px;
-      letter-spacing: 1px;
-    }
-
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 40px;
-    }
-
-    .nav-links a {
-      color: var(--white);
-      font-size: 14px;
-      font-weight: 500;
-      opacity: 0.8;
-    }
-
-    .nav-links a:hover,
-    .nav-links a.active {
-      opacity: 1;
-      color: var(--accent);
-    }
-
-    .cta-btn {
-      background-color: var(--accent);
-      color: var(--text-dark) !important;
-      padding: 10px 25px;
-      border-radius: 12px;
-      font-weight: 700;
-      opacity: 1 !important;
-    }
-
-    .auth-links {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-      color: var(--white);
-    }
-
-    .auth-links i {
-      font-size: 20px;
-      cursor: pointer;
-    }
-
-    /* HERO */
+{% block extra_css %}
+/* HERO */
     .hero {
       height: 90vh;
       background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.2)), url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=2070&auto=format&fit=crop');
@@ -244,36 +127,6 @@
       margin-top: 5px;
     }
 
-    .dropdown-menu {
-      position: absolute;
-      bottom: 100%;
-      right: 0;
-      background: white;
-      box-shadow: 0 -10px 20px rgba(0, 0, 0, 0.1);
-      border-radius: 8px 8px 0 0;
-      display: none;
-      width: 200px;
-      overflow: hidden;
-    }
-
-    .dropdown-menu a {
-      padding: 15px 20px;
-      display: block;
-      color: var(--text-dark);
-      font-size: 13px;
-      font-weight: 600;
-      border-bottom: 1px solid #f1f5f9;
-    }
-
-    .dropdown-menu a:hover {
-      background: #f8fafc;
-      color: var(--primary);
-    }
-
-    .dropdown-menu.active {
-      display: block;
-    }
-
     /* WHAT WE DO */
     .what-we-do {
       padding: 150px 0 80px;
@@ -300,12 +153,7 @@
     }
 
     /* PRODUCT LISTINGS */
-    .section-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin: 80px 0 40px;
-    }
+    .section-
 
     .section-header h2 {
       font-size: 32px;
@@ -486,74 +334,6 @@
     }
 
     /* FOOTER */
-    footer {
-      padding: 80px 0 40px;
-      background: white;
-    }
-
-    .footer-grid {
-      display: grid;
-      grid-template-columns: 2fr 1fr 1fr 1fr;
-      gap: 50px;
-      margin-bottom: 60px;
-    }
-
-    .footer-logo {
-      font-size: 24px;
-      font-weight: 800;
-      color: var(--primary);
-      margin-bottom: 20px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .footer-about p {
-      color: #64748b;
-      font-size: 13px;
-      max-width: 300px;
-    }
-
-    .footer-col h5 {
-      font-size: 16px;
-      margin-bottom: 25px;
-      color: #1e293b;
-    }
-
-    .footer-col ul {
-      list-style: none;
-    }
-
-    .footer-col ul li {
-      margin-bottom: 12px;
-    }
-
-    .footer-col ul li a {
-      color: #64748b;
-      font-size: 13px;
-    }
-
-    .footer-col ul li a:hover {
-      color: var(--primary);
-    }
-
-    .social-links a {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      color: #64748b;
-      font-size: 13px;
-      margin-bottom: 15px;
-    }
-
-    .footer-bottom {
-      border-top: 1px solid #f1f5f9;
-      padding-top: 30px;
-      display: flex;
-      justify-content: space-between;
-      color: #94a3b8;
-      font-size: 12px;
-    }
 
     /* SEARCH MODAL (Hidden by default) */
     .search-modal {
@@ -594,11 +374,10 @@
       font-size: 30px;
       cursor: pointer;
     }
-  </style>
-</head>
+{% endblock %}
 
-<body>
-  <!-- Search Modal -->
+{% block content %}
+<!-- Search Modal -->
   <div class="search-modal" id="searchModal">
     <span class="close-search" onclick="closeSearch()">&times;</span>
     <div class="search-modal-content">
@@ -607,31 +386,7 @@
       </form>
     </div>
   </div>
-
-  <header>
-    <div class="container navbar">
-      <a href="{% url 'home' %}" class="logo">
-        <i class="fa-solid fa-eye"></i>
-        <div>GLOBAL<br><span>VISION</span></div>
-      </a>
-      <nav class="nav-links">
-        <a href="{% url 'home' %}" class="active">Home</a>
-        <a href="{% url 'account:rent_vehicle' %}">RENT</a>
-        <a href="{% url 'account:blog' %}">Blog</a>
-        <a href="{% url 'account:contact' %}" class="cta-btn">Contact us</a>
-      </nav>
-      <div class="auth-links">
-        <i class="fa-solid fa-magnifying-glass" onclick="openSearch()"></i>
-        {% if user.is_authenticated %}
-        <a href="{% url 'account:dashboard' %}" style="color: white;"><i class="fa-solid fa-user-gear"></i></a>
-        {% else %}
-        <a href="{% url 'account:login' %}" style="color: white;"><i class="fa-regular fa-circle-user"></i></a>
-        {% endif %}
-      </div>
-    </div>
-  </header>
-
-  <section class="hero">
+<section class="hero">
     <div class="container">
       <div class="hero-content">
         <h1>Rent Premium <br> Trekking <br> Equipment for <br> Your Next <br> Journey</h1>
@@ -789,53 +544,10 @@
       </div>
     </div>
   </section>
+{% endblock %}
 
-  <footer>
-    <div class="container footer-grid">
-      <div class="footer-about">
-        <div class="footer-logo">
-          <i class="fa-solid fa-eye"></i> GLOBAL VISION
-        </div>
-        <p>We provide high-quality trekking and camping gear for rent, offering affordable and reliable equipment for
-          beginners and experienced trekkers. Explore the mountains with confidence.</p>
-      </div>
-      <div class="footer-col">
-        <h5>Services</h5>
-        <ul>
-          <li><a href="#">Email Marketing</a></li>
-          <li><a href="#">Campaigns</a></li>
-          <li><a href="#">Branding</a></li>
-          <li><a href="#">Offline</a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <h5>About</h5>
-        <ul>
-          <li><a href="#">Our Story</a></li>
-          <li><a href="#">Benefits</a></li>
-          <li><a href="#">Team</a></li>
-          <li><a href="#">Careers</a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <h5>Follow Us</h5>
-        <div class="social-links">
-          <a href="#"><i class="fa-brands fa-facebook-f"></i> Facebook</a>
-          <a href="#"><i class="fa-brands fa-twitter"></i> Twitter</a>
-          <a href="#"><i class="fa-brands fa-instagram"></i> Instagram</a>
-        </div>
-      </div>
-    </div>
-    <div class="container footer-bottom">
-      <p>Copyright © 2026 Legalpum. All rights reserved.</p>
-      <div>
-        <a href="#" style="margin-right: 20px;">Terms & Conditions</a>
-        <a href="#">Privacy Policy</a>
-      </div>
-    </div>
-  </footer>
-
-  <script>
+{% block extra_scripts %}
+<script>
     function openSearch() {
       document.getElementById('searchModal').style.display = 'flex';
       document.querySelector('.search-modal input').focus();
@@ -867,6 +579,4 @@
       }
     });
   </script>
-</body>
-
-</html>
+{% endblock %}

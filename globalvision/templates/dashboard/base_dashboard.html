@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Dashboard{% endblock %} - PeakRent Admin</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-logo">Peak<span>Rent</span></div>
+        
+        <div class="nav-section-label">Overview</div>
+        <a href="{% url 'dashboard_home' %}" class="nav-link">Dashboard</a>
+        
+        <div class="nav-section-label">Content</div>
+        <a href="{% url 'vehicle_list' %}" class="nav-link">Vehicles</a>
+        <a href="{% url 'equipment_list' %}" class="nav-link">Equipment</a>
+        <a href="#" class="nav-link">Bookings</a>
+        <a href="{% url 'blog_list' %}" class="nav-link">Blog Posts</a>
+        
+        <div class="nav-section-label">Pages</div>
+        <a href="{% url 'about_editor' %}" class="nav-link">About Us</a>
+        <a href="{% url 'contact_editor' %}" class="nav-link">Contact Us</a>
+
+        <div class="sidebar-bottom">
+            <div class="avatar">{{ request.user.username|make_list|first|upper }}</div>
+            <div>
+                <div class="admin-name">{{ request.user.username }}</div>
+                <a href="{% url 'admin_logout' %}" class="logout-link">Log out</a>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Topbar -->
+    <header class="topbar">
+        <div class="page-title">
+            {% block page_title %}Dashboard{% endblock %}
+        </div>
+        <div class="topbar-right">
+            <span class="admin-name" style="color:var(--dark);">{{ request.user.username }}</span>
+            <div class="avatar">{{ request.user.username|make_list|first|upper }}</div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        {% block content %}{% endblock %}
+    </main>
+    
+    <script>
+        // Set active state on sidebar links
+        const currentPath = window.location.pathname;
+        const links = document.querySelectorAll('.nav-link');
+        links.forEach(link => {
+            if(link.getAttribute('href') !== '#' && currentPath.includes(link.getAttribute('href'))) {
+                link.classList.add('active');
+            }
+        });
+    </script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>\n

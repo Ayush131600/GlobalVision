@@ -1,0 +1,56 @@
+{% extends 'dashboard/base_dashboard.html' %}
+
+{% block page_title %}Contact Information{% endblock %}
+
+{% block content %}
+<form method="POST">
+    {% csrf_token %}
+    <div class="form-grid">
+        <div class="form-left-col">
+            <h3 class="section-title">Site Settings</h3>
+            <div class="form-group">
+                <label>Phone Number</label>
+                <input type="text" name="phone" class="form-control" value="{{ settings.phone }}">
+            </div>
+            <div class="form-group">
+                <label>WhatsApp Number</label>
+                <input type="text" name="whatsapp" class="form-control" value="{{ settings.whatsapp }}">
+            </div>
+            <div class="form-group">
+                <label>Email Address</label>
+                <input type="email" name="email" class="form-control" value="{{ settings.email }}">
+            </div>
+            <div class="form-group">
+                <label>Physical Address</label>
+                <textarea name="address" class="form-control" style="min-height:80px;">{{ settings.address }}</textarea>
+            </div>
+            <div class="form-group">
+                <label>Opening Hours</label>
+                <textarea name="opening_hours" class="form-control" style="min-height:80px;">{{ settings.opening_hours }}</textarea>
+            </div>
+        </div>
+
+        <div class="form-right-col">
+            <h3 class="section-title">Maps Preview</h3>
+            <div class="form-group">
+                <label>Maps Embed URL (iframe src)</label>
+                <input type="text" name="maps_embed" id="maps-input" class="form-control" value="{{ settings.maps_embed }}">
+                <p style="font-size:0.75rem; color:var(--mist); margin-top:4px;">Copy the src attribute from Google Maps embed code.</p>
+            </div>
+            <div style="border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; height:300px; background:#eee;">
+                <iframe id="maps-preview" style="width:100%; height:100%; border:none;" src="{{ settings.maps_embed }}"></iframe>
+            </div>
+            
+            <button type="submit" class="btn btn-primary" style="width:100%; margin-top:32px; padding:14px; font-size:1rem;">Save Contact Info</button>
+        </div>
+    </div>
+</form>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.getElementById('maps-input').addEventListener('input', function() {
+        document.getElementById('maps-preview').src = this.value;
+    });
+</script>
+{% endblock %}\n

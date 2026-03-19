@@ -1,7 +1,7 @@
 
 from django.urls import path
 from .views import (
-    login, admin_login, register, logout_view, rent_vehicle, rent_equipment, blog, contact, product_detail,
+    login, admin_login, register, logout_view, rent_vehicle, rent_equipment, blog, contact, about, product_detail,
     dashboard, profile_view, manage_products, product_create, product_update, product_delete,
     manage_blog, blog_create, blog_update, blog_delete
 )
@@ -17,6 +17,7 @@ urlpatterns = [
     path('rent/equipment/', rent_equipment, name="rent_equipment"),
     path('blog/', blog, name="blog"),
     path('contact/', contact, name="contact"),
+    path('about/', about, name="about"),
     path('product/<str:product_type>/<int:product_id>/', product_detail, name="product_detail"),
     
     # Dashboard & Management
