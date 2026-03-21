@@ -19,7 +19,12 @@ urlpatterns = [
     path('blog/<int:pk>/edit/', views.blog_edit, name='blog_edit'),
     path('blog/<int:pk>/delete/', views.blog_delete, name='blog_delete'),
     
+    path('contact/', views.contact_message_list, name='contact_list'),
+    path('contact/<int:pk>/', views.contact_message_detail, name='contact_detail'),
+    path('contact/<int:pk>/delete/', views.contact_message_delete, name='contact_delete'),
+    
     path('about/', views.about_editor, name='about_editor'),
-    path('contact/', views.contact_editor, name='contact_editor'),
+    path('settings/', views.site_settings, name='site_settings'),
+    
     path('logout/', views.admin_logout_view, name='admin_logout'),
 ]

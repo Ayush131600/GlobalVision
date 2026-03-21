@@ -3,8 +3,10 @@ from django.contrib.auth import authenticate, login as auth_login, logout
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from django.db.models import Q
-from .models import User, Vehicle, Equipment, BlogPost
-from .forms import VehicleForm, EquipmentForm, BlogPostForm, UserProfileForm
+from .models import User
+from dashboard.models import Vehicle, Equipment, BlogPost, ContactMessage, AboutPage, SiteSettings, TeamMember
+from dashboard.forms import VehicleForm, EquipmentForm, BlogPostForm
+from .forms import UserProfileForm
 
 
 def login(request):

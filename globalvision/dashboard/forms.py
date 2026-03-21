@@ -1,32 +1,42 @@
 from django import forms
-from .models import Vehicle, Equipment, BlogPost
+from .models import Vehicle, Equipment, BlogPost, TeamMember, AboutPage, SiteSettings, ContactMessage
 from django.core.exceptions import ValidationError
 import os
 from django_summernote.widgets import SummernoteWidget
 
-def validate_image_extension(value):
-    ext = os.path.splitext(value.name)[1].lower()
-    valid_extensions = ['.jpg', '.jpeg', '.png', '.webp']
-    if ext not in valid_extensions:
-        raise ValidationError('Only JPG, JPEG, PNG, and WEBP files are allowed.')
-
 class VehicleForm(forms.ModelForm):
-    image = forms.ImageField(validators=[validate_image_extension], required=False)
     class Meta:
         model = Vehicle
-        fields = ['name', 'type', 'description', 'price_per_day', 'is_available', 'image']
+        fields = ['name', 'category', 'price_per_day', 'status', 'description', 'image']
 
 class EquipmentForm(forms.ModelForm):
-    image = forms.ImageField(validators=[validate_image_extension], required=False)
     class Meta:
         model = Equipment
-        fields = ['name', 'category', 'description', 'price_per_day', 'stock', 'image']
+        fields = ['name', 'category', 'price_per_day', 'stock', 'status', 'description', 'image']
 
 class BlogPostForm(forms.ModelForm):
-    cover_image = forms.ImageField(validators=[validate_image_extension], required=False)
     class Meta:
         model = BlogPost
-        fields = ['title', 'content', 'cover_image', 'status']
+        fields = ['title', 'category', 'cover_image', 'body', 'is_published']
         widgets = {
-            'content': SummernoteWidget()
+            'body': SummernoteWidget()
         }
+
+class TeamMemberForm(forms.ModelForm):
+    class Meta:
+        model = TeamMember
+        fields = ['name', 'role', 'favourite_trek', 'photo', 'display_order']
+
+class AboutPageForm(forms.ModelForm):
+    class Meta:
+        model = AboutPage
+        fields = ['mission', 'story', 'stat_years', 'stat_treks', 'stat_clients', 'stat_team']
+        widgets = {
+            'mission': SummernoteWidget(),
+            'story': SummernoteWidget(),
+        }
+
+class SiteSettingsForm(forms.ModelForm):
+    class Meta:
+        model = SiteSettings
+        fields = '__all__'

@@ -8,7 +8,7 @@ URLS_PATH = r'c:\Users\Acer\Desktop\GlobalVision\globalvision\globalvision\urls.
 with open(URLS_PATH, 'r', encoding='utf-8') as f:
     urls_content = f.read()
 
-if 'path(\\'admin-login/\\'' not in urls_content:
+if "path('admin-login/'" not in urls_content:
     # Need to add to urlpatterns and imports
     # Safely insert imports
     if 'from dashboard.views import admin_login_view' not in urls_content:

@@ -3,8 +3,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.http import require_http_methods
 from django.utils import timezone
 from .decorators import admin_required
-from .models import Vehicle, Equipment, Booking, BlogPost, TeamMember, AboutContent, SiteSettings
-from .forms import VehicleForm, EquipmentForm, BlogPostForm
+from .models import Vehicle, Equipment, Booking, BlogPost, TeamMember, AboutPage, SiteSettings, ContactMessage
+from .forms import VehicleForm, EquipmentForm, BlogPostForm, TeamMemberForm, AboutPageForm, SiteSettingsForm
 from django.contrib.auth import get_user_model
 
 @require_http_methods(["GET", "POST"])
@@ -18,7 +18,7 @@ def admin_login_view(request):
         password = request.POST.get('password')
         user = authenticate(request, username=username, password=password)
         if user is not None:
-            if user.is_staff:
+            if user.is_staff or user.role == 'admin':
                 login(request, user)
                 return redirect('dashboard_home')
             else:
@@ -38,13 +38,9 @@ def dashboard_home(request):
     context = {
         'total_vehicles': Vehicle.objects.count(),
         'total_equipment': Equipment.objects.count(),
-        'total_bookings': Booking.objects.filter(
-            created_at__date=timezone.now().date()
-        ).count(),
-        'total_users': User.objects.filter(is_staff=False).count(),
-        'recent_bookings': Booking.objects.select_related(
-            'user', 'vehicle'
-        ).order_by('-created_at')[:8],
+        'total_blogs': BlogPost.objects.count(),
+        'unread_messages': ContactMessage.objects.filter(is_read=False).count(),
+        'total_bookings': Booking.objects.count(),
     }
     return render(request, 'dashboard/home.html', context)
 
@@ -116,8 +112,7 @@ def blog_add(request):
     form = BlogPostForm(request.POST or None, request.FILES or None)
     if form.is_valid():
         post = form.save(commit=False)
-        if post.status == 'published' and not post.published_at:
-            post.published_at = timezone.now()
+        post.author = request.user
         post.save()
         return redirect('blog_list')
     return render(request, 'dashboard/blog/form.html', {'form': form, 'title': 'Write Post'})
@@ -127,10 +122,7 @@ def blog_edit(request, pk):
     post = get_object_or_404(BlogPost, pk=pk)
     form = BlogPostForm(request.POST or None, request.FILES or None, instance=post)
     if form.is_valid():
-        post = form.save(commit=False)
-        if post.status == 'published' and not post.published_at:
-            post.published_at = timezone.now()
-        post.save()
+        form.save()
         return redirect('blog_list')
     return render(request, 'dashboard/blog/form.html', {'form': form, 'title': 'Edit Post', 'object': post})
 
@@ -142,86 +134,60 @@ def blog_delete(request, pk):
     return redirect('blog_list')
 
 @admin_required
+def contact_message_list(request):
+    messages = ContactMessage.objects.all().order_by('-created_at')
+    return render(request, 'dashboard/contact/list.html', {'messages': messages})
+
+@admin_required
+def contact_message_detail(request, pk):
+    message = get_object_or_404(ContactMessage, pk=pk)
+    # Mark as read
+    if not message.is_read:
+        message.is_read = True
+        message.save()
+    return render(request, 'dashboard/contact/detail.html', {'message': message})
+
+@require_http_methods(["POST"])
+@admin_required
+def contact_message_delete(request, pk):
+    message = get_object_or_404(ContactMessage, pk=pk)
+    message.delete()
+    return redirect('contact_list')
+
+@admin_required
 def about_editor(request):
-    about = AboutContent.objects.first()
-    if not about:
-        about = AboutContent.objects.create(
-            tagline='', company_story='', mission_statement='',
-            stat_trekkers=0, stat_vehicles=0, stat_equipment=0
+    about_obj = AboutPage.objects.first()
+    if not about_obj:
+        about_obj = AboutPage.objects.create(
+            mission='', story='', stat_years=0, stat_treks=0, stat_clients=0, stat_team=0
         )
-    team_members = TeamMember.objects.all().order_by('order')
     
     if request.method == 'POST':
-        about.tagline = request.POST.get('tagline')
-        about.company_story = request.POST.get('company_story')
-        about.mission_statement = request.POST.get('mission_statement')
-        try:
-            about.stat_trekkers = int(request.POST.get('stat_trekkers') or 0)
-            about.stat_vehicles = int(request.POST.get('stat_vehicles') or 0)
-            about.stat_equipment = int(request.POST.get('stat_equipment') or 0)
-        except ValueError:
-            pass
-        about.save()
+        form = AboutPageForm(request.POST, request.FILES, instance=about_obj)
+        if form.is_valid():
+            form.save()
+            return redirect('about_editor')
+    else:
+        form = AboutPageForm(instance=about_obj)
         
-        # Determine how many members we have to loop through based on the JS additions
-        # First process the ones directly submitted by id in POST keys for existing or deleted ones
-        delete_ids = request.POST.get('delete_members', '').split(',')
-        if delete_ids:
-            for d in delete_ids:
-                if d.strip().isdigit():
-                    TeamMember.objects.filter(id=int(d)).delete()
-                    
-        # Handle editing existing members that were rendered correctly as member_{id}_name
-        for key in request.POST.keys():
-            if key.startswith('member_') and key.endswith('_name'):
-                mid = key.split('_')[1]
-                if mid.isdigit():
-                    tm = TeamMember.objects.filter(id=int(mid)).first()
-                    if tm:
-                        tm.name = request.POST.get(f'member_{mid}_name', tm.name)
-                        tm.role = request.POST.get(f'member_{mid}_role', tm.role)
-                        tm.bio = request.POST.get(f'member_{mid}_bio', tm.bio)
-                        tm.favorite_trek = request.POST.get(f'member_{mid}_fav', tm.favorite_trek)
-                        if request.FILES.get(f'member_{mid}_photo'):
-                            tm.photo = request.FILES.get(f'member_{mid}_photo')
-                        tm.save()
-            elif key.startswith('new_member_name_'):
-                # Key is something like new_member_name_1
-                temp_id = key.split('_')[-1]
-                name = request.POST.get(key)
-                if name:
-                    tm = TeamMember.objects.create(
-                        name=name,
-                        role=request.POST.get(f'new_member_role_{temp_id}', ''),
-                        bio=request.POST.get(f'new_member_bio_{temp_id}', ''),
-                        favorite_trek=request.POST.get(f'new_member_fav_{temp_id}', '')
-                    )
-                    if request.FILES.get(f'new_member_photo_{temp_id}'):
-                        tm.photo = request.FILES.get(f'new_member_photo_{temp_id}')
-                        tm.save()
-        
-        return redirect('about_editor')
-    
+    team_members = TeamMember.objects.all().order_by('display_order')
     return render(request, 'dashboard/about.html', {
-        'about': about,
+        'form': form,
         'team_members': team_members
     })
 
 @admin_required
-def contact_editor(request):
+def site_settings(request):
     settings_obj = SiteSettings.objects.first()
     if not settings_obj:
-        settings_obj = SiteSettings.objects.create(
-            phone='', email='', address='',
-            maps_embed='', whatsapp='', opening_hours=''
-        )
+        settings_obj = SiteSettings.objects.create()
+        
     if request.method == 'POST':
-        settings_obj.phone = request.POST.get('phone')
-        settings_obj.email = request.POST.get('email')
-        settings_obj.address = request.POST.get('address')
-        settings_obj.maps_embed = request.POST.get('maps_embed')
-        settings_obj.whatsapp = request.POST.get('whatsapp')
-        settings_obj.opening_hours = request.POST.get('opening_hours')
-        settings_obj.save()
-        return redirect('contact_editor')
-    return render(request, 'dashboard/contact.html', {'settings': settings_obj})
+        form = SiteSettingsForm(request.POST, instance=settings_obj)
+        if form.is_valid():
+            form.save()
+            return redirect('site_settings')
+    else:
+        form = SiteSettingsForm(instance=settings_obj)
+        
+    return render(request, 'dashboard/settings.html', {'form': form})

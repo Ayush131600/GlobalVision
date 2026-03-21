@@ -21,9 +21,10 @@
         <a href="#" class="nav-link">Bookings</a>
         <a href="{% url 'blog_list' %}" class="nav-link">Blog Posts</a>
         
-        <div class="nav-section-label">Pages</div>
-        <a href="{% url 'about_editor' %}" class="nav-link">About Us</a>
-        <a href="{% url 'contact_editor' %}" class="nav-link">Contact Us</a>
+        <div class="nav-section-label">Pages / Configuration</div>
+        <a href="{% url 'about_editor' %}" class="nav-link">ℹ️ About Us</a>
+        <a href="{% url 'contact_list' %}" class="nav-link">📬 Contact Messages</a>
+        <a href="{% url 'site_settings' %}" class="nav-link">⚙️ Site Settings</a>
 
         <div class="sidebar-bottom">
             <div class="avatar">{{ request.user.username|make_list|first|upper }}</div>
