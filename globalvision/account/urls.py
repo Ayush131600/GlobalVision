@@ -2,7 +2,7 @@
 from django.urls import path
 from .views import (
     login, admin_login, register, logout_view, rent_vehicle, rent_equipment, blog, contact, about, product_detail,
-    dashboard, profile_view, manage_products, product_create, product_update, product_delete,
+    profile_view, manage_products, product_create, product_update, product_delete,
     manage_blog, blog_create, blog_update, blog_delete
 )
 
@@ -21,7 +21,6 @@ urlpatterns = [
     path('product/<str:product_type>/<int:product_id>/', product_detail, name="product_detail"),
     
     # Dashboard & Management
-    path('dashboard/', dashboard, name="dashboard"),
     path('profile/', profile_view, name="profile"),
     path('manage/products/', manage_products, name="manage_products"),
     path('manage/products/create/<str:product_type>/', product_create, name="product_create"),

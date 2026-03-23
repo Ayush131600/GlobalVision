@@ -38,7 +38,7 @@ def admin_login(request):
 
         if user is not None and user.role == 'admin':
             auth_login(request, user)
-            return redirect("account:dashboard")
+            return redirect("dashboard_home")
         else:
             messages.error(
                 request,
@@ -140,18 +140,7 @@ def home(request):
 def is_admin(user):
     return user.is_authenticated and user.role == 'admin'
 
-@login_required
-def dashboard(request):
-    total_vehicles = Vehicle.objects.count()
-    total_equipment = Equipment.objects.count()
-    total_blog_posts = BlogPost.objects.count()
-    
-    context = {
-        'total_vehicles': total_vehicles,
-        'total_equipment': total_equipment,
-        'total_blog_posts': total_blog_posts,
-    }
-    return render(request, 'account/dashboard.html', context)
+
 
 @login_required
 def profile_view(request):
@@ -159,7 +148,7 @@ def profile_view(request):
         form = UserProfileForm(request.POST, instance=request.user)
         if form.is_valid():
             form.save()
-            return redirect('account:dashboard')
+            return redirect('account:profile')
     else:
         form = UserProfileForm(instance=request.user)
     

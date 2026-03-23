@@ -256,7 +256,6 @@
             <div class="auth-links">
                 <a href="#" style="color: var(--primary); font-size: 18px;"><i class="fa-solid fa-magnifying-glass"></i></a>
                 {% if user.is_authenticated %}
-                <a href="{% url 'account:dashboard' %}" title="Dashboard" class="auth-icon"><i class="fa-solid fa-gauge"></i></a>
                 <a href="{% url 'account:profile' %}" title="Profile" class="auth-icon"><i class="fa-regular fa-user"></i></a>
                 <a href="{% url 'account:logout' %}" title="Logout" class="auth-icon"><i class="fa-solid fa-right-from-bracket"></i></a>
                 {% else %}
