@@ -1,0 +1,147 @@
+<form method="POST" class="profile-settings-form">
+    {% csrf_token %}
+
+    <div class="profile-header-main mb-12">
+        <div class="d-flex align-items-center gap-6">
+            <div class="profile-avatar-premium shadow-lg">
+                <span class="avatar-letter">{{ request.user.user_name|slice:":1"|upper }}</span>
+            </div>
+            <div>
+                <h2 class="h3 font-black text-slate-800 m-0">{{ request.user.user_name }}</h2>
+                <div class="d-flex align-items-center gap-2 mt-1">
+                    <span class="badge bg-indigo-50 text-indigo-600 font-black text-[9px] uppercase tracking-widest px-2 py-1 rounded-pill">System User</span>
+                    <span class="text-[10px] text-slate-300 font-bold uppercase tracking-widest">UID: #{{ request.user.user_id|stringformat:"05d" }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-6">
+            <div class="form-group-premium">
+                <label><i class="fa-solid fa-signature"></i> User Name</label>
+                {{ form.user_name }}
+                {% if form.user_name.errors %}<div class="error-text">{{ form.user_name.errors.0 }}</div>{% endif %}
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group-premium">
+                <label><i class="fa-solid fa-envelope"></i> Email Address</label>
+                {{ form.email }}
+                {% if form.email.errors %}<div class="error-text">{{ form.email.errors.0 }}</div>{% endif %}
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group-premium">
+                <label><i class="fa-solid fa-phone"></i> Contact No</label>
+                {{ form.phone_no }}
+                {% if form.phone_no.errors %}<div class="error-text">{{ form.phone_no.errors.0 }}</div>{% endif %}
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group-premium">
+                <label><i class="fa-solid fa-calendar"></i> Date of Birth</label>
+                {{ form.dob }}
+                {% if form.dob.errors %}<div class="error-text">{{ form.dob.errors.0 }}</div>{% endif %}
+            </div>
+        </div>
+        <div class="col-12">
+            <div class="form-group-premium">
+                <label><i class="fa-solid fa-location-dot"></i> Billing Address</label>
+                {{ form.address }}
+                {% if form.address.errors %}<div class="error-text">{{ form.address.errors.0 }}</div>{% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex gap-3 mt-10">
+        <a href="{% url 'home' %}" class="btn-cancel-v2">Discard changes</a>
+        <button type="submit" class="btn-save-v2">Commit updates</button>
+    </div>
+</form>
+
+<style>
+    .profile-avatar-premium {
+        width: 80px;
+        height: 80px;
+        background: #008fa0;
+        border-radius: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+    }
+    .avatar-letter {
+        color: white;
+        font-size: 32px;
+        font-weight: 900;
+        line-height: 1;
+    }
+    
+    .form-group-premium { margin-bottom: 8px; }
+    .form-group-premium label {
+        display: block;
+        font-size: 10px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: #94a3b8;
+        margin-bottom: 8px;
+    }
+    .form-group-premium label i { margin-right: 6px; color: #cbd5e1; }
+
+    .form-group-premium input, 
+    .form-group-premium textarea {
+        width: 100%;
+        padding: 12px 16px;
+        background: #f8fafc;
+        border: 2px solid #f1f5f9;
+        border-radius: 12px;
+        font-size: 14px;
+        font-weight: 600;
+        color: #1e293b;
+        transition: 0.2s;
+    }
+    .form-group-premium input:focus, 
+    .form-group-premium textarea:focus {
+        background: white;
+        border-color: #008fa0;
+        outline: none;
+        box-shadow: 0 0 0 4px rgba(0, 143, 160, 0.05);
+    }
+
+    .btn-save-v2 {
+        flex: 1;
+        background: #008fa0;
+        color: white;
+        border: 0;
+        padding: 14px;
+        border-radius: 12px;
+        font-weight: 800;
+        text-transform: uppercase;
+        font-size: 12px;
+        letter-spacing: 0.02em;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+    .btn-save-v2:hover { background: #007685; }
+
+    .btn-cancel-v2 {
+        flex: 1;
+        background: #f1f5f9;
+        color: #64748b;
+        border: 0;
+        padding: 14px;
+        border-radius: 12px;
+        font-weight: 800;
+        text-transform: uppercase;
+        font-size: 12px;
+        letter-spacing: 0.02em;
+        text-decoration: none;
+        text-align: center;
+        transition: 0.2s;
+    }
+    .btn-cancel-v2:hover { background: #e2e8f0; color: #1e293b; }
+
+    .error-text { color: #ef4444; font-size: 11px; font-weight: 700; margin-top: 6px; }
+</style>

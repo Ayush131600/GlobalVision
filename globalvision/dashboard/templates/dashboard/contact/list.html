@@ -1,0 +1,76 @@
+{% extends 'dashboard/base_dashboard.html' %}
+{% load static %}
+
+{% block title %}Messages & Inquiries{% endblock %}
+{% block page_title %}Communication Desk{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row mb-6 align-items-center">
+        <div class="col">
+            <h1 class="h3 font-black text-slate-800 m-0">Inbound Inquiries</h1>
+            <p class="text-sm font-medium text-slate-400 mt-1">Status: <span class="bg-indigo-50 text-indigo-500 px-3 py-1 rounded-pill font-black text-[10px]">{{ messages|length }} total submissions</span></p>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden mt-6">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0" style="border-collapse: separate; border-spacing: 0;">
+                <thead class="bg-slate-50 border-bottom">
+                    <tr>
+                        <th class="ps-6 py-3 text-[10px] font-black text-slate-400 uppercase tracking-widest border-0">Sender / Channel</th>
+                        <th class="py-3 text-[10px] font-black text-slate-400 uppercase tracking-widest border-0">Topic / Subject</th>
+                        <th class="py-3 text-[10px] font-black text-slate-400 uppercase tracking-widest border-0 text-center">Status</th>
+                        <th class="py-3 text-[10px] font-black text-slate-400 uppercase tracking-widest border-0 text-center">Received Date</th>
+                        <th class="pe-6 py-3 text-[10px] font-black text-slate-400 uppercase tracking-widest border-0 text-end">Action Control</th>
+                    </tr>
+                </thead>
+                <tbody class="border-0">
+                    {% for m in messages %}
+                    <tr class="border-bottom {% if not m.is_read %}bg-indigo-50/20{% endif %}" style="transition: 0.2s;">
+                        <td class="ps-6 py-5 border-0">
+                            <div class="d-flex align-items-center gap-4">
+                                <div class="avatar bg-slate-100 rounded-circle d-flex align-items-center justify-center font-black text-slate-400" style="width: 44px; height: 44px;">
+                                    {{ m.name|slice:":1"|upper }}
+                                </div>
+                                <div class="overflow-hidden">
+                                    <p class="font-black text-sm text-slate-800 m-0 truncate">{{ m.name }}</p>
+                                    <span class="text-[10px] font-bold text-slate-400 uppercase">{{ m.email }}</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="border-0">
+                            <p class="text-sm font-semibold text-slate-700 m-0">{{ m.subject|truncatechars:150 }}</p>
+                        </td>
+                        <td class="text-center border-0">
+                            {% if not m.is_read %}
+                            <span class="badge bg-indigo-100 text-indigo-700 border border-indigo-200 text-[9px] font-black uppercase rounded-pill px-3 py-1">New Thread</span>
+                            {% else %}
+                            <span class="badge bg-slate-100 text-slate-400 border border-slate-200 text-[9px] font-black uppercase rounded-pill px-3 py-1">Processed</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-center border-0 font-black text-slate-400 text-[10px] tracking-widest uppercase">
+                            {{ m.created_at|date:"M d, H:i" }}
+                        </td>
+                        <td class="pe-6 text-end border-0">
+                            <div class="d-flex justify-content-end gap-2">
+                                <a href="{% url 'contact_detail' m.pk %}" class="btn btn-sm btn-dark rounded-pill px-4 text-[10px] font-black uppercase tracking-widest text-decoration-none">Open Ticket</a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="5" class="text-center py-5 italic text-slate-300">No communication logs recorded.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<style>
+    .rounded-4 { border-radius: 20px; }
+    .bg-slate-50 { background: #f8fafc; }
+    .bg-indigo-50\/20 { background: rgba(99, 102, 241, 0.05); }
+    .text-slate-400 { color: #94a3b8; }
+</style>
+{% endblock %}

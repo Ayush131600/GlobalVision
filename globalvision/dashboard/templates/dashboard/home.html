@@ -1,0 +1,160 @@
+{% extends 'dashboard/base_dashboard.html' %}
+{% load static %}
+
+{% block page_title %}Platform Overview{% endblock %}
+
+{% block content %}
+<div class="welcome-banner mb-8 p-12 rounded-4 text-white shadow-2xl relative overflow-hidden" style="background: linear-gradient(135deg, #008fa0 0%, #005f6b 100%);">
+    <div style="position:absolute; right:-20px; bottom:-20px; width:180px; height:180px; background:white; opacity:0.1; border-radius:30% 70% 70% 30% / 30% 30% 70% 70%;"></div>
+    <div style="position:absolute; left:20%; top:-30px; width:100px; height:100px; background:white; opacity:0.05; border-radius:50%;"></div>
+    <div class="relative z-10">
+        <div class="d-flex align-items-center gap-3 mb-4">
+             <div class="badge bg-white/20 text-white font-black text-[10px] uppercase tracking-widest px-3 py-2 rounded-pill">System Status: Optimal</div>
+             <div class="text-[10px] opacity-60 font-medium">Last Sync: Just now</div>
+        </div>
+        <h1 class="font-black mb-2" style="font-size: 2.5rem; letter-spacing: -0.04em;">Welcome back, {{ request.user.user_name }}!</h1>
+        <p class="text-sm font-medium opacity-80 max-w-md leading-relaxed">Your control center for Global Vision. You currently have <span class="text-white font-black border-bottom border-white/30">{{ unread_messages }} unread inquiries</span> and 0 pending blog reviews.</p>
+    </div>
+</div>
+
+<div class="row g-6 mb-8">
+    <div class="col-md-3">
+        <div class="admin-card stats-card border-0 shadow-sm transition-all hover:-translate-y-1">
+            <div class="d-flex justify-content-between align-items-start mb-4">
+                <div class="w-10 h-10 rounded-3 bg-indigo-50 text-indigo-500 d-flex align-items-center justify-center">
+                    <i class="fa-solid fa-truck-fast"></i>
+                </div>
+                <span class="text-[10px] font-black text-slate-300 uppercase tracking-widest">Global Fleet</span>
+            </div>
+            <h2 class="h2 font-black text-slate-800 m-0">{{ total_vehicles }}</h2>
+            <div class="mt-3 fs-tiny font-bold text-slate-400 uppercase tracking-tighter">Registered Units</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="admin-card stats-card border-0 shadow-sm transition-all hover:-translate-y-1">
+            <div class="d-flex justify-content-between align-items-start mb-4">
+                <div class="w-10 h-10 rounded-3 bg-amber-50 text-amber-500 d-flex align-items-center justify-center">
+                    <i class="fa-solid fa-helmet-safety"></i>
+                </div>
+                <span class="text-[10px] font-black text-slate-300 uppercase tracking-widest">Inventory</span>
+            </div>
+            <h2 class="h2 font-black text-slate-800 m-0">{{ total_equipment }}</h2>
+            <div class="mt-3 fs-tiny font-bold text-slate-400 uppercase tracking-tighter">Gear Items</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="admin-card stats-card border-0 shadow-sm transition-all hover:-translate-y-1">
+            <div class="d-flex justify-content-between align-items-start mb-4">
+                <div class="w-10 h-10 rounded-3 bg-emerald-50 text-emerald-500 d-flex align-items-center justify-center">
+                    <i class="fa-solid fa-receipt"></i>
+                </div>
+                <span class="text-[10px] font-black text-slate-300 uppercase tracking-widest">Revenue Ops</span>
+            </div>
+            <h2 class="h2 font-black text-slate-800 m-0">{{ total_bookings }}</h2>
+            <div class="mt-3 fs-tiny font-bold text-slate-400 uppercase tracking-tighter">Total Bookings</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="admin-card stats-card border-0 shadow-sm transition-all hover:-translate-y-1">
+            <div class="d-flex justify-content-between align-items-start mb-4">
+                <div class="w-10 h-10 rounded-3 bg-rose-50 text-rose-500 d-flex align-items-center justify-center">
+                    <i class="fa-solid fa-fingerprint"></i>
+                </div>
+                <span class="text-[10px] font-black text-slate-300 uppercase tracking-widest">Audience</span>
+            </div>
+            <h2 class="h2 font-black text-slate-800 m-0">{{ total_users }}</h2>
+            <div class="mt-3 fs-tiny font-bold text-slate-400 uppercase tracking-tighter">Active Members</div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-8">
+    <div class="col-lg-8">
+        <div class="admin-card p-0 border-0 shadow-sm overflow-hidden">
+            <div class="p-6 border-bottom d-flex justify-content-between align-items-center bg-white">
+                <div>
+                    <h3 class="h6 font-black text-slate-800 m-0">Transaction Monitor</h3>
+                    <p class="text-[10px] text-slate-400 font-bold uppercase mt-1">Live tracking of recent reservations</p>
+                </div>
+                <a href="#" class="btn btn-sm btn-light rounded-pill px-4 font-black text-[9px] uppercase tracking-widest">View All</a>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead>
+                         <tr class="bg-slate-50">
+                             <th class="ps-6 py-3 text-[10px] font-black text-slate-400 uppercase border-0">Order Ref</th>
+                             <th class="py-3 text-[10px] font-black text-slate-400 uppercase border-0">Requester</th>
+                             <th class="py-3 text-[10px] font-black text-slate-400 uppercase border-0 text-center">Value</th>
+                             <th class="pe-6 py-3 text-[10px] font-black text-slate-400 uppercase border-0 text-end">Dispatch</th>
+                         </tr>
+                    </thead>
+                    <tbody class="border-0">
+                        {% for b in recent_bookings %}
+                        <tr class="border-bottom">
+                            <td class="ps-6 py-4 border-0">
+                                <span class="badge bg-slate-100 text-slate-600 font-mono font-bold border-0">#GV-{{ b.id|stringformat:"04d" }}</span>
+                            </td>
+                            <td class="border-0">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="w-7 h-7 bg-indigo-50 text-indigo-500 font-black rounded-circle d-flex align-items-center justify-center text-[9px]">{{ b.user.user_name|slice:":1"|upper }}</div>
+                                    <span class="text-sm font-bold text-slate-700">{{ b.user.user_name }}</span>
+                                </div>
+                            </td>
+                            <td class="text-center border-0 font-black text-slate-800 text-sm">
+                                ${{ b.total_price }}
+                            </td>
+                            <td class="pe-6 text-end border-0">
+                                <span class="badge {% if b.status == 'confirmed' %}bg-emerald-100 text-emerald-700{% elif b.status == 'pending' %}bg-amber-100 text-amber-700{% else %}bg-slate-100 text-slate-500{% endif %} font-black text-[9px] uppercase px-3 py-1 rounded-pill">
+                                    {{ b.status|default:"Pending" }}
+                                </span>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="4" class="text-center py-8 border-0">
+                            <div class="opacity-20 mb-2"><i class="fa-solid fa-satellite-dish fa-3x"></i></div>
+                            <p class="text-xs font-bold text-slate-300 uppercase letter-spacing-widest">No transaction signals detected</p>
+                        </td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="admin-card bg-slate-900 border-0 p-8 text-white relative overflow-hidden">
+            <div style="position:absolute; right:-30px; top:-30px; width:120px; height:120px; background:var(--primary-admin); opacity:0.1; border-radius:50%;"></div>
+            
+            <h4 class="font-black h5 mb-6 d-flex align-items-center gap-3"><i class="fa-solid fa-bolt-lightning text-accent"></i> Rapid Logic</h4>
+            <div class="d-grid gap-3 mb-8">
+                <a href="{% url 'blog_add' %}" class="btn btn-primary-admin py-3 rounded-3 font-black text-[10px] uppercase tracking-widest text-white text-decoration-none" style="background:#008fa0;">Compose Post</a>
+                <a href="{% url 'vehicle_add' %}" class="btn bg-white/5 hover:bg-white/10 py-3 rounded-3 font-black text-[10px] uppercase tracking-widest text-white text-decoration-none border border-white/10">Inventory Inbound</a>
+            </div>
+            
+            <div class="p-6 bg-white/5 rounded-4 border border-white/5">
+                <h5 class="text-[10px] font-black uppercase text-slate-500 tracking-widest mb-4">Metric Pulse</h5>
+                <div class="d-flex flex-column gap-3">
+                    <div class="d-flex justify-content-between border-bottom border-white/5 pb-2">
+                        <span class="text-xs opacity-60">Open Inquiries</span>
+                        <span class="text-xs font-black text-rose-400">{{ unread_messages }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span class="text-xs opacity-60">Pending Blogs</span>
+                        <span class="text-xs font-black text-amber-400">0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .rounded-4 { border-radius: 20px; }
+    .bg-white\/20 { background: rgba(255,255,255,0.2); }
+    .bg-white\/5 { background: rgba(255,255,255,0.05); }
+    .h2 { font-size: 2rem; line-height: 1; letter-spacing: -0.04em; }
+    .fs-tiny { font-size: 9px; }
+    .stats-card { min-height: 160px; display: flex; flex-direction: column; justify-content: center; padding: 32px !important; }
+    .w-10 { width: 40px; } .h-10 { height: 40px; }
+    .w-12 { width: 48px; } .h-12 { height: 48px; }
+</style>
+{% endblock %}

@@ -1,0 +1,160 @@
+{% extends 'dashboard/base_dashboard.html' %}
+{% load static %}
+
+{% block title %}Blog Management{% endblock %}
+{% block page_title %}Blog Content Review{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <!-- Stats Cards -->
+    <div class="row g-4 mb-5">
+        <div class="col-md-4">
+            <div class="stat-card c-vehicles">
+                <span class="stat-label">Pending Review</span>
+                <p class="stat-number">{{ posts|slice:":0"|length }}</p> <!-- Still need fix for correct stats -->
+                <div class="mt-2 text-xs font-bold text-amber-500 uppercase tracking-tighter">Requires Action</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="stat-card c-bookings">
+                <span class="stat-label">Published</span>
+                <p class="stat-number">{{ posts|length }}</p>
+                <div class="mt-2 text-xs font-bold text-emerald-500 uppercase tracking-tighter">Live on Website</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Actions Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="h4 font-bold m-0 text-slate-800"><i class="fa-solid fa-newspaper me-2 opacity-50"></i> Submission Queue</h2>
+        <a href="{% url 'blog_add' %}" class="btn btn-primary shadow-sm rounded-pill px-4 py-2 font-bold">
+            <i class="fa-solid fa-plus me-2"></i> Write New Post
+        </a>
+    </div>
+
+    <!-- Submissions Table -->
+    <div class="table-section border-0 shadow-sm rounded-4 overflow-hidden p-0">
+        <div class="table-responsive">
+            <table class="data-table mb-0">
+                <thead>
+                    <tr>
+                        <th class="ps-4">Article Title</th>
+                        <th>Author</th>
+                        <th class="text-center">Read Time</th>
+                        <th class="text-center">Status</th>
+                        <th class="text-center">Submitted</th>
+                        <th class="pe-4 text-end text-white">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for post in posts %}
+                    <tr class="border-bottom">
+                        <td class="ps-4 py-4">
+                            <div class="d-flex align-items-center">
+                                {% if post.cover_image %}
+                                <img src="{{ post.cover_image.url }}" class="rounded-3 me-3" style="width: 48px; height: 48px; object-fit: cover;">
+                                {% else %}
+                                <div class="bg-slate-100 rounded-3 me-3 d-flex align-items-center justify-center" style="width: 48px; height: 48px;">
+                                    <i class="fa-regular fa-image text-slate-400"></i>
+                                </div>
+                                {% endif %}
+                                <div>
+                                    <p class="font-bold mb-0 text-slate-800">{{ post.title|truncatechars:40 }}</p>
+                                    <span class="text-xs text-slate-400 font-bold uppercase tracking-widest">{{ post.category }}</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="d-flex align-items-center gap-2">
+                                <div class="avatar bg-indigo-100 text-indigo-600 rounded-circle d-flex align-items-center justify-content-center font-bold text-xs" style="width: 28px; height: 28px;">
+                                    {{ post.author.username|make_list|first|upper|default:"A" }}
+                                </div>
+                                <span class="text-sm font-medium">{{ post.author.username|default:"Anonymous" }}</span>
+                            </div>
+                        </td>
+                        <td class="text-center">
+                            <span class="text-xs font-bold text-slate-500"><i class="fa-solid fa-clock me-1 opacity-50"></i> {{ post.read_time }}m</span>
+                        </td>
+                        <td class="text-center">
+                            {% if post.status == 'pending' %}
+                            <span class="badge pending">Pending Review</span>
+                            {% elif post.status == 'accepted' %}
+                            <span class="badge published">Accepted</span>
+                            {% else %}
+                            <span class="badge cancelled" title="{{ post.rejection_reason }}">Rejected</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-center text-xs text-slate-500 font-normal">
+                            {{ post.created_at|date:"M d, Y" }}
+                        </td>
+                        <td class="pe-4 text-end">
+                            <div class="d-flex justify-content-end gap-2">
+                                {% if post.status == 'pending' %}
+                                <a href="{% url 'blog_approve' post.pk %}" class="btn btn-small btn-secondary" title="Approve & Publish"><i class="fa-solid fa-check"></i></a>
+                                <button class="btn btn-small btn-outline-danger" title="Reject" onclick="openRejectModal({{ post.pk }})"><i class="fa-solid fa-xmark"></i></button>
+                                {% endif %}
+                                <a href="{% url 'blog_edit' post.pk %}" class="btn btn-small btn-outline-forest" title="Edit"><i class="fa-solid fa-pen"></i></a>
+                                <form action="{% url 'blog_delete' post.pk %}" method="POST" class="d-inline" onsubmit="return confirm('Archive this story?')">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-small btn-text text-danger" title="Delete"><i class="fa-regular fa-trash-can"></i></button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="6" class="text-center py-5 opacity-40 italic">No submissions found.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Reject -->
+<div id="rejectModal" class="modal-overlay">
+    <div class="modal-box">
+        <h3 class="font-black mb-4 h4">Rejection Reason</h3>
+        <p class="text-xs text-slate-500 font-bold uppercase tracking-widest mb-6 border-bottom pb-2">Provide feedback for the author</p>
+        <form id="rejectForm" method="POST">
+            {% csrf_token %}
+            <textarea name="reason" class="form-control mb-6" placeholder="Quality not up to standard... Needs better images..." required></textarea>
+            <div class="flex-column gap-3">
+                <button type="submit" class="btn btn-primary w-full py-3 font-bold uppercase mb-3">Confirm Rejection</button>
+                <button type="button" class="btn btn-text w-full py-2 font-bold uppercase text-slate-400" onclick="closeModal()">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function openRejectModal(id) {
+        document.getElementById('rejectForm').action = "/dashboard/blog/" + id + "/reject/";
+        document.getElementById('rejectModal').classList.add('active');
+    }
+    function closeModal() {
+        document.getElementById('rejectModal').classList.remove('active');
+    }
+</script>
+
+<style>
+    .h4 { font-size: 1.25rem; }
+    .text-indigo-600 { color: #6366f1; }
+    .bg-indigo-100 { background-color: #e0e7ff; }
+    .bg-slate-100 { background-color: #f1f5f9; }
+    .text-slate-400 { color: #94a3b8; }
+    .text-slate-500 { color: #64748b; }
+    .text-slate-800 { color: #1e293b; }
+    .font-black { font-weight: 900; }
+    .font-bold { font-weight: 700; }
+    .text-[10px] { font-size: 10px; }
+    .tracking-widest { letter-spacing: 0.1em; }
+    .modal-overlay {
+        position: fixed; inset:0; background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(8px);
+        display: none; align-items: center; justify-content: center; z-index: 1000;
+    }
+    .modal-overlay.active { display: flex; }
+    .modal-box { background: white; border-radius: 32px; padding: 40px; width: 100%; max-width: 440px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); }
+    .btn-primary { background: #008fa0 !important; }
+    .btn-secondary { background: #f59e0b !important; border-color: #f59e0b !important; color: white !important; }
+</style>
+{% endblock %}

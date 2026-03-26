@@ -30,6 +30,12 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'account',
     'dashboard',
+    'inventory',
+    'blog',
+    'contacts',
+    'cms',
+    'bookings',
+    'cart',
     'django_summernote',
 ]
 
@@ -50,7 +56,7 @@ ROOT_URLCONF = 'globalvision.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / "templates"],
+        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

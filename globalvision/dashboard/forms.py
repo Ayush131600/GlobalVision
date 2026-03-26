@@ -1,7 +1,8 @@
 from django import forms
-from .models import Vehicle, Equipment, BlogPost, TeamMember, AboutPage, SiteSettings, ContactMessage
-from django.core.exceptions import ValidationError
-import os
+from inventory.models import Vehicle, Equipment
+from blog.models import BlogPost
+from cms.models import TeamMember, AboutPage, SiteSettings
+from contacts.models import ContactMessage
 from django_summernote.widgets import SummernoteWidget
 
 class VehicleForm(forms.ModelForm):

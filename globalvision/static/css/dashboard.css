@@ -1,18 +1,18 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
 :root {
-  --cream: #F8F9FA;
-  --dark: #111827;
-  --forest: #e67e22;
-  --moss: #d35400;
-  --gold: #e67e22;
-  --warm: #FFF7ED;
-  --mist: #6B7280;
-  --sidebar-bg: #1a1a2e;
+  --primary: #008fa0;
+  --primary-dark: #007685;
+  --secondary: #0ea5e9;
+  --text-dark: #1e293b;
+  --text-light: #64748b;
+  --white: #ffffff;
+  --bg-light: #f8fafc;
+  --accent: #f59e0b;
+  --sidebar-bg: #1e293b;
   --sidebar-text: rgba(255,255,255,0.7);
-  --sidebar-active: #e67e22;
-  --card-bg: #FFFFFF;
-  --border: #E5E7EB;
+  --sidebar-active: #008fa0;
+  --border: #E2E8F0;
   --danger: #EF4444;
   --success: #10B981;
   --font-display: 'Inter', sans-serif;
@@ -20,6 +20,13 @@
   --radius: 8px;
   --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
   --transition: all 0.2s ease;
+  
+  /* Mapping for existing classes */
+  --forest: var(--primary);
+  --moss: var(--primary-dark);
+  --gold: var(--accent);
+  --dark: var(--text-dark);
+  --mist: var(--text-light);
 }
 
 body {
@@ -30,8 +37,8 @@ body {
     grid-template-rows: 60px 1fr;
     min-height: 100vh;
     font-family: var(--font-body);
-    background: #F8F6F1;
-    color: var(--dark);
+    background: var(--bg-light);
+    color: var(--text-dark);
 }
 
 /* Sidebar */
@@ -273,7 +280,7 @@ body {
     color: white;
 }
 .btn-primary:hover {
-    background: var(--moss);
+    background: var(--secondary);
 }
 
 .btn-secondary {

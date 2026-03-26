@@ -4,7 +4,10 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from django.db.models import Q
 from .models import User
-from dashboard.models import Vehicle, Equipment, BlogPost, ContactMessage, AboutPage, SiteSettings, TeamMember
+from inventory.models import Vehicle, Equipment
+from blog.models import BlogPost
+from contacts.models import ContactMessage
+from cms.models import AboutPage, SiteSettings, TeamMember
 from dashboard.forms import VehicleForm, EquipmentForm, BlogPostForm
 from .forms import UserProfileForm
 
@@ -68,7 +71,7 @@ def register(request):
                 "Passwords do not match",
                 extra_tags="error"
             )
-            return redirect("register")
+            return redirect("account:register")
 
         if User.objects.filter(user_name=user_name).exists():
             messages.error(
@@ -76,7 +79,7 @@ def register(request):
                 "Username already exists",
                 extra_tags="error"
             )
-            return redirect("register")
+            return redirect("account:register")
 
         if User.objects.filter(email=email).exists():
             messages.error(
@@ -84,7 +87,7 @@ def register(request):
                 "Email already exists",
                 extra_tags="error"
             )
-            return redirect("register")
+            return redirect("account:register")
 
         if User.objects.filter(phone_no=phone_no).exists():
             messages.error(
@@ -92,7 +95,7 @@ def register(request):
                 "Phone number already exists",
                 extra_tags="error"
             )
-            return redirect("register")
+            return redirect("account:register")
 
         user = User.objects.create_user(
             user_name=user_name,
@@ -110,7 +113,6 @@ def register(request):
         )
 
         auth_login(request, user)
-        auth_login(request, user)
         return redirect("home")
 
     return render(request, "account/register.html")
@@ -120,6 +122,7 @@ from django.contrib.auth import logout as auth_logout
 def logout_view(request):
     auth_logout(request)
     return redirect("home")
+
 def home(request):
     query = request.GET.get('q', '').strip()
     if query:
@@ -137,6 +140,7 @@ def home(request):
     equipment = Equipment.objects.all()[:4]
     return render(request, 'account/home.html', {'vehicles': vehicles, 'equipment': equipment})
 
+
 def is_admin(user):
     return user.is_authenticated and user.role == 'admin'
 
@@ -152,7 +156,7 @@ def profile_view(request):
     else:
         form = UserProfileForm(instance=request.user)
     
-    base_template = 'account/admin_dashboard_base.html' if request.user.role == 'admin' else 'account/home.html'
+    base_template = 'account/admin_dashboard_base.html' if request.user.role == 'admin' else 'account/base.html'
     return render(request, 'account/profile.html', {
         'form': form,
         'base_template': base_template
@@ -162,10 +166,11 @@ def profile_view(request):
 def manage_products(request):
     vehicles = Vehicle.objects.all()
     equipment = Equipment.objects.all()
-    return render(request, 'account/manage_products.html', {
+    return render(request, 'inventory/manage_products.html', {
         'vehicles': vehicles,
         'equipment': equipment
     })
+
 
 @user_passes_test(is_admin)
 def product_create(request, product_type):
@@ -180,11 +185,12 @@ def product_create(request, product_type):
         form.save()
         return redirect('account:manage_products')
 
-    return render(request, 'account/product_form.html', {
+    return render(request, 'inventory/product_form.html', {
         'form': form,
         'product_type': product_type,
         'action': 'Create'
     })
+
 
 @user_passes_test(is_admin)
 def product_update(request, product_type, pk):
@@ -199,11 +205,12 @@ def product_update(request, product_type, pk):
         form.save()
         return redirect('account:manage_products')
 
-    return render(request, 'account/product_form.html', {
+    return render(request, 'inventory/product_form.html', {
         'form': form,
         'product_type': product_type,
         'action': 'Update'
     })
+
 
 @user_passes_test(is_admin)
 def product_delete(request, product_type, pk):
@@ -216,12 +223,13 @@ def product_delete(request, product_type, pk):
         instance.delete()
         return redirect('account:manage_products')
     
-    return render(request, 'account/confirm_delete.html', {'item': instance})
+    return render(request, 'inventory/confirm_delete.html', {'item': instance})
 
 @user_passes_test(is_admin)
 def manage_blog(request):
     posts = BlogPost.objects.all()
-    return render(request, 'account/manage_blog.html', {'posts': posts})
+    return render(request, 'blog/manage_blog.html', {'posts': posts})
+
 
 @user_passes_test(is_admin)
 def blog_create(request):
@@ -231,7 +239,7 @@ def blog_create(request):
         post.author = request.user
         post.save()
         return redirect('account:manage_blog')
-    return render(request, 'account/blog_form.html', {'form': form, 'action': 'Create'})
+    return render(request, 'blog/blog_form.html', {'form': form, 'action': 'Create'})
 
 @user_passes_test(is_admin)
 def blog_update(request, pk):
@@ -240,7 +248,7 @@ def blog_update(request, pk):
     if request.method == 'POST' and form.is_valid():
         form.save()
         return redirect('account:manage_blog')
-    return render(request, 'account/blog_form.html', {'form': form, 'action': 'Update'})
+    return render(request, 'blog/blog_form.html', {'form': form, 'action': 'Update'})
 
 @user_passes_test(is_admin)
 def blog_delete(request, pk):
@@ -248,7 +256,7 @@ def blog_delete(request, pk):
     if request.method == 'POST':
         post.delete()
         return redirect('account:manage_blog')
-    return render(request, 'account/confirm_delete.html', {'item': post})
+    return render(request, 'inventory/confirm_delete.html', {'item': post})
 
 def rent_vehicle(request):
     query = request.GET.get('q')
@@ -262,7 +270,8 @@ def rent_vehicle(request):
         vehicles = vehicles.filter(
             Q(name__icontains=query) | Q(category__icontains=query)
         )
-    return render(request, 'account/rent_vehicle.html', {'vehicles': vehicles})
+    return render(request, 'inventory/rent_vehicle.html', {'vehicles': vehicles})
+
 
 def rent_equipment(request):
     query = request.GET.get('q')
@@ -276,17 +285,22 @@ def rent_equipment(request):
         equipment = equipment.filter(
             Q(name__icontains=query) | Q(category__icontains=query)
         )
-    return render(request, 'account/rent_equipment.html', {'equipment': equipment})
+    return render(request, 'inventory/rent_equipment.html', {'equipment': equipment})
+
 
 def blog(request):
-    posts = BlogPost.objects.all().order_by('-created_at')
-    return render(request, 'account/blog.html', {'posts': posts})
+    posts = BlogPost.objects.filter(is_published=True).order_by('-created_at')
+    return render(request, 'blog/blog.html', {'posts': posts})
+
 
 def contact(request):
-    return render(request, 'account/contact.html')
+    settings = SiteSettings.objects.first()
+    return render(request, 'contacts/contact.html', {'settings': settings})
+
 
 def about(request):
-    return render(request, 'account/about.html')
+    return render(request, 'cms/about.html')
+
 
 
 
@@ -300,4 +314,4 @@ def product_detail(request, product_type, product_id):
         'product': product,
         'product_type': product_type
     }
-    return render(request, 'account/product_detail.html', context)
+    return render(request, 'inventory/product_detail.html', context)

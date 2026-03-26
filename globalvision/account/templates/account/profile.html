@@ -1,0 +1,48 @@
+{% extends base_template %}
+{% load static %}
+
+{% block title %}Profile Settings — Global Vision{% endblock %}
+{% block page_title %}Security & Profile{% endblock %}
+
+{% block dashboard_content %}
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <div class="card border-0 shadow-lg mt-6" style="background: white; border-radius: 24px;">
+             <div class="card-body p-8 md-p-12">
+                 <div class="mb-10 border-bottom pb-8">
+                     <h1 class="h3 font-black text-slate-800 m-0">Technical Environment Settings</h1>
+                     <p class="text-sm font-medium text-slate-400 mt-1">Configure your administrative credentials and environment parameters.</p>
+                 </div>
+                 {% include "account/profile_form_snippet.html" %}
+             </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="profile-container-frontend py-20" style="background: #f8fafc; min-height: 100vh;">
+    <div class="container" style="max-width: 800px;">
+        <div class="card border-0 shadow-2xl" style="background: white; border-radius: 32px;">
+             <div class="card-body p-10 md-p-16">
+                 <div class="d-flex align-items-center justify-content-between mb-10 border-bottom pb-8">
+                     <div>
+                         <h1 class="h2 font-black text-slate-900 m-0">Account Settings</h1>
+                         <p class="text-sm font-medium text-slate-400 mt-1">Manage your identity and platform integration.</p>
+                     </div>
+                     <div class="d-none d-md-flex w-14 h-14 bg-slate-50 rounded-circle align-items-center justify-content-center text-slate-200">
+                         <i class="fa-solid fa-gear fa-xl"></i>
+                     </div>
+                 </div>
+                 
+                 {% include "account/profile_form_snippet.html" %}
+             </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+<style>
+    .shadow-2xl { box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.08) !important; }
+    .w-14 { width: 56px; } .h-14 { height: 56px; }
+</style>

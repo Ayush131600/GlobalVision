@@ -1,0 +1,96 @@
+{% extends 'dashboard/base_dashboard.html' %}
+{% load static %}
+
+{% block title %}{{ title }} - Global Vision{% endblock %}
+{% block page_title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="row g-6 mb-5">
+    <div class="col-lg-8">
+        <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+            <div class="card-header bg-white p-6 border-bottom">
+                <h3 class="h5 font-bold mb-0">Article Details</h3>
+                <p class="text-sm text-slate-400">Provide the story and meta-information for this publication.</p>
+            </div>
+            <div class="card-body p-8 space-y-6">
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    
+                    <div class="grid md:grid-cols-2 gap-6 mb-6">
+                        <div class="space-y-2">
+                            <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest pl-2">Headline</label>
+                            {{ form.title }}
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest pl-2">Category</label>
+                            {{ form.category }}
+                        </div>
+                    </div>
+
+                    <div class="space-y-2 mb-6">
+                         <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest pl-2">Cover Image</label>
+                         <div class="p-8 border-2 border-dashed border-slate-100 rounded-3 text-center transition-all hover:border-indigo-400">
+                             {{ form.cover_image }}
+                         </div>
+                    </div>
+
+                    <div class="space-y-2 mb-8">
+                         <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest pl-2">Body Content</label>
+                         {{ form.body }}
+                    </div>
+
+                    <div class="d-flex gap-3 pt-6 border-top">
+                        <a href="{% url 'blog_list' %}" class="btn btn-light rounded-pill px-6 py-3 font-bold flex-1">Discard Changes</a>
+                        <button type="submit" class="btn btn-dark rounded-pill px-6 py-3 font-bold flex-[2]">
+                            <i class="fa-solid fa-paper-plane me-2 opacity-50"></i> Save & Publish
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4 space-y-6">
+        <div class="card border-0 shadow-sm rounded-4 p-8 bg-indigo-600 text-white">
+            <i class="fa-solid fa-lightbulb fa-2x mb-4 opacity-50"></i>
+            <h4 class="font-black h5 mb-3">Editor's Checklist</h4>
+            <ul class="list-unstyled space-y-3 opacity-90 text-sm">
+                <li class="d-flex gap-3"><i class="fa-solid fa-check mt-1"></i> Use a captivating title.</li>
+                <li class="d-flex gap-3"><i class="fa-solid fa-check mt-1"></i> Ensure categories match content.</li>
+                <li class="d-flex gap-3"><i class="fa-solid fa-check mt-1"></i> Check spelling and grammar.</li>
+                <li class="d-flex gap-3"><i class="fa-solid fa-check mt-1"></i> Optimize cover image for mobile.</li>
+            </ul>
+        </div>
+        {% if object %}
+        <div class="card border-0 shadow-sm rounded-4 p-8 bg-white border border-slate-100">
+            <h4 class="font-bold text-sm uppercase tracking-widest text-slate-500 mb-6">Article Statistics</h4>
+            <div class="space-y-4">
+                <div class="d-flex justify-content-between">
+                    <span class="text-sm font-medium text-slate-400">Status</span>
+                    <span class="badge bg-amber-100 text-amber-700 font-black text-[10px] uppercase rounded-pill px-4">{{ object.status }}</span>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <span class="text-sm font-medium text-slate-400">Word Count</span>
+                    <span class="font-black text-slate-800">{{ object.word_count }}</span>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <span class="text-sm font-medium text-slate-400">ID Reference</span>
+                    <span class="font-mono text-slate-400">#{{ object.id }}</span>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+    .space-y-2 > *, .space-y-3 > *, .space-y-4 > *, .space-y-6 > *, .space-y-8 > * { margin-bottom: 0px !important; }
+    .space-y-2 > * + *, .space-y-3 > * + *, .space-y-4 > * + *, .space-y-6 > * + *, .space-y-8 > * + * { margin-top: 1rem; }
+    input, select, textarea { 
+        width: 100%; border: 2px solid #f1f5f9; border-radius: 12px; padding: 12px 20px; outline: none; transition: 0.3s;
+    }
+    input:focus, select:focus, textarea:focus { border-color: #6366f1; }
+    .btn-light { background: #f1f5f9; border: 0 !important; color: #1e293b; }
+    .btn-light:hover { background: #e2e8f0; }
+</style>
+{% endblock %}

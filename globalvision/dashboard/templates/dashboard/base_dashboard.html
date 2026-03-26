@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Console{% endblock %} - Global Vision Admin</title>
+    {% load static %}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+    <style>
+        :root {
+            --primary-admin: #008fa0;
+            --accent-admin: #f59e0b;
+            --sidebar-width: 280px;
+        }
+        body { 
+            display: grid; 
+            grid-template-columns: var(--sidebar-width) 1fr; 
+            grid-template-rows: 64px 1fr; 
+            min-height: 100vh;
+            background: #f8fafc;
+            font-family: 'Inter', sans-serif;
+        }
+        .sidebar {
+            grid-row: 1 / -1;
+            background: #0f172a;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            border-right: 1px solid rgba(255,255,255,0.05);
+        }
+        .sidebar-logo { border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 24px;
+            color: rgba(255,255,255,0.6);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: 0.2s;
+            border-left: 3px solid transparent;
+        }
+        .nav-link:hover {
+            color: white;
+            background: rgba(255,255,255,0.05);
+        }
+        .nav-link.active {
+            color: white;
+            background: rgba(245, 158, 11, 0.1);
+            border-left-color: var(--accent-admin);
+        }
+        .topbar {
+            grid-column: 2;
+            background: rgba(255,255,255,0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .main-content {
+            grid-column: 2;
+            padding: 40px;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        .admin-card {
+            background: white;
+            border-radius: 16px;
+            border: 1px solid #e2e8f0;
+            padding: 24px;
+            transition: 0.3s;
+        }
+        .admin-card:hover { border-color: var(--primary-admin); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05); }
+        
+        /* Utility overrides */
+        .text-accent { color: var(--accent-admin); }
+        .bg-accent { background: var(--accent-admin); }
+        .font-black { font-weight: 900; }
+        .rounded-3 { border-radius: 12px; }
+    </style>
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="sidebar-logo py-8 px-8">
+            <div style="display: flex; align-items:center; gap: 12px;">
+                <div style="width:36px; height:36px; background:white; border-radius:8px; display:flex; align-items:center; justify-content:center;">
+                    <i class="fa-solid fa-mountain-sun" style="color:#008fa0; font-size:20px;"></i>
+                </div>
+                <span class="font-black" style="font-size:20px; letter-spacing:-0.03em;">Global<span class="text-accent">Vision</span></span>
+            </div>
+        </div>
+
+        <div style="font-size:10px; font-weight:900; opacity:0.3; padding:24px 24px 8px; text-transform:uppercase; letter-spacing:0.2em;">Platform</div>
+        <nav style="display:flex; flex-direction:column; gap:4px; padding:0 8px;">
+            <a href="{% url 'dashboard_home' %}" class="nav-link rounded-3 {% if request.resolver_match.url_name == 'dashboard_home' %}active{% endif %}">
+                <i class="fa-solid fa-chess-board" style="width:20px;"></i> Overview
+            </a>
+            
+            <div style="font-size:10px; font-weight:900; opacity:0.3; padding:24px 16px 8px; text-transform:uppercase; letter-spacing:0.2em;">Operations</div>
+            <a href="{% url 'vehicle_list' %}" class="nav-link rounded-3 {% if 'vehicle' in request.path %}active{% endif %}">
+                <i class="fa-solid fa-truck-pickup" style="width:20px;"></i> Vehicles
+            </a>
+            <a href="{% url 'equipment_list' %}" class="nav-link rounded-3 {% if 'equipment' in request.path %}active{% endif %}">
+                <i class="fa-solid fa-screwdriver-wrench" style="width:20px;"></i> Equipment
+            </a>
+            
+            <div style="font-size:10px; font-weight:900; opacity:0.3; padding:24px 16px 8px; text-transform:uppercase; letter-spacing:0.2em;">System</div>
+            <a href="{% url 'blog_list' %}" class="nav-link rounded-3 {% if 'blog' in request.path %}active{% endif %}">
+                <i class="fa-solid fa-paper-plane" style="width:20px;"></i> Blog Queue
+            </a>
+            <a href="{% url 'contact_list' %}" class="nav-link rounded-3 {% if 'contact' in request.path %}active{% endif %}">
+                <i class="fa-solid fa-inbox" style="width:20px;"></i> Messages
+            </a>
+            <a href="{% url 'site_settings' %}" class="nav-link rounded-3 {% if 'settings' in request.path %}active{% endif %}">
+                <i class="fa-solid fa-cloud-moon" style="width:20px;"></i> Global Config
+            </a>
+        </nav>
+
+        <div class="sidebar-footer" style="margin-top:auto; padding:24px; background:rgba(0,0,0,0.2);">
+            <div style="display:flex; align-items:center; gap:12px;">
+                <div style="width:36px; height:36px; border-radius:50%; background:#f59e0b; display:flex; align-items:center; justify-content:center; font-weight:900;">{{ request.user.user_name|slice:":1"|upper }}</div>
+                <div style="overflow:hidden;">
+                    <p style="margin:0; font-size:13px; font-weight:700; color:white;">{{ request.user.user_name }}</p>
+                    <a href="{% url 'admin_logout' %}" style="font-size:10px; color:#94a3b8; text-decoration:none;">Log out session</a>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <header class="topbar">
+        <div style="font-weight:900; font-size:18px; color:#1e293b; letter-spacing:-0.02em;">{% block page_title %}Console{% endblock %}</div>
+        <div style="display:flex; align-items:center; gap:24px;">
+           <div style="width:32px; height:32px; border-radius:50%; background:#f1f5f9; display:flex; align-items:center; justify-content:center; font-weight:900; color:#94a3b8; border: 2px solid white; box-shadow: 0 0 0 1px #e2e8f0;">{{ request.user.user_name|slice:":1"|upper }}</div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,98 @@
+{% extends 'dashboard/base_dashboard.html' %}
+{% load static %}
+
+{% block title %}System Configuration{% endblock %}
+{% block page_title %}Site Settings{% endblock %}
+
+{% block content %}
+<div class="row g-8">
+    <div class="col-lg-7">
+        <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-6">
+            <div class="card-header bg-white p-8 border-bottom">
+                <h3 class="h4 font-black text-slate-900 mb-1">Global Configuration</h3>
+                <p class="text-sm font-medium text-slate-500 italic">Settings updated across all public pages.</p>
+            </div>
+            <div class="card-body p-10 space-y-8">
+                <form method="POST">
+                    {% csrf_token %}
+                    
+                    <div class="grid md:grid-cols-2 gap-8 mb-8">
+                         <div class="space-y-3">
+                             <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest pl-2">Office Phone</label>
+                             {{ form.phone }}
+                         </div>
+                         <div class="space-y-3">
+                             <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest pl-2">WhatsApp Sync</label>
+                             {{ form.whatsapp }}
+                         </div>
+                    </div>
+
+                    <div class="space-y-3 mb-8">
+                         <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest pl-2">Public Email</label>
+                         {{ form.email }}
+                    </div>
+
+                    <div class="space-y-3 mb-8">
+                         <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest pl-2">Office Address</label>
+                         {{ form.address }}
+                    </div>
+
+                    <div class="space-y-3 mb-12">
+                         <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest pl-2">Google Maps Embed URL</label>
+                         {{ form.maps_embed }}
+                         <p class="text-[9px] text-indigo-500 font-bold tracking-widest mt-2 uppercase">Provide the iframe source URL (e.g. google.com/maps/embed/...)</p>
+                    </div>
+
+                    <div class="d-flex gap-4 pt-10 border-top">
+                        <button type="submit" class="btn btn-dark rounded-pill h-16 w-full font-black text-sm uppercase tracking-widest shadow-xl shadow-slate-200">
+                             Save Global Changes
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-5">
+        <div class="card border-0 shadow-sm rounded-4 p-10 bg-indigo-600 text-white relative overflow-hidden">
+             <div class="absolute -top-10 -right-10 w-40 h-40 bg-white/10 rounded-circle"></div>
+             <i class="fa-solid fa-earth-mountain fa-3x mb-8 opacity-50"></i>
+             <h4 class="font-black h3 mb-6">Social Integration</h4>
+             <div class="space-y-10">
+                <div class="d-flex align-items-center gap-6">
+                    <div class="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center"><i class="fa-brands fa-facebook-f text-xl"></i></div>
+                    <div class="flex-1 border-b border-white/10 pb-4">
+                        <p class="text-[10px] font-black uppercase opacity-60 tracking-widest mb-1">Facebook</p>
+                        <p class="text-sm font-bold">{{ settings.facebook_url|default:"Not Linked" }}</p>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center gap-6">
+                    <div class="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center"><i class="fa-brands fa-instagram text-xl"></i></div>
+                    <div class="flex-1 border-b border-white/10 pb-4">
+                        <p class="text-[10px] font-black uppercase opacity-60 tracking-widest mb-1">Instagram Business</p>
+                        <p class="text-sm font-bold">{{ settings.instagram_url|default:"Not Linked" }}</p>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center gap-6">
+                    <div class="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center"><i class="fa-brands fa-tripadvisor text-xl"></i></div>
+                    <div class="flex-1">
+                        <p class="text-[10px] font-black uppercase opacity-60 tracking-widest mb-1">TripAdvisor</p>
+                        <p class="text-sm font-bold">{{ settings.tripadvisor_url|default:"Not Linked" }}</p>
+                    </div>
+                </div>
+             </div>
+             <div class="mt-12 pt-10 border-top border-white/10">
+                 <p class="text-[11px] font-medium opacity-60 m-0">Global Vision Content Network Integration 2026</p>
+             </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    input, select, textarea { 
+        width: 100%; border: 2px solid #f1f5f9; border-radius: 12px; padding: 12px 20px; outline: none; transition: 0.3s;
+        font-weight: 600; font-size: 14px;
+    }
+    input:focus, select:focus, textarea:focus { border-color: #6366f1; background: #f8fafc; }
+</style>
+{% endblock %}

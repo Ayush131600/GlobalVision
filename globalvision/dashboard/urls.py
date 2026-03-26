@@ -18,6 +18,8 @@ urlpatterns = [
     path('blog/add/', views.blog_add, name='blog_add'),
     path('blog/<int:pk>/edit/', views.blog_edit, name='blog_edit'),
     path('blog/<int:pk>/delete/', views.blog_delete, name='blog_delete'),
+    path('blog/<int:pk>/approve/', views.blog_approve, name='blog_approve'),
+    path('blog/<int:pk>/reject/', views.blog_reject, name='blog_reject'),
     
     path('contact/', views.contact_message_list, name='contact_list'),
     path('contact/<int:pk>/', views.contact_message_detail, name='contact_detail'),

@@ -1,0 +1,95 @@
+{% extends 'dashboard/base_dashboard.html' %}
+{% load static %}
+
+{% block title %}Vehicle Fleet{% endblock %}
+{% block page_title %}Transport Management{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row mb-6 align-items-center">
+        <div class="col">
+            <h1 class="h3 font-black text-slate-800 m-0">Vehicle Fleet</h1>
+            <p class="text-sm font-medium text-slate-400 mt-1">Status: <span class="bg-indigo-50 text-indigo-500 px-3 py-1 rounded-pill font-black text-[10px]">{{ vehicles.count }} units registered</span></p>
+        </div>
+        <div class="col-auto">
+            <a href="{% url 'vehicle_add' %}" class="btn btn-primary-admin rounded-pill px-6 py-2 shadow-lg d-flex align-items-center gap-2" style="background:#008fa0 !important; border:0; color:white; font-weight:700; font-size:14px; text-decoration:none;">
+                <i class="fa-solid fa-car-on"></i> Add New Unit
+            </a>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden mt-6">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0" style="border-collapse: separate; border-spacing: 0;">
+                <thead class="bg-slate-50 border-bottom">
+                    <tr>
+                        <th class="ps-6 py-3 text-[10px] font-black text-slate-400 uppercase tracking-widest border-0">Asset / Model</th>
+                        <th class="py-3 text-[10px] font-black text-slate-400 uppercase tracking-widest border-0">Type</th>
+                        <th class="py-3 text-[10px] font-black text-slate-400 uppercase tracking-widest border-0 text-center">Rental Fee</th>
+                        <th class="py-3 text-[10px] font-black text-slate-400 uppercase tracking-widest border-0 text-center">Fleet Status</th>
+                        <th class="pe-6 py-3 text-[10px] font-black text-slate-400 uppercase tracking-widest border-0 text-end">Action Control</th>
+                    </tr>
+                </thead>
+                <tbody class="border-0">
+                    {% for v in vehicles %}
+                    <tr class="border-bottom" style="transition: 0.2s;">
+                        <td class="ps-6 py-5 border-0">
+                            <div class="d-flex align-items-center gap-4">
+                                {% if v.image %}
+                                <img src="{{ v.image.url }}" class="rounded-3 shadow-sm" style="width: 80px; height: 50px; object-fit: cover;">
+                                {% else %}
+                                <div class="bg-slate-100 rounded-3 d-flex align-items-center justify-center text-slate-300" style="width: 80px; height: 50px;">
+                                    <i class="fa-solid fa-car fa-xl"></i>
+                                </div>
+                                {% endif %}
+                                <div class="overflow-hidden">
+                                    <p class="font-black h6 text-slate-800 m-0 truncate">{{ v.name }}</p>
+                                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">VIN: #{{ v.id|stringformat:"05d" }}</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="border-0">
+                            <span class="text-xs font-bold text-slate-700 bg-slate-100 px-3 py-1 rounded-pill">{{ v.category }}</span>
+                        </td>
+                        <td class="text-center border-0 font-black text-slate-800 text-sm">
+                            <span class="text-slate-300 font-medium me-0.5">$</span>{{ v.price_per_day }}<span class="text-[9px] text-slate-400 font-bold uppercase ms-1">/ day</span>
+                        </td>
+                        <td class="text-center border-0">
+                            {% if v.status == 'Available' %}
+                            <span class="badge bg-emerald-100 text-emerald-700 border border-emerald-200 text-[9px] font-black uppercase rounded-pill px-3 py-1">Online (Fleet)</span>
+                            {% elif v.status == 'Rented' %}
+                            <span class="badge bg-amber-100 text-amber-700 border border-amber-200 text-[9px] font-black uppercase rounded-pill px-3 py-1">Active Rental</span>
+                            {% else %}
+                            <span class="badge bg-rose-100 text-rose-700 border border-rose-200 text-[9px] font-black uppercase rounded-pill px-3 py-1">Maintenance</span>
+                            {% endif %}
+                        </td>
+                        <td class="pe-6 text-end border-0">
+                            <div class="d-flex justify-content-end gap-2">
+                                <a href="{% url 'vehicle_edit' v.pk %}" class="btn btn-sm btn-outline-forest rounded-pill px-4 text-[10px] font-black uppercase tracking-widest text-decoration-none">Edit Unit</a>
+                                <form action="{% url 'vehicle_delete' v.pk %}" method="POST" class="d-inline" onsubmit="return confirm('Retire this asset?')">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-sm btn-link font-black text-[10px] uppercase text-rose-400 hover:text-rose-600 text-decoration-none p-0 ms-2">Retire</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="5" class="text-center py-5 italic text-slate-300">No vehicles available in the database.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<style>
+    .rounded-4 { border-radius: 20px; }
+    .bg-slate-50 { background: #f8fafc; }
+    .bg-slate-100 { background: #f1f5f9; }
+    .text-slate-400 { color: #94a3b8; }
+    .text-slate-100 { color: #f1f5f9; }
+    .link-slate-400:hover { color: #1e293b; }
+    .btn-outline-forest { border: 2px solid #008fa0 !important; color: #008fa0 !important; }
+    .btn-outline-forest:hover { background: #008fa0 !important; color: white !important; }
+</style>
+{% endblock %}

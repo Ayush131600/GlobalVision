@@ -3,7 +3,11 @@ from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.http import require_http_methods
 from django.utils import timezone
 from .decorators import admin_required
-from .models import Vehicle, Equipment, Booking, BlogPost, TeamMember, AboutPage, SiteSettings, ContactMessage
+from inventory.models import Vehicle, Equipment
+from bookings.models import Booking
+from blog.models import BlogPost
+from cms.models import TeamMember, AboutPage, SiteSettings
+from contacts.models import ContactMessage
 from .forms import VehicleForm, EquipmentForm, BlogPostForm, TeamMemberForm, AboutPageForm, SiteSettingsForm
 from django.contrib.auth import get_user_model
 
@@ -41,6 +45,8 @@ def dashboard_home(request):
         'total_blogs': BlogPost.objects.count(),
         'unread_messages': ContactMessage.objects.filter(is_read=False).count(),
         'total_bookings': Booking.objects.count(),
+        'total_users': User.objects.count(),
+        'recent_bookings': Booking.objects.all().order_by('-id')[:5],
     }
     return render(request, 'dashboard/home.html', context)
 
@@ -48,6 +54,7 @@ def dashboard_home(request):
 def vehicle_list(request):
     vehicles = Vehicle.objects.all().order_by('-created_at')
     return render(request, 'dashboard/vehicles/list.html', {'vehicles': vehicles})
+
 
 @admin_required
 def vehicle_add(request):
@@ -78,6 +85,7 @@ def equipment_list(request):
     equipment = Equipment.objects.all().order_by('-created_at')
     return render(request, 'dashboard/equipment/list.html', {'equipment': equipment})
 
+
 @admin_required
 def equipment_add(request):
     form = EquipmentForm(request.POST or None, request.FILES or None)
@@ -107,6 +115,7 @@ def blog_list(request):
     posts = BlogPost.objects.all().order_by('-created_at')
     return render(request, 'dashboard/blog/list.html', {'posts': posts})
 
+
 @admin_required
 def blog_add(request):
     form = BlogPostForm(request.POST or None, request.FILES or None)
@@ -134,9 +143,30 @@ def blog_delete(request, pk):
     return redirect('blog_list')
 
 @admin_required
+def blog_approve(request, pk):
+    post = get_object_or_404(BlogPost, pk=pk)
+    post.status = 'accepted'
+    post.is_published = True
+    post.save()
+    return redirect('blog_list')
+
+@admin_required
+def blog_reject(request, pk):
+    if request.method == 'POST':
+        post = get_object_or_404(BlogPost, pk=pk)
+        reason = request.POST.get('reason')
+        if reason:
+            post.status = 'rejected'
+            post.is_published = False
+            post.rejection_reason = reason
+            post.save()
+    return redirect('blog_list')
+
+@admin_required
 def contact_message_list(request):
     messages = ContactMessage.objects.all().order_by('-created_at')
     return render(request, 'dashboard/contact/list.html', {'messages': messages})
+
 
 @admin_required
 def contact_message_detail(request, pk):

@@ -1,29 +1,28 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
 :root {
-  --cream: #F5F0E8;
-  --dark: #1A1A14;
-  --forest: #2D4A35;
-  --moss: #4E7A57;
-  --gold: #C8933A;
-  --warm: #E8DCC8;
-  --mist: #8BA89A;
-  --sidebar-bg: #141F17;
-  --sidebar-text: rgba(245,240,232,0.6);
-  --sidebar-active: #C8933A;
-  --card-bg: #FFFFFF;
-  --border: rgba(26,26,20,0.1);
-  --danger: #C0392B;
-  --success: #27AE60;
-  --font-display: 'Playfair Display', serif;
-  --font-body: 'DM Sans', sans-serif;
-  --radius: 6px;
-  --shadow: 0 2px 12px rgba(0,0,0,0.08);
+  --primary: #008fa0;
+  --primary-dark: #007685;
+  --secondary: #0ea5e9;
+  --text-dark: #1e293b;
+  --text-light: #64748b;
+  --white: #ffffff;
+  --bg-light: #f8fafc;
+  --accent: #f59e0b;
+  --danger: #EF4444;
+  --success: #10B981;
+  --sidebar-bg: #1e293b;
+  --sidebar-text: rgba(255,255,255,0.7);
+  --sidebar-active: #008fa0;
+  --font-body: 'Inter', sans-serif;
+  --radius: 8px;
+  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
   --transition: all 0.2s ease;
 }
 
 body {
-    background-color: var(--dark);
+    background-color: var(--bg-light);
+    color: var(--text-dark);
     font-family: var(--font-body);
     display: flex;
     justify-content: center;
@@ -35,18 +34,20 @@ body {
 }
 
 .login-card {
-    background-color: var(--sidebar-bg);
+    background-color: var(--white);
     width: 420px;
     padding: 48px;
-    border: 1px solid rgba(255,255,255,0.07);
-    border-radius: 8px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
     box-sizing: border-box;
     text-align: center;
 }
 
 .logo {
-    font-family: var(--font-display);
-    color: var(--gold);
+    font-family: var(--font-body);
+    font-weight: 700;
+    color: var(--primary);
     font-size: 2.2rem;
     margin: 0;
 }
@@ -85,9 +86,9 @@ label {
 }
 
 input {
-    background-color: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.1);
-    color: white;
+    background-color: var(--white);
+    border: 1px solid var(--border);
+    color: var(--text-dark);
     padding: 14px 16px;
     border-radius: var(--radius);
     width: 100%;
@@ -98,13 +99,13 @@ input {
 }
 
 input:focus {
-    border-color: var(--gold);
+    border-color: var(--primary);
     outline: none;
 }
 
 .btn-submit {
-    background-color: var(--gold);
-    color: var(--dark);
+    background-color: var(--primary);
+    color: var(--white);
     width: 100%;
     padding: 14px;
     font-weight: 600;
