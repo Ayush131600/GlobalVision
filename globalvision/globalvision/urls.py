@@ -28,6 +28,8 @@ urlpatterns = [
     path('', home, name='home'), 
     path('admin-login/', admin_login_view, name='admin_login'),
     path('dashboard/', include('dashboard.urls')),
+    path('dashboard/user/', include('user_dashboard.urls')),
+    path('cart/', include('cart.urls')),
     path('summernote/', include('django_summernote.urls')),
 ]
 

@@ -1,0 +1,92 @@
+{% extends 'user_dashboard/base.html' %}
+
+{% block title %}Support{% endblock %}
+{% block page_heading %}Adventure Support Center{% endblock %}
+
+{% block extra_css %}
+<style>
+    .support-form {
+        background: var(--white);
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: var(--shadow);
+        margin-bottom: 2rem;
+    }
+    .support-form-group {
+        margin-bottom: 1.5rem;
+    }
+    .support-form-group label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: var(--text-dark);
+        font-size: 0.9rem;
+    }
+    .support-form-control {
+        width: 100%;
+        padding: 0.8rem 1rem;
+        border: 2px solid #eee;
+        border-radius: 8px;
+        font-size: 0.95rem;
+        transition: var(--transition);
+        outline: none;
+    }
+    .support-form-control:focus {
+        border-color: var(--primary-orange);
+    }
+    .ticket-card {
+        background: var(--white);
+        padding: 1.5rem;
+        border-radius: 12px;
+        box-shadow: var(--shadow);
+        margin-bottom: 1.5rem;
+        border-left: 5px solid transparent;
+        transition: var(--transition);
+    }
+    .ticket-card.open { border-left-color: #f1c40f; }
+    .ticket-card.resolved { border-left-color: #2ecc71; opacity: 0.8; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="support-form">
+    <h3 style="margin-bottom: 1.5rem; color: var(--text-dark); border-bottom: 2px solid #eee; padding-bottom: 0.5rem;">New Ticket</h3>
+    <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 2rem;">How can we help? Tell us more about your issue, we'll respond as soon as possible.</p>
+    
+    <form method="POST">
+        {% csrf_token %}
+        <div class="support-form-group">
+            <label>Subject</label>
+            <input type="text" name="subject" class="support-form-control" placeholder="Brief summary of your issue" required>
+        </div>
+        <div class="support-form-group">
+            <label>Message</label>
+            <textarea name="message" rows="4" class="support-form-control" placeholder="Detailed description..." required></textarea>
+        </div>
+        <button type="submit" class="btn-primary" style="padding: 0.8rem 2.5rem; font-size: 0.95rem;">Submit Ticket</button>
+    </form>
+</div>
+
+<h3 style="margin: 3rem 0 1.5rem; color: var(--text-dark);">Your Support History</h3>
+<div>
+    {% for msg in support_messages %}
+    <div class="ticket-card {{ msg.status|lower }}">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+            <div>
+                <h4 style="color: var(--text-dark); margin-bottom: 0.5rem;">{{ msg.subject }}</h4>
+                <p style="font-size: 0.8rem; color: var(--text-muted);">Submitted on: <strong>{{ msg.created_at|date:"F j, Y, g:i a" }}</strong></p>
+                <div style="margin-top: 1.5rem; color: #444; line-height: 1.6; font-size: 0.95rem; background: #f9f9f9; padding: 1rem; border-radius: 8px;">
+                    {{ msg.message }}
+                </div>
+            </div>
+            <span class="badge badge-{{ msg.status|lower }}">{{ msg.status }}</span>
+        </div>
+    </div>
+    {% empty %}
+    <div class="card" style="text-align: center; padding: 4rem;">
+        <i class="fa-solid fa-comments fa-4x" style="color: #eee; margin-bottom: 2rem; display: block;"></i>
+        <p style="color: var(--text-muted);">No support history found. All good!</p>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

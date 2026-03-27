@@ -250,6 +250,13 @@
                     </div>
                 </div>
                 <a href="{% url 'account:blog' %}" class="{% if request.resolver_match.url_name == 'blog' %}active{% endif %}">Blog</a>
+                {% if user.is_authenticated %}
+                    {% if user.role == 'admin' or user.is_staff %}
+                        <a href="{% url 'dashboard_home' %}" class="cta-btn" style="background: #2c3e50;">Admin Panel</a>
+                    {% else %}
+                        <a href="{% url 'user_dashboard' %}" class="cta-btn" style="background: var(--accent);">Dashboard</a>
+                    {% endif %}
+                {% endif %}
                 <a href="{% url 'account:contact' %}" class="cta-btn">Contact us</a>
             </nav>
 
@@ -266,6 +273,17 @@
             </div>
         </div>
     </header>
+
+    <!-- MESSAGES -->
+    {% if messages %}
+    <div class="container" style="margin-top: 20px;">
+        {% for message in messages %}
+        <div style="padding: 15px; margin-bottom: 20px; border-radius: 8px; {% if message.tags == 'success' %}background: #eafaf1; color: #2ecc71; border: 1px solid #2ecc71;{% elif message.tags == 'error' %}background: #fdf2f2; color: #e74c3c; border: 1px solid #e74c3c;{% else %}background: #ebf5fb; color: #3498db; border: 1px solid #3498db;{% endif %}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
 
     <!-- CONTENT -->
     {% block content %}{% endblock %}

@@ -1,0 +1,95 @@
+{% extends 'user_dashboard/base.html' %}
+
+{% block title %}Booking History{% endblock %}
+{% block page_heading %}Past & Completed Bookings{% endblock %}
+
+{% block extra_css %}
+<style>
+    .filter-bar {
+        background: var(--white);
+        padding: 1rem 1.5rem;
+        border-radius: 12px;
+        margin-bottom: 2rem;
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        box-shadow: var(--shadow);
+    }
+    .filter-group {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .filter-group label {
+        font-size: 0.8rem;
+        font-weight: 700;
+        color: var(--text-muted);
+        text-transform: uppercase;
+    }
+    .filter-control {
+        padding: 0.5rem 1rem;
+        border: 2px solid #eee;
+        border-radius: 8px;
+        font-size: 0.85rem;
+        outline: none;
+        transition: var(--transition);
+    }
+    .filter-control:focus { border-color: var(--primary-orange); }
+</style>
+{% endblock %}
+
+{% block content %}
+<form method="GET" class="filter-bar">
+    <div class="filter-group">
+        <label>Status</label>
+        <select name="status" class="filter-control">
+            <option value="All" {% if current_status == 'All' %}selected{% endif %}>All History</option>
+            <option value="Completed" {% if current_status == 'Completed' %}selected{% endif %}>Completed Only</option>
+            <option value="Cancelled" {% if current_status == 'Cancelled' %}selected{% endif %}>Cancelled Only</option>
+        </select>
+    </div>
+    <div class="filter-group">
+        <label>From</label>
+        <input type="date" name="start_date" value="{{ start_date }}" class="filter-control">
+    </div>
+    <div class="filter-group">
+        <label>To</label>
+        <input type="date" name="end_date" value="{{ end_date }}" class="filter-control">
+    </div>
+    <button type="submit" class="btn-primary" style="padding: 0.5rem 1.5rem; font-size: 0.85rem;">Filter Results</button>
+    <a href="{% url 'user_history' %}" style="text-decoration: none; color: var(--text-muted); font-size: 0.8rem; font-weight: 600;">Reset Filters</a>
+</form>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem;">
+    {% for booking in bookings %}
+    <div class="card" style="opacity: {% if booking.status == 'Cancelled' %}0.7{% else %}1{% endif %};">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
+            <div>
+                <h4 style="color: var(--text-dark); margin-bottom: 0.25rem;">{{ booking.item.name }}</h4>
+                <p style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">{{ booking.item_type|capfirst }}</p>
+                <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 5px;">ID: #{{ booking.id }}</p>
+            </div>
+            <span class="badge badge-{{ booking.status|lower }}">{{ booking.status }}</span>
+        </div>
+
+        <div style="background: #fdf2f2; border-radius: 8px; padding: 0.75rem; margin-bottom: 1rem; border-left: 4px solid #eee;">
+            <div style="display: flex; justify-content: space-between; font-size: 0.8rem;">
+                <span style="color: var(--text-muted); font-weight: 600;">DATE RANGE</span>
+                <span style="color: var(--text-dark); font-weight: 700;">{{ booking.start_date }} → {{ booking.end_date }}</span>
+            </div>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #eee; padding-top: 1rem;">
+            <span style="font-size: 0.85rem; color: var(--text-muted);">Paid Amount</span>
+            <span style="font-size: 1rem; font-weight: 800; color: var(--text-dark);">Rs. {{ booking.total_price }}</span>
+        </div>
+    </div>
+    {% empty %}
+    <div class="card" style="grid-column: 1 / -1; text-align: center; padding: 4rem;">
+        <i class="fa-solid fa-history fa-4x" style="color: #eee; margin-bottom: 2rem; display: block;"></i>
+        <h2 style="color: var(--text-dark); margin-bottom: 1rem;">No history found.</h2>
+        <p style="color: var(--text-muted);">Try adjusting your filters or complete your first booking!</p>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

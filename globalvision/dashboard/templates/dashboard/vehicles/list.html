@@ -52,7 +52,7 @@
                             <span class="text-xs font-bold text-slate-700 bg-slate-100 px-3 py-1 rounded-pill">{{ v.category }}</span>
                         </td>
                         <td class="text-center border-0 font-black text-slate-800 text-sm">
-                            <span class="text-slate-300 font-medium me-0.5">$</span>{{ v.price_per_day }}<span class="text-[9px] text-slate-400 font-bold uppercase ms-1">/ day</span>
+                            <span class="text-slate-300 font-medium me-0.5">Rs. </span>{{ v.price_per_day }}<span class="text-[9px] text-slate-400 font-bold uppercase ms-1">/ day</span>
                         </td>
                         <td class="text-center border-0">
                             {% if v.status == 'Available' %}
@@ -66,9 +66,9 @@
                         <td class="pe-6 text-end border-0">
                             <div class="d-flex justify-content-end gap-2">
                                 <a href="{% url 'vehicle_edit' v.pk %}" class="btn btn-sm btn-outline-forest rounded-pill px-4 text-[10px] font-black uppercase tracking-widest text-decoration-none">Edit Unit</a>
-                                <form action="{% url 'vehicle_delete' v.pk %}" method="POST" class="d-inline" onsubmit="return confirm('Retire this asset?')">
+                                <form action="{% url 'vehicle_delete' v.pk %}" method="POST" class="d-inline" onsubmit="return confirm('Delete this asset?')">
                                     {% csrf_token %}
-                                    <button type="submit" class="btn btn-sm btn-link font-black text-[10px] uppercase text-rose-400 hover:text-rose-600 text-decoration-none p-0 ms-2">Retire</button>
+                                    <button type="submit" class="btn btn-sm btn-link font-black text-[10px] uppercase text-rose-400 hover:text-rose-600 text-decoration-none p-0 ms-2">Delete</button>
                                 </form>
                             </div>
                         </td>

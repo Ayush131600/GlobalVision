@@ -14,10 +14,22 @@ from .forms import UserProfileForm
 
 def login(request):
     if request.method == "POST":
-        user_name = request.POST.get("user_name")
+        login_input = request.POST.get("user_name")
         password = request.POST.get("password")
 
-        user = authenticate(request, user_name=user_name, password=password)
+        # Try to find user by email first
+        user_to_auth = login_input
+        if "@" in login_input:
+            user_obj = User.objects.filter(email__iexact=login_input).first()
+            if user_obj:
+                user_to_auth = user_obj.user_name
+
+        # Authenticate using standard 'username' keyword (Django maps this to USERNAME_FIELD)
+        user = authenticate(request, username=user_to_auth, password=password)
+        
+        # Fallback to 'user_name' keyword if 'username' fails
+        if user is None:
+            user = authenticate(request, user_name=user_to_auth, password=password)
 
         if user is not None:
             auth_login(request, user)
@@ -37,7 +49,10 @@ def admin_login(request):
         user_name = request.POST.get("user_name")
         password = request.POST.get("password")
 
-        user = authenticate(request, user_name=user_name, password=password)
+        # Try both 'username' and 'user_name' keywords
+        user = authenticate(request, username=user_name, password=password)
+        if user is None:
+            user = authenticate(request, user_name=user_name, password=password)
 
         if user is not None and user.role == 'admin':
             auth_login(request, user)
@@ -315,3 +330,87 @@ def product_detail(request, product_type, product_id):
         'product_type': product_type
     }
     return render(request, 'inventory/product_detail.html', context)
+
+
+import random
+from django.core.mail import send_mail
+from django.conf import settings
+from .models import PasswordResetOTP
+
+def password_reset_request(request):
+    if request.method == 'POST':
+        email = request.POST.get('email', '').strip()
+        user = User.objects.filter(email__iexact=email).first()
+        
+        if user:
+            # Generate 6-digit OTP
+            otp = str(random.randint(100000, 999999))
+            
+            # Save OTP to database
+            PasswordResetOTP.objects.create(email=email, otp_code=otp)
+            
+            # Send Email
+            subject = 'Password Reset Verification Code'
+            message = f'Your verification code for password reset is: {otp}. It will expire in 10 minutes.'
+            email_from = settings.DEFAULT_FROM_EMAIL
+            recipient_list = [email]
+            send_mail(subject, message, email_from, recipient_list)
+            
+            # Store email in session for the next step
+            request.session['reset_email'] = email
+            messages.success(request, "Verification code sent to your email.")
+            return redirect('account:password_reset_verify')
+        else:
+            messages.error(request, "No account found with this email.")
+            
+    return render(request, 'account/password_reset_form.html')
+
+def password_reset_verify(request):
+    email = request.session.get('reset_email')
+    if not email:
+        return redirect('account:password_reset_request')
+        
+    if request.method == 'POST':
+        otp_entered = request.POST.get('otp')
+        otp_obj = PasswordResetOTP.objects.filter(email=email, otp_code=otp_entered, is_used=False).last()
+        
+        if otp_obj and not otp_obj.is_expired():
+            otp_obj.is_used = True
+            otp_obj.save()
+            request.session['otp_verified'] = True
+            return redirect('account:password_reset_set_new')
+        else:
+            messages.error(request, "Invalid or expired verification code.")
+            
+    return render(request, 'account/password_reset_verify.html', {'email': email})
+
+def password_reset_set_new(request):
+    email = request.session.get('reset_email')
+    verified = request.session.get('otp_verified')
+    
+    if not email or not verified:
+        return redirect('account:password_reset_request')
+        
+    if request.method == 'POST':
+        password = request.POST.get('password')
+        confirm_password = request.POST.get('confirm_password')
+        
+        if password and password == confirm_password:
+            user = User.objects.filter(email=email).first()
+            if user:
+                user.set_password(password)
+                user.save()
+                
+                # Clear session
+                del request.session['reset_email']
+                del request.session['otp_verified']
+                
+                messages.success(request, f"Password reset successful for {user.user_name}. You can now login.")
+                return redirect('account:login')
+            else:
+                messages.error(request, "User not found.")
+                return redirect('account:password_reset_request')
+        else:
+            messages.error(request, "Passwords do not match or are empty.")
+            
+    return render(request, 'account/password_reset_confirm.html')

@@ -1,9 +1,9 @@
-
 from django.urls import path
 from .views import (
     login, admin_login, register, logout_view, rent_vehicle, rent_equipment, blog, contact, about, product_detail,
     profile_view, manage_products, product_create, product_update, product_delete,
-    manage_blog, blog_create, blog_update, blog_delete
+    manage_blog, blog_create, blog_update, blog_delete,
+    password_reset_request, password_reset_verify, password_reset_set_new
 )
 
 app_name = 'account'
@@ -29,5 +29,15 @@ urlpatterns = [
     path('manage/blog/', manage_blog, name="manage_blog"),
     path('manage/blog/create/', blog_create, name="blog_create"),
     path('manage/blog/update/<int:pk>/', blog_update, name="blog_update"),
-    path('manage/blog/delete/<int:pk>/', blog_delete, name="blog_delete"),
+    
+    # Custom OTP Password Reset
+    path('password-reset/', 
+         password_reset_request, 
+         name='password_reset'),
+    path('password-reset/verify/', 
+         password_reset_verify, 
+         name='password_reset_verify'),
+    path('password-reset/confirm/', 
+         password_reset_set_new, 
+         name='password_reset_set_new'),
 ]

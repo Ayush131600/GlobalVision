@@ -1,0 +1,70 @@
+{% extends 'user_dashboard/base.html' %}
+
+{% block title %}Overview{% endblock %}
+{% block page_heading %}Dashboard Overview{% endblock %}
+
+{% block content %}
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+    <div class="card" style="border-left: 5px solid #3498db;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <p style="color: var(--text-muted); font-size: 0.9rem; font-weight: 600; text-transform: uppercase;">Active Bookings</p>
+                <h2 style="font-size: 2rem; color: var(--text-dark); margin-top: 5px;">{{ active_bookings }}</h2>
+            </div>
+            <div style="background: rgba(52, 152, 219, 0.1); color: #3498db; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                <i class="fa-solid fa-calendar-check fa-xl"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="card" style="border-left: 5px solid #2ecc71;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <p style="color: var(--text-muted); font-size: 0.9rem; font-weight: 600; text-transform: uppercase;">Past Bookings</p>
+                <h2 style="font-size: 2rem; color: var(--text-dark); margin-top: 5px;">{{ past_bookings }}</h2>
+            </div>
+            <div style="background: rgba(46, 204, 113, 0.1); color: #2ecc71; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                <i class="fa-solid fa-history fa-xl"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="card" style="border-left: 5px solid #e67e22;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <p style="color: var(--text-muted); font-size: 0.9rem; font-weight: 600; text-transform: uppercase;">Cart Items</p>
+                <h2 style="font-size: 2rem; color: var(--text-dark); margin-top: 5px;">{{ cart_items }}</h2>
+            </div>
+            <div style="background: rgba(230, 126, 34, 0.1); color: #e67e22; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                <i class="fa-solid fa-cart-shopping fa-xl"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="card" style="border-left: 5px solid #9b59b6;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <p style="color: var(--text-muted); font-size: 0.9rem; font-weight: 600; text-transform: uppercase;">Support Messages</p>
+                <h2 style="font-size: 2rem; color: var(--text-dark); margin-top: 5px;">{{ support_tickets }}</h2>
+            </div>
+            <div style="background: rgba(155, 89, 182, 0.1); color: #9b59b6; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                <i class="fa-solid fa-comments fa-xl"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div style="margin-top: 2rem;">
+    <div class="card">
+        <h3 style="margin-bottom: 1.5rem; color: var(--text-dark);">Welcome back, {{ user.user_name }}! 👋</h3>
+        <p style="color: var(--text-muted); line-height: 1.6;">
+            This is your personal dashboard where you can manage your bookings, update your profile, and more. 
+            If you need help, feel free to contact our support team from the support section.
+        </p>
+        <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+            <a href="{% url 'user_bookings' %}" class="btn-primary" style="text-decoration: none;">View Bookings</a>
+            <a href="{% url 'user_cart' %}" class="btn-primary" style="text-decoration: none; background: transparent; border: 2px solid var(--primary-orange); color: var(--primary-orange);">Go to Cart</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

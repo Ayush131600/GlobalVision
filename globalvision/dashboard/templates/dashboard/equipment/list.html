@@ -64,9 +64,9 @@
                         <td class="pe-6 text-end border-0">
                             <div class="d-flex justify-content-end gap-2">
                                 <a href="{% url 'equipment_edit' item.pk %}" class="btn btn-sm btn-outline-forest rounded-pill px-4 text-[10px] font-black uppercase tracking-widest text-decoration-none">Update Stock</a>
-                                <form action="{% url 'equipment_delete' item.pk %}" method="POST" class="d-inline" onsubmit="return confirm('Remove liquid asset?')">
+                                <form action="{% url 'equipment_delete' item.pk %}" method="POST" class="d-inline" onsubmit="return confirm('Delete this asset?')">
                                     {% csrf_token %}
-                                    <button type="submit" class="btn btn-sm btn-link font-black text-[10px] uppercase text-rose-400 hover:text-rose-600 text-decoration-none p-0 ms-2">Liquidate</button>
+                                    <button type="submit" class="btn btn-sm btn-link font-black text-[10px] uppercase text-rose-400 hover:text-rose-600 text-decoration-none p-0 ms-2">Delete</button>
                                 </form>
                             </div>
                         </td>

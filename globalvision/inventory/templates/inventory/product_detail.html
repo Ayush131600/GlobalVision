@@ -176,21 +176,23 @@ ul {
 
                 <div class="rent-card">
                     <h3>Rent Options</h3>
-                    <form action="#" method="POST">
+                    <form action="{% url 'cart:add_to_cart' product_type product.id %}" method="POST">
+                        {% csrf_token %}
                         <div class="form-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
                             <div>
                                 <label>Start Date</label>
-                                <input type="date" required>
+                                <input type="date" name="start_date" required>
                             </div>
                             <div>
                                 <label>End Date</label>
-                                <input type="date" required>
+                                <input type="date" name="end_date" required>
                             </div>
                         </div>
 
                         <div class="btn-group">
-                            <button type="button" class="btn btn-cart"><i class="fa-solid fa-cart-plus"></i> Add to
-                                Cart</button>
+                            <button type="submit" class="btn btn-cart">
+                                <i class="fa-solid fa-cart-plus"></i> Add to Cart
+                            </button>
                             <button type="submit" class="btn btn-rent">Rent Now</button>
                         </div>
                     </form>

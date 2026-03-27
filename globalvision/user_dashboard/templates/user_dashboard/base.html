@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}User Dashboard{% endblock %} | Global Vision</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --primary-orange: #e67e22;
+            --primary-hover: #d35400;
+            --sidebar-bg: #2c3e50;
+            --sidebar-color: #ecf0f1;
+            --bg-light: #f4f7f6;
+            --text-dark: #2c3e50;
+            --text-muted: #7f8c8d;
+            --white: #ffffff;
+            --shadow: 0 2px 10px rgba(0,0,0,0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 260px;
+            background-color: var(--sidebar-bg);
+            color: var(--sidebar-color);
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            display: flex;
+            flex-direction: column;
+            z-index: 1000;
+            transition: var(--transition);
+        }
+
+        .sidebar-header {
+            padding: 2rem 1.5rem;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .sidebar-header h2 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--white);
+            letter-spacing: 1px;
+        }
+
+        .sidebar-header span {
+            color: var(--primary-orange);
+        }
+
+        .sidebar-menu {
+            flex: 1;
+            padding: 1.5rem 0;
+            overflow-y: auto;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 0.8rem 1.5rem;
+            color: var(--sidebar-color);
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            border-left: 4px solid transparent;
+            margin-bottom: 0.2rem;
+            transition: var(--transition);
+        }
+
+        .menu-item:hover, .menu-item.active {
+            background-color: rgba(255,255,255,0.05);
+            color: var(--primary-orange);
+            border-left-color: var(--primary-orange);
+        }
+
+        .menu-item i {
+            width: 24px;
+            margin-right: 12px;
+            font-size: 1.1rem;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            margin-left: 260px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header Styles */
+        header {
+            height: 70px;
+            background-color: var(--white);
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 900;
+        }
+
+        .page-title h3 {
+            font-size: 1.25rem;
+            color: var(--text-dark);
+            font-weight: 700;
+        }
+
+        .user-nav {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            cursor: pointer;
+        }
+
+        .user-profile img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--primary-orange);
+        }
+
+        .user-info .user-name {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .user-info .user-role {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .logout-btn {
+            background-color: transparent;
+            border: 1px solid #eee;
+            color: var(--text-muted);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+        }
+
+        .logout-btn:hover {
+            border-color: #e74c3c;
+            color: #e74c3c;
+            background-color: #fdf2f2;
+        }
+
+        /* Content Body Wrapper */
+        .content-body {
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 992px) {
+            .sidebar {
+                width: 70px;
+            }
+            .sidebar-header h2, .menu-item span {
+                display: none;
+            }
+            .main-content {
+                margin-left: 70px;
+            }
+            .menu-item {
+                justify-content: center;
+                padding: 1rem;
+            }
+            .menu-item i {
+                margin-right: 0;
+            }
+        }
+
+        @media (max-width: 576px) {
+            header {
+                padding: 0 1rem;
+            }
+            .user-info {
+                display: none;
+            }
+            .content-body {
+                padding: 1rem;
+            }
+        }
+
+        /* Common Components */
+        .card {
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-orange);
+            color: var(--white);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .badge-pending { background-color: #fef9e7; color: #f1c40f; }
+        .badge-confirmed { background-color: #eafaf1; color: #2ecc71; }
+        .badge-active { background-color: #ebf5fb; color: #3498db; }
+        .badge-completed { background-color: #f2f3f4; color: #7f8c8d; }
+        .badge-cancelled { background-color: #fdf2f2; color: #e74c3c; }
+
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h2>GLOBAL <span>VISION</span></h2>
+        </div>
+        <nav class="sidebar-menu">
+            <a href="{% url 'user_dashboard' %}" class="menu-item {% if request.resolver_match.url_name == 'user_dashboard' %}active{% endif %}">
+                <i class="fa-solid fa-house"></i>
+                <span>Overview</span>
+            </a>
+            <a href="{% url 'user_profile' %}" class="menu-item {% if request.resolver_match.url_name == 'user_profile' %}active{% endif %}">
+                <i class="fa-solid fa-user"></i>
+                <span>My Profile</span>
+            </a>
+            <a href="{% url 'user_bookings' %}" class="menu-item {% if request.resolver_match.url_name == 'user_bookings' %}active{% endif %}">
+                <i class="fa-solid fa-box"></i>
+                <span>My Bookings</span>
+            </a>
+            <a href="{% url 'user_history' %}" class="menu-item {% if request.resolver_match.url_name == 'user_history' %}active{% endif %}">
+                <i class="fa-solid fa-clipboard-list"></i>
+                <span>Booking History</span>
+            </a>
+            <a href="{% url 'user_cart' %}" class="menu-item {% if request.resolver_match.url_name == 'user_cart' %}active{% endif %}">
+                <i class="fa-solid fa-cart-shopping"></i>
+                <span>Cart</span>
+            </a>
+            <a href="{% url 'user_support' %}" class="menu-item {% if request.resolver_match.url_name == 'user_support' %}active{% endif %}">
+                <i class="fa-solid fa-comments"></i>
+                <span>Support</span>
+            </a>
+            <div style="margin-top: auto; padding-top: 2rem;">
+                <a href="{% url 'user_logout' %}" class="menu-item">
+                    <i class="fa-solid fa-door-open"></i>
+                    <span>Logout</span>
+                </a>
+            </div>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <header>
+            <div class="page-title">
+                <h3>{% block page_heading %}User Dashboard{% endblock %}</h3>
+            </div>
+            <div class="user-nav">
+                <div class="user-profile">
+                    {% if user.profile_photo %}
+                        <img src="{{ user.profile_photo.url }}" alt="{{ user.user_name }}">
+                    {% else %}
+                        <img src="https://ui-avatars.com/api/?name={{ user.user_name }}&background=e67e22&color=fff" alt="{{ user.user_name }}">
+                    {% endif %}
+                    <div class="user-info">
+                        <span class="user-name">{{ user.user_name }}</span>
+                        <span class="user-role">Customer</span>
+                    </div>
+                </div>
+                <a href="{% url 'user_logout' %}" class="logout-btn">
+                    <i class="fa-solid fa-sign-out-alt"></i>
+                    Logout
+                </a>
+            </div>
+        </header>
+
+        <section class="content-body">
+            {% if messages %}
+                {% for message in messages %}
+                    <div style="padding: 1rem; margin-bottom: 1rem; border-radius: 8px; background: {% if message.tags == 'success' %}#eafaf1; color: #2ecc71;{% else %}#fdf2f2; color: #e74c3c;{% endif %} border: 1px solid currentColor;">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            {% block content %}
+            {% endblock %}
+        </section>
+    </main>
+
+    <script>
+        // Simple micro-animations for menu items
+        document.querySelectorAll('.menu-item').forEach(item => {
+            item.addEventListener('mouseenter', () => {
+                const icon = item.querySelector('i');
+                icon.style.transform = 'scale(1.2) rotate(-10deg)';
+                icon.style.transition = 'transform 0.3s ease';
+            });
+            item.addEventListener('mouseleave', () => {
+                const icon = item.querySelector('i');
+                icon.style.transform = 'scale(1) rotate(0)';
+            });
+        });
+    </script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

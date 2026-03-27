@@ -1,0 +1,111 @@
+{% extends 'user_dashboard/base.html' %}
+
+{% block title %}My Cart{% endblock %}
+{% block page_heading %}Adventure Gear Shopping Cart{% endblock %}
+
+{% block extra_css %}
+<style>
+    .cart-item {
+        display: flex;
+        gap: 1.5rem;
+        padding: 1.5rem;
+        background: var(--white);
+        border-radius: 12px;
+        box-shadow: var(--shadow);
+        margin-bottom: 1.5rem;
+        position: relative;
+    }
+    .cart-item img {
+        width: 120px;
+        height: 120px;
+        border-radius: 8px;
+        object-fit: cover;
+    }
+    .cart-item-details { flex: 1; }
+    .cart-item-dates { margin-top: 1rem; display: flex; gap: 1rem; align-items: flex-end; }
+    .cart-item-dates input { padding: 0.5rem; border: 1.5px solid #eee; border-radius: 6px; font-size: 0.8rem; }
+    .order-summary { background: var(--white); border-radius: 12px; box-shadow: var(--shadow); padding: 2rem; position: sticky; top: 100px; }
+    .summary-row { display: flex; justify-content: space-between; margin-bottom: 1rem; border-bottom: 1px solid #f8f9fa; padding-bottom: 0.5rem; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem;">
+    <!-- Cart Items List -->
+    <div>
+        {% for item in items %}
+        <div class="cart-item">
+            {% if item.content_object.image %}
+                <img src="{{ item.content_object.image.url }}" alt="{{ item.content_object.name }}">
+            {% else %}
+                <div style="width: 120px; height: 120px; background: #eee; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--text-muted);">
+                    <i class="fa-solid fa-image fa-2x"></i>
+                </div>
+            {% endif %}
+
+            <div class="cart-item-details">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                    <div>
+                        <h4 style="color: var(--text-dark); margin-bottom: 0.25rem;">{{ item.content_object.name }}</h4>
+                        <p style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">{{ item.content_type.model|capfirst }}</p>
+                    </div>
+                    <form action="{% url 'remove_from_cart' item.pk %}" method="POST" onsubmit="return confirm('Remove this item from cart?');">
+                        {% csrf_token %}
+                        <button type="submit" style="background: transparent; border: none; color: #e74c3c; cursor: pointer; font-size: 1.1rem;"><i class="fa-solid fa-trash-can"></i></button>
+                    </form>
+                </div>
+
+                <div style="margin-top: 1rem; display: flex; justify-content: space-between; align-items: center;">
+                    <p style="font-size: 0.9rem; color: var(--text-muted);">Price per day: <span style="font-weight: 700; color: var(--text-dark);">Rs. {{ item.content_object.price_per_day }}</span></p>
+                    <p style="font-size: 1rem; font-weight: 800; color: var(--primary-orange);">Subtotal: Rs. {{ item.total_price }}</p>
+                </div>
+
+                <form action="{% url 'update_cart_dates' item.pk %}" method="POST" class="cart-item-dates">
+                    {% csrf_token %}
+                    <div>
+                        <label style="display: block; font-size: 0.7rem; font-weight: 700; color: var(--text-muted); margin-bottom: 4px;">RENTAL START</label>
+                        <input type="date" name="start_date" value="{{ item.start_date|date:'Y-m-d' }}" required onchange="this.form.submit()">
+                    </div>
+                    <div>
+                        <label style="display: block; font-size: 0.7rem; font-weight: 700; color: var(--text-muted); margin-bottom: 4px;">RENTAL END</label>
+                        <input type="date" name="end_date" value="{{ item.end_date|date:'Y-m-d' }}" required onchange="this.form.submit()">
+                    </div>
+                    <small style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 8px;">(Total {{ item.days }} days)</small>
+                </form>
+            </div>
+        </div>
+        {% empty %}
+        <div class="card" style="text-align: center; padding: 4rem;">
+            <i class="fa-solid fa-cart-plus fa-4x" style="color: #eee; margin-bottom: 2rem; display: block;"></i>
+            <h2 style="color: var(--text-dark); margin-bottom: 1rem;">Your cart is empty.</h2>
+            <p style="color: var(--text-muted); margin-bottom: 2rem;">Browse our adventure equipment and start booking!</p>
+            <a href="{% url 'home' %}" class="btn-primary" style="text-decoration: none;">Browse Adventure Gear</a>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Order Summary Panel -->
+    <div>
+        <div class="order-summary">
+            <h4 style="margin-bottom: 1.5rem; color: var(--text-dark); border-bottom: 2px solid #eee; padding-bottom: 0.5rem;">Order Summary</h4>
+            <div class="summary-row">
+                <span style="color: var(--text-muted);">Total Items</span>
+                <span style="color: var(--text-dark); font-weight: 700;">{{ items.count }}</span>
+            </div>
+            <div class="summary-row" style="border-bottom: none; margin-top: 1rem;">
+                <span style="color: var(--text-muted); font-size: 1.2rem;">Grand Total</span>
+                <span style="color: var(--primary-orange); font-size: 1.5rem; font-weight: 800;">Rs. {{ total_price }}</span>
+            </div>
+            
+            <form action="{% url 'cart_checkout' %}" method="POST" style="margin-top: 2rem;">
+                {% csrf_token %}
+                <button type="submit" class="btn-primary" style="width: 100%; padding: 1rem; font-size: 1rem; letter-spacing: 1px;">PROCEED TO BOOK <i class="fa-solid fa-arrow-right" style="margin-left: 10px;"></i></button>
+            </form>
+            
+            <p style="margin-top: 1.5rem; font-size: 0.75rem; color: var(--text-muted); text-align: center; line-height: 1.5;">
+                By clicking proceed, you are submitting a rental request. Our team will verify availability and contact you for final confirmation.
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

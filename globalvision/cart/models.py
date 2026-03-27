@@ -19,7 +19,15 @@ class CartItem(models.Model):
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
     quantity = models.PositiveIntegerField(default=1)
-    days = models.PositiveIntegerField(default=1)
+    start_date = models.DateField(null=True, blank=True)
+    end_date = models.DateField(null=True, blank=True)
+    
+    @property
+    def days(self):
+        if self.start_date and self.end_date:
+            delta = self.end_date - self.start_date
+            return max(delta.days, 1)
+        return 1
 
     class Meta:
         db_table = 'account_cartitem'

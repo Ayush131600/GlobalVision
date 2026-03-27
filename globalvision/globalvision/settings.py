@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'bookings',
     'cart',
     'django_summernote',
+    'user_dashboard',
 ]
 
 AUTH_USER_MODEL = 'account.User'
@@ -139,3 +140,15 @@ SUMMERNOTE_CONFIG = {
         ],
     }
 }
+
+# Email Configuration
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'visiong546@gmail.com'
+EMAIL_HOST_PASSWORD = 'rsjoswudftoxqcpp'
+DEFAULT_FROM_EMAIL = f'GlobalVision <{EMAIL_HOST_USER}>'
+
+
+

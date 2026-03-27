@@ -1,0 +1,132 @@
+{% extends 'user_dashboard/base.html' %}
+
+{% block title %}My Profile{% endblock %}
+{% block page_heading %}Update Profile Information{% endblock %}
+
+{% block extra_css %}
+<style>
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+    .form-group label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: var(--text-dark);
+        font-size: 0.9rem;
+    }
+    .form-control {
+        width: 100%;
+        padding: 0.8rem 1rem;
+        border: 2.5px solid #eee;
+        border-radius: 8px;
+        font-size: 0.95rem;
+        transition: var(--transition);
+        outline: none;
+    }
+    .form-control:focus {
+        border-color: var(--primary-orange);
+    }
+    .profile-img-preview {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-bottom: 1rem;
+        border: 4px solid var(--primary-orange);
+        box-shadow: var(--shadow);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem;">
+    <!-- Profile Info Form -->
+    <div class="card">
+        <h3 style="margin-bottom: 1.5rem; color: var(--text-dark); border-bottom: 2px solid #eee; padding-bottom: 0.5rem;">Basic Details</h3>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div style="text-align: center; margin-bottom: 2rem;">
+                {% if user.profile_photo %}
+                    <img id="imgPreview" src="{{ user.profile_photo.url }}" class="profile-img-preview">
+                {% else %}
+                    <img id="imgPreview" src="https://ui-avatars.com/api/?name={{ user.user_name }}&size=120&background=e67e22&color=fff" class="profile-img-preview">
+                {% endif %}
+                <div class="form-group">
+                    <label for="profile_photo" class="btn-primary" style="display: inline-block; padding: 0.5rem 1rem; font-size: 0.8rem;">
+                        <i class="fa-solid fa-camera"></i> Change Photo
+                    </label>
+                    <input type="file" id="profile_photo" name="profile_photo" style="display: none;" onchange="previewImage(event)">
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                    <label>User Name</label>
+                    <input type="text" name="user_name" value="{{ user.user_name }}" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" name="email" value="{{ user.email }}" class="form-control" required>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <input type="text" name="phone_no" value="{{ user.phone_no }}" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>Date of Birth</label>
+                    <input type="date" name="dob" value="{{ user.dob|date:'Y-m-d' }}" class="form-control">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Address</label>
+                <textarea name="address" rows="3" class="form-control">{{ user.address }}</textarea>
+            </div>
+
+            <button type="submit" name="update_profile" class="btn-primary" style="width: 100%; margin-top: 1rem;">Save Changes</button>
+        </form>
+    </div>
+
+    <!-- Password Change Form -->
+    <div class="card">
+        <h3 style="margin-bottom: 1.5rem; color: var(--text-dark); border-bottom: 2px solid #eee; padding-bottom: 0.5rem;">Security</h3>
+        <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1.5rem;">Keep your account secure by using a strong password.</p>
+        
+        <form method="POST">
+            {% csrf_token %}
+            {% for field in password_form %}
+                <div class="form-group">
+                    <label>{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.errors %}
+                        <small style="color: #e74c3c; font-size: 0.75rem;">{{ field.errors.0 }}</small>
+                    {% endif %}
+                </div>
+            {% endfor %}
+            <button type="submit" name="change_password" class="btn-primary" style="width: 100%; margin-top: 1rem; background-color: #34495e;">Update Password</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function previewImage(event) {
+        const reader = new FileReader();
+        reader.onload = function() {
+            const output = document.getElementById('imgPreview');
+            output.src = reader.result;
+        };
+        reader.readAsDataURL(event.target.files[0]);
+    }
+
+    // Add CSS classes to password form fields manually
+    document.querySelectorAll('form input[type="password"]').forEach(input => {
+        input.classList.add('form-control');
+    });
+</script>
+{% endblock %}
