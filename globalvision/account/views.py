@@ -309,6 +309,24 @@ def blog(request):
 
 
 def contact(request):
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        subject = request.POST.get('subject')
+        message_content = request.POST.get('message')
+        
+        if name and email and message_content:
+            ContactMessage.objects.create(
+                user=request.user if request.user.is_authenticated else None,
+                name=name,
+                email=email,
+                subject=subject or 'No Subject',
+                message=message_content
+            )
+            print(f"DEBUG: Message saved from {name}")
+            messages.success(request, 'Thank you! Your message has been sent to our team.')
+            return redirect('account:contact')
+            
     settings = SiteSettings.objects.first()
     return render(request, 'contacts/contact.html', {'settings': settings})
 

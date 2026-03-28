@@ -3,8 +3,7 @@
 {% block content %}
 <div class="container" style="max-width: 800px; padding: 60px 0;">
     <div style="background: white; padding: 50px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.05);">
-        <h1 style="color: var(--primary); margin-bottom: 40px; text-align: center;">{{ action }} {{ product_type|title
-            }}</h1>
+        <h1 style="color: var(--primary); margin-bottom: 40px; text-align: center;">{{ action }} {{ product_type|title }}</h1>
 
         <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}

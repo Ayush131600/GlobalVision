@@ -1,0 +1,75 @@
+{% extends 'dashboard/base_dashboard.html' %}
+{% load static %}
+
+{% block title %}Broadcast Alerts | Admin Console{% endblock %}
+{% block page_title %}Broadcast Management{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="admin-card">
+            <div class="d-flex align-items-center gap-3 mb-6">
+                <div class="bg-accent p-3 rounded-circle text-white">
+                    <i class="fa-solid fa-bullhorn fa-lg"></i>
+                </div>
+                <div>
+                    <h3 class="h5 font-black m-0 text-slate-800">Send Global Alert</h3>
+                    <p class="text-xs font-bold text-slate-400 m-0 uppercase tracking-wider">Broadcast messages to your users</p>
+                </div>
+            </div>
+
+            <form method="POST">
+                {% csrf_token %}
+                
+                <div class="mb-5">
+                    <label class="form-label text-xs font-black text-slate-500 uppercase tracking-widest mb-3" for="user_id">Recipient Channel</label>
+                    <select class="form-select rounded-3 border-slate-200 py-3 px-4 font-semibold text-sm" name="user_id" id="user_id" required>
+                        <option value="all">Broadcast to All Users</option>
+                        {% for user in users %}
+                        <option value="{{ user.id }}">{{ user.user_name }} ({{ user.email }})</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-8 mb-5">
+                        <label class="form-label text-xs font-black text-slate-500 uppercase tracking-widest mb-3" for="title">Alert Headline</label>
+                        <input type="text" class="form-control rounded-3 border-slate-200 py-3 px-4 font-semibold text-sm" name="title" id="title" placeholder="e.g. New Trekking Package Available!" required>
+                    </div>
+                    <div class="col-md-4 mb-5">
+                        <label class="form-label text-xs font-black text-slate-500 uppercase tracking-widest mb-3" for="type">Alert Category</label>
+                        <select class="form-select rounded-3 border-slate-200 py-3 px-4 font-semibold text-sm" name="type" id="type">
+                            <option value="general">General</option>
+                            <option value="booking">Booking</option>
+                            <option value="payment">Payment</option>
+                            <option value="rental">Rental</option>
+                            <option value="system">System</option>
+                            <option value="admin" selected>Admin Announcement</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="mb-6">
+                    <label class="form-label text-xs font-black text-slate-500 uppercase tracking-widest mb-3" for="message">Detailed Message</label>
+                    <textarea class="form-control rounded-3 border-slate-200 py-3 px-4 font-semibold text-sm" name="message" id="message" rows="5" placeholder="Write your announcement details here..." required></textarea>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center bg-slate-50 p-4 rounded-4">
+                    <div class="text-xs text-slate-400 font-bold italic">
+                        <i class="fa-solid fa-circle-info me-1"></i> This will also send an email to recipients.
+                    </div>
+                    <button type="submit" class="btn btn-dark rounded-pill px-6 py-3 font-black text-xs uppercase tracking-widest shadow-lg">
+                        <span class="me-2"><i class="fa-solid fa-paper-plane"></i></span> Dispatch Alert
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    .mb-6 { margin-bottom: 2rem; }
+    .rounded-4 { border-radius: 1rem; }
+    .bg-slate-50 { background: #f8fafc; }
+</style>
+{% endblock %}

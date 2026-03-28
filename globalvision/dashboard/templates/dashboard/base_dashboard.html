@@ -124,6 +124,9 @@
             <a href="{% url 'contact_list' %}" class="nav-link rounded-3 {% if 'contact' in request.path %}active{% endif %}">
                 <i class="fa-solid fa-inbox" style="width:20px;"></i> Messages
             </a>
+            <a href="{% url 'admin_notifications' %}" class="nav-link rounded-3 {% if 'notifications' in request.path %}active{% endif %}">
+                <i class="fa-solid fa-bullhorn" style="width:20px;"></i> Broadcast Alerts
+            </a>
             <a href="{% url 'site_settings' %}" class="nav-link rounded-3 {% if 'settings' in request.path %}active{% endif %}">
                 <i class="fa-solid fa-cloud-moon" style="width:20px;"></i> Global Config
             </a>

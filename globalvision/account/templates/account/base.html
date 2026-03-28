@@ -227,6 +227,102 @@
         }
 
         /* ===== SPECIFIC PAGE STYLES ===== */
+        /* ===== NOTIFICATION STYLES ===== */
+        .notification-wrapper { position: relative; }
+        .notification-btn { position: relative; cursor: pointer; color: var(--text-light); }
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #ef4444;
+            color: white;
+            font-size: 10px;
+            font-weight: 800;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid white;
+        }
+        .notification-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            width: 320px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            display: none;
+            z-index: 2000;
+            margin-top: 15px;
+            overflow: hidden;
+            border: 1px solid #f1f5f9;
+        }
+        .notification-dropdown.active { display: block; }
+        .notification-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid #f1f5f9;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .notification-header h4 { font-size: 14px; margin: 0; font-weight: 700; color: var(--text-dark); }
+        .notification-list { max-height: 350px; overflow-y: auto; }
+        .notification-item {
+            padding: 15px 20px;
+            border-bottom: 1px solid #f8fafc;
+            display: flex;
+            gap: 15px;
+            transition: 0.2s;
+            text-decoration: none;
+            color: inherit;
+        }
+        .notification-item:hover { background: #f8fafc; }
+        .notification-item.unread { background: #f0f9ff; }
+        .non-item-icon {
+            width: 36px; height: 36px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0; font-size: 14px;
+        }
+        .icon-booking { background: #ecfdf5; color: #10b981; }
+        .icon-payment { background: #fffbeb; color: #f59e0b; }
+        .icon-system { background: #eff6ff; color: #3b82f6; }
+        .icon-admin { background: #fef2f2; color: #ef4444; }
+        .icon-general { background: #f8fafc; color: #64748b; }
+        
+        .notification-content h5 { font-size: 13px; margin: 0 0 4px; color: var(--text-dark); font-weight: 600; }
+        .notification-content p { font-size: 12px; margin: 0 0 5px; color: var(--text-light); line-height: 1.4; }
+        .notification-time { font-size: 10px; color: #94a3b8; font-weight: 500; }
+        .notification-footer { padding: 10px; text-align: center; border-top: 1px solid #f1f5f9; }
+        .notification-footer a { font-size: 12px; color: var(--primary); font-weight: 600; text-decoration: none; }
+
+        /* TOAST NOTIFICATION */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 3000;
+        }
+        .toast-alert {
+            background: white;
+            padding: 15px 20px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 10px;
+            border-left: 4px solid var(--primary);
+            animation: slideIn 0.3s ease-out;
+            max-width: 350px;
+        }
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
         {% block extra_css %}{% endblock %}
     </style>
 </head>
@@ -262,6 +358,24 @@
 
             <div class="auth-links">
                 {% if user.is_authenticated %}
+                <div class="notification-wrapper">
+                    <div class="notification-btn auth-icon" id="notifBtn">
+                        <i class="fa-regular fa-bell"></i>
+                        <span class="notification-badge" id="notifBadge" style="display: none;">0</span>
+                    </div>
+                    <div class="notification-dropdown" id="notifDropdown">
+                        <div class="notification-header">
+                            <h4>Notifications</h4>
+                            <a href="#" id="markAllRead" style="font-size: 11px; font-weight: 700; color: var(--primary); text-decoration: none;">Mark all read</a>
+                        </div>
+                        <div class="notification-list" id="notifList">
+                            <div style="padding: 20px; text-align: center; color: #94a3b8; font-size: 12px;">Loading...</div>
+                        </div>
+                        <div class="notification-footer">
+                            <a href="{% url 'notification_list' %}">View All Notifications</a>
+                        </div>
+                    </div>
+                </div>
                 <a href="{% url 'account:profile' %}" title="Profile" class="auth-icon"><i class="fa-regular fa-user"></i></a>
                 <a href="{% url 'account:logout' %}" title="Logout" class="auth-icon"><i class="fa-solid fa-right-from-bracket"></i></a>
                 {% else %}
@@ -343,6 +457,108 @@
         </div>
     </footer>
 
+    <div class="toast-container" id="toastContainer"></div>
+
     {% block extra_scripts %}{% endblock %}
+
+    {% if user.is_authenticated %}
+    <script>
+        const notifBtn = document.getElementById('notifBtn');
+        const notifDropdown = document.getElementById('notifDropdown');
+        const notifList = document.getElementById('notifList');
+        const notifBadge = document.getElementById('notifBadge');
+        const markAllBtn = document.getElementById('markAllRead');
+        const toastContainer = document.getElementById('toastContainer');
+
+        let lastCount = 0;
+
+        function fetchNotifications() {
+            fetch('/notifications/api/get/')
+                .then(response => response.json())
+                .then(data => {
+                    updateBadge(data.unread_count);
+                    renderNotifications(data.notifications);
+                    
+                    if (data.unread_count > lastCount) {
+                        const newNotif = data.notifications[0];
+                        showToast(newNotif);
+                    }
+                    lastCount = data.unread_count;
+                });
+        }
+
+        function updateBadge(count) {
+            if (count > 0) {
+                notifBadge.innerText = count;
+                notifBadge.style.display = 'flex';
+            } else {
+                notifBadge.style.display = 'none';
+            }
+        }
+
+        function renderNotifications(notifications) {
+            if (notifications.length === 0) {
+                notifList.innerHTML = '<div style="padding: 20px; text-align: center; color: #94a3b8; font-size: 12px;">No notifications yet</div>';
+                return;
+            }
+
+            notifList.innerHTML = notifications.map(n => `
+                <a href="/notifications/api/mark-read/${n.id}/" class="notification-item ${n.is_read ? '' : 'unread'}">
+                    <div class="non-item-icon icon-${n.type}">
+                        <i class="${getIcon(n.type)}"></i>
+                    </div>
+                    <div class="notification-content">
+                        <h5>${n.title}</h5>
+                        <p>${n.message}</p>
+                        <span class="notification-time">${n.created_at}</span>
+                    </div>
+                </a>
+            `).join('');
+        }
+
+        function getIcon(type) {
+            const icons = {
+                'booking': 'fa-solid fa-calendar-check',
+                'payment': 'fa-solid fa-credit-card',
+                'rental': 'fa-solid fa-truck-ramp-box',
+                'system': 'fa-solid fa-circle-info',
+                'admin': 'fa-solid fa-user-shield',
+                'general': 'fa-solid fa-bell'
+            };
+            return icons[type] || icons['general'];
+        }
+
+        function showToast(notif) {
+            const toast = document.createElement('div');
+            toast.className = 'toast-alert';
+            toast.innerHTML = `
+                <div class="non-item-icon icon-${notif.type}"><i class="${getIcon(notif.type)}"></i></div>
+                <div class="notification-content">
+                    <h5>${notif.title}</h5>
+                    <p>${notif.message}</p>
+                </div>
+            `;
+            toastContainer.appendChild(toast);
+            setTimeout(() => toast.remove(), 5000);
+        }
+
+        notifBtn.onclick = (e) => {
+            e.stopPropagation();
+            notifDropdown.classList.toggle('active');
+        };
+
+        markAllBtn.onclick = (e) => {
+            e.preventDefault();
+            fetch('/notifications/api/mark-all-read/')
+                .then(() => fetchNotifications());
+        };
+
+        window.onclick = () => notifDropdown.classList.remove('active');
+
+        // Initial fetch and poll every 30 seconds
+        fetchNotifications();
+        setInterval(fetchNotifications, 30000);
+    </script>
+    {% endif %}
 </body>
 </html>

@@ -12,6 +12,7 @@ from inventory.models import Vehicle, Equipment
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import Q
 from decimal import Decimal
+from notifications.utils import create_notification
 
 @user_required
 def user_overview(request):
@@ -155,9 +156,32 @@ def user_logout(request):
 # Actions
 @user_required
 def cancel_booking(request, pk):
-    booking = get_object_or_404(Booking, pk=pk, user=request.user, status='Pending')
+    if request.method != 'POST':
+        messages.error(request, "Invalid request method.")
+        return redirect('user_bookings')
+        
+    try:
+        booking = Booking.objects.get(pk=pk, user=request.user)
+    except Booking.DoesNotExist:
+        messages.error(request, "Booking not found.")
+        return redirect('user_bookings')
+
+    if booking.status != 'Pending':
+        messages.error(request, f"This booking is {booking.status.lower()} and cannot be cancelled.")
+        return redirect('user_bookings')
+
+    # Proceed with cancellation
     booking.status = 'Cancelled'
     booking.save()
+    
+    # Trigger notification
+    create_notification(
+        user=request.user,
+        title="Booking Cancelled",
+        message=f"Your booking for {booking.item.name if booking.item else 'Item'} has been cancelled.",
+        type='general'
+    )
+    
     messages.success(request, "Booking cancelled successfully.")
     return redirect('user_bookings')
 
@@ -203,7 +227,7 @@ def cart_checkout(request):
     try:
         with transaction.atomic():
             for item in items:
-                Booking.objects.create(
+                booking = Booking.objects.create(
                     user=request.user,
                     content_type=item.content_type,
                     object_id=item.object_id,
@@ -211,6 +235,16 @@ def cart_checkout(request):
                     end_date=item.end_date,
                     total_price=item.total_price,
                     status='Pending'
+                )
+                
+                # Trigger notification for each booking
+                item_name = item.content_object.name if item.content_object else "Item"
+                create_notification(
+                    user=request.user,
+                    title="Booking Confirmed",
+                    message=f"Your booking for {item_name} from {item.start_date} to {item.end_date} is now pending confirmation. Total: ${item.total_price}",
+                    type='booking',
+                    link='/dashboard/user/bookings/'
                 )
             
             # Clear cart

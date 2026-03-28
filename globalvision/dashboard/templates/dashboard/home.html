@@ -125,9 +125,34 @@
             <div style="position:absolute; right:-30px; top:-30px; width:120px; height:120px; background:var(--primary-admin); opacity:0.1; border-radius:50%;"></div>
             
             <h4 class="font-black h5 mb-6 d-flex align-items-center gap-3"><i class="fa-solid fa-bolt-lightning text-accent"></i> Rapid Logic</h4>
-            <div class="d-grid gap-3 mb-8">
-                <a href="{% url 'blog_add' %}" class="btn btn-primary-admin py-3 rounded-3 font-black text-[10px] uppercase tracking-widest text-white text-decoration-none" style="background:#008fa0;">Compose Post</a>
-                <a href="{% url 'vehicle_add' %}" class="btn bg-white/5 hover:bg-white/10 py-3 rounded-3 font-black text-[10px] uppercase tracking-widest text-white text-decoration-none border border-white/10">Inventory Inbound</a>
+            
+            <form action="{% url 'send_admin_notification' %}" method="POST" class="d-grid gap-3">
+                {% csrf_token %}
+                <input type="hidden" name="user_id" value="all">
+                <input type="hidden" name="type" value="admin">
+                
+                <div class="bg-primary-admin p-4 rounded-3 text-center mb-1 shadow-sm">
+                    <span class="font-black text-[11px] uppercase tracking-widest text-white">Broadcast Global Alert</span>
+                </div>
+                
+                <div class="form-group mb-1">
+                    <input type="text" name="title" class="form-control bg-white/5 border-white/10 text-white text-xs py-3 font-semibold placeholder-white/20" placeholder="Alert Headline..." required>
+                </div>
+                
+                <div class="form-group mb-3">
+                    <textarea name="message" class="form-control bg-white/5 border-white/10 text-white text-xs py-3 font-semibold placeholder-white/20" rows="3" placeholder="Message content..." required></textarea>
+                </div>
+                
+                <button type="submit" class="btn btn-primary-admin py-3 rounded-3 font-black text-[10px] uppercase tracking-widest text-white border-0 shadow-lg" style="background:#008fa0;">
+                    <i class="fa-solid fa-paper-plane me-2"></i> Dispatch Now
+                </button>
+            </form>
+            
+            <div class="mt-6 pt-6 border-top border-white/5 d-grid gap-2">
+                <a href="{% url 'vehicle_add' %}" class="text-white/40 hover:text-white text-[9px] font-black uppercase tracking-widest text-decoration-none d-flex align-items-center justify-content-between transition-all">
+                    <span>New Fleet Asset</span>
+                    <i class="fa-solid fa-plus-circle text-xs"></i>
+                </a>
             </div>
             
             <div class="p-6 bg-white/5 rounded-4 border border-white/5">

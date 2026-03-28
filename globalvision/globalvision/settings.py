@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'cart',
     'django_summernote',
     'user_dashboard',
+    'notifications',
 ]
 
 AUTH_USER_MODEL = 'account.User'
@@ -107,7 +108,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Tokyo'
 
 USE_I18N = True
 
