@@ -126,7 +126,7 @@
             
             <h4 class="font-black h5 mb-6 d-flex align-items-center gap-3"><i class="fa-solid fa-bolt-lightning text-accent"></i> Rapid Logic</h4>
             
-            <form action="{% url 'send_admin_notification' %}" method="POST" class="d-grid gap-3">
+            <form action="{% url 'admin_notifications' %}" method="POST" class="d-grid gap-3">
                 {% csrf_token %}
                 <input type="hidden" name="user_id" value="all">
                 <input type="hidden" name="type" value="admin">

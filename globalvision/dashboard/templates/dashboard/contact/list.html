@@ -1,76 +1,221 @@
 {% extends 'dashboard/base_dashboard.html' %}
 {% load static %}
 
-{% block title %}Messages & Inquiries{% endblock %}
-{% block page_title %}Communication Desk{% endblock %}
+{% block title %}Messages & Inquiries | Admin Console{% endblock %}
+{% block page_title %}Inbound Communication{% endblock %}
 
 {% block content %}
-<div class="container-fluid">
-    <div class="row mb-6 align-items-center">
-        <div class="col">
-            <h1 class="h3 font-black text-slate-800 m-0">Inbound Inquiries</h1>
-            <p class="text-sm font-medium text-slate-400 mt-1">Status: <span class="bg-indigo-50 text-indigo-500 px-3 py-1 rounded-pill font-black text-[10px]">{{ messages|length }} total submissions</span></p>
-        </div>
-    </div>
-
-    <div class="card border-0 shadow-sm rounded-4 overflow-hidden mt-6">
-        <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0" style="border-collapse: separate; border-spacing: 0;">
-                <thead class="bg-slate-50 border-bottom">
-                    <tr>
-                        <th class="ps-6 py-3 text-[10px] font-black text-slate-400 uppercase tracking-widest border-0">Sender / Channel</th>
-                        <th class="py-3 text-[10px] font-black text-slate-400 uppercase tracking-widest border-0">Topic / Subject</th>
-                        <th class="py-3 text-[10px] font-black text-slate-400 uppercase tracking-widest border-0 text-center">Status</th>
-                        <th class="py-3 text-[10px] font-black text-slate-400 uppercase tracking-widest border-0 text-center">Received Date</th>
-                        <th class="pe-6 py-3 text-[10px] font-black text-slate-400 uppercase tracking-widest border-0 text-end">Action Control</th>
-                    </tr>
-                </thead>
-                <tbody class="border-0">
-                    {% for m in messages %}
-                    <tr class="border-bottom {% if not m.is_read %}bg-indigo-50/20{% endif %}" style="transition: 0.2s;">
-                        <td class="ps-6 py-5 border-0">
-                            <div class="d-flex align-items-center gap-4">
-                                <div class="avatar bg-slate-100 rounded-circle d-flex align-items-center justify-center font-black text-slate-400" style="width: 44px; height: 44px;">
-                                    {{ m.name|slice:":1"|upper }}
-                                </div>
-                                <div class="overflow-hidden">
-                                    <p class="font-black text-sm text-slate-800 m-0 truncate">{{ m.name }}</p>
-                                    <span class="text-[10px] font-bold text-slate-400 uppercase">{{ m.email }}</span>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="border-0">
-                            <p class="text-sm font-semibold text-slate-700 m-0">{{ m.subject|truncatechars:150 }}</p>
-                        </td>
-                        <td class="text-center border-0">
-                            {% if not m.is_read %}
-                            <span class="badge bg-indigo-100 text-indigo-700 border border-indigo-200 text-[9px] font-black uppercase rounded-pill px-3 py-1">New Thread</span>
-                            {% else %}
-                            <span class="badge bg-slate-100 text-slate-400 border border-slate-200 text-[9px] font-black uppercase rounded-pill px-3 py-1">Processed</span>
-                            {% endif %}
-                        </td>
-                        <td class="text-center border-0 font-black text-slate-400 text-[10px] tracking-widest uppercase">
-                            {{ m.created_at|date:"M d, H:i" }}
-                        </td>
-                        <td class="pe-6 text-end border-0">
-                            <div class="d-flex justify-content-end gap-2">
-                                <a href="{% url 'contact_detail' m.pk %}" class="btn btn-sm btn-dark rounded-pill px-4 text-[10px] font-black uppercase tracking-widest text-decoration-none">Open Ticket</a>
-                            </div>
-                        </td>
-                    </tr>
-                    {% empty %}
-                    <tr><td colspan="5" class="text-center py-5 italic text-slate-300">No communication logs recorded.</td></tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+<div class="row mb-8">
+    <div class="col-12">
+        <div class="welcome-banner p-10 rounded-5 text-white shadow-xl relative overflow-hidden" style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);">
+             <div style="position:absolute; right:-20px; bottom:-20px; width:150px; height:150px; background:var(--primary-admin); opacity:0.1; border-radius:30% 70% 70% 30% / 30% 30% 70% 70%;"></div>
+             <div style="position:absolute; left:10%; top:-30px; width:80px; height:80px; background:white; opacity:0.03; border-radius:50%;"></div>
+            <div class="relative z-10 d-flex justify-content-between align-items-center">
+                <div>
+                    <div class="status-badge mb-4">
+                        <span class="pulsing-dot"></span>
+                        <span class="text-[10px] font-black uppercase tracking-widest">System: Live Monitor</span>
+                    </div>
+                    <h1 class="font-black mb-2 h2" style="letter-spacing: -0.04em;">Communication Desk</h1>
+                    <p class="text-sm font-medium opacity-60 m-0">Consolidated stream of all inbound platform inquiries and customer signals.</p>
+                </div>
+                <div class="text-end border-start border-white/10 ps-10">
+                    <span class="d-block text-[10px] font-black uppercase tracking-widest opacity-40 mb-1">Queue volume</span>
+                    <span class="h1 font-black m-0 tracking-tighter" style="font-size: 3.5rem;">{{ messages|length }}</span>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
+<div class="admin-card p-0 border-0 shadow-sm overflow-hidden rounded-4">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead>
+                <tr class="bg-slate-50">
+                    <th class="ps-8 py-5 text-[11px] font-black text-slate-400 uppercase tracking-widest border-0">Sender Signature</th>
+                    <th class="py-5 text-[11px] font-black text-slate-400 uppercase tracking-widest border-0">Topic Protocol</th>
+                    <th class="py-5 text-[11px] font-black text-slate-400 uppercase tracking-widest border-0 text-center">Thread Status</th>
+                    <th class="py-5 text-[11px] font-black text-slate-400 uppercase tracking-widest border-0 text-center">Ingestion Date</th>
+                    <th class="pe-8 py-5 text-[11px] font-black text-slate-400 uppercase tracking-widest border-0 text-end">Operations</th>
+                </tr>
+            </thead>
+            <tbody class="border-0">
+                {% for m in messages %}
+                <tr class="message-row {% if not m.is_read %}unread-row{% endif %}">
+                    <td class="ps-8 py-5 border-0">
+                        <div class="d-flex align-items-center gap-4">
+                            <div class="avatar-capsule position-relative">
+                                <div class="avatar rounded-4 d-flex align-items-center justify-center font-black text-white shadow-sm" 
+                                     style="width: 52px; height: 52px; background: linear-gradient(135deg, #{% cycle '00c6ff' 'f093fb' '84fab0' 'ff9a9e' %}, #{% cycle '0072ff' 'f5576c' '8fd3f4' 'fecfef' %});">
+                                    {{ m.name|slice:":1"|upper }}
+                                </div>
+                            </div>
+                            <div>
+                                <h4 class="font-black text-[15px] text-slate-800 m-0" style="letter-spacing: -0.02em;">{{ m.name }}</h4>
+                                <p class="text-[11px] font-bold text-slate-400 uppercase m-0 tracking-tighter opacity-80">{{ m.email }}</p>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="border-0">
+                        <div class="px-2" style="max-width: 400px;">
+                            <p class="text-sm font-semibold text-slate-700 m-0 leading-relaxed">{{ m.subject|truncatechars:85 }}</p>
+                        </div>
+                    </td>
+                    <td class="text-center border-0">
+                        {% if not m.is_read %}
+                        <div class="badge-priority">
+                            <i class="fa-solid fa-bolt-lightning"></i>
+                            <span>Priority Thread</span>
+                        </div>
+                        {% else %}
+                        <div class="badge-processed">
+                            <i class="fa-solid fa-check-double"></i>
+                            <span>Processed</span>
+                        </div>
+                        {% endif %}
+                    </td>
+                    <td class="text-center border-0">
+                        <div class="ingestion-date">
+                            <span class="date">{{ m.created_at|date:"M d" }}</span>
+                            <span class="time">{{ m.created_at|date:"H:i" }}</span>
+                        </div>
+                    </td>
+                    <td class="pe-8 text-end border-0">
+                        <a href="{% url 'contact_detail' m.pk %}" class="btn-action">
+                            <span>Inspect Thread</span>
+                            <i class="fa-solid fa-arrow-right-long ms-2"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center py-20 border-0">
+                        <div class="empty-state">
+                            <div class="icon-box mx-auto mb-4">
+                                <i class="fa-solid fa-ghost fa-2x"></i>
+                            </div>
+                            <h5 class="font-black text-slate-400 uppercase tracking-widest text-xs">No Signal Detected</h5>
+                            <p class="text-xs text-slate-300 mt-2 font-medium">Communication channels are currently silent.</p>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
 <style>
+    .rounded-5 { border-radius: 32px; }
     .rounded-4 { border-radius: 20px; }
-    .bg-slate-50 { background: #f8fafc; }
-    .bg-indigo-50\/20 { background: rgba(99, 102, 241, 0.05); }
-    .text-slate-400 { color: #94a3b8; }
+    
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(16, 185, 129, 0.1);
+        color: #10b981;
+        padding: 6px 14px;
+        border-radius: 100px;
+        border: 1px solid rgba(16, 185, 129, 0.2);
+    }
+    
+    .pulsing-dot {
+        width: 6px;
+        height: 6px;
+        background: #10b981;
+        border-radius: 50%;
+        box-shadow: 0 0 0 rgba(16, 185, 129, 0.4);
+        animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+        0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
+        70% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+    }
+
+    .message-row { transition: all 0.3s ease; cursor: pointer; border-bottom: 1px solid #f1f5f9 !important; }
+    .message-row:hover { background-color: #f8fafc; transform: translateX(4px); }
+    .unread-row { background-color: rgba(0, 143, 160, 0.02); }
+    
+    .badge-priority {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 14px;
+        border-radius: 100px;
+        background: #fffbeb;
+        color: #d97706;
+        border: 1px solid #fef3c7;
+        font-size: 10px;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+    
+    .badge-processed {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 14px;
+        border-radius: 100px;
+        background: #f1f5f9;
+        color: #64748b;
+        border: 1px solid #e2e8f0;
+        font-size: 10px;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+    
+    .ingestion-date {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        line-height: 1.2;
+    }
+    .ingestion-date .date { font-size: 11px; font-weight: 900; color: #334155; }
+    .ingestion-date .time { font-size: 10px; font-weight: 700; color: #94a3b8; text-transform: uppercase; }
+
+    .btn-action {
+        display: inline-flex;
+        align-items: center;
+        background: #0f172a;
+        color: white;
+        padding: 10px 24px;
+        border-radius: 100px;
+        font-size: 10px;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+    .btn-action:hover {
+        background: var(--primary-admin);
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
+    }
+    
+    .icon-box {
+        width: 64px;
+        height: 64px;
+        background: #f8fafc;
+        color: #cbd5e1;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .avatar { font-size: 1.2rem; }
+    .bg-slate-50 { background-color: #f8fafc; }
+    .tracking-tighter { letter-spacing: -0.05em; }
 </style>
 {% endblock %}
+
+
