@@ -164,19 +164,13 @@
             flex: 1;
         }
 
-            {
-            % block extra_css %
-        }
-
-            {
-            % endblock %
-        }
+        {% block extra_css %}{% endblock %}
     </style>
 </head>
 
 <body>
     <div class="sidebar">
-        <div class="sidebar-brand">Global Vision</div>
+        <a href="{% url 'dashboard_home' %}" class="sidebar-brand" style="text-decoration: none;">Global Vision</a>
         <div class="sidebar-menu">
             <a href="{% url 'account:dashboard' %}"
                 class="{% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">

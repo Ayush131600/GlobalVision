@@ -39,8 +39,6 @@ class Booking(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    class Meta:
-        db_table = 'dashboard_booking'
 
     def __str__(self):
         return f"Booking #{self.id} - {self.user}"

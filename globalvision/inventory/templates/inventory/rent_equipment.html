@@ -213,12 +213,14 @@
         <div class="tabs">
             <a href="?category=all{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}"
                 class="tab-btn {% if not request.GET.category or request.GET.category == 'all' %}active{% endif %}">All</a>
-            <a href="?category=gear{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}"
-                class="tab-btn {% if request.GET.category == 'gear' %}active{% endif %}">Gear</a>
-            <a href="?category=clothing{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}"
-                class="tab-btn {% if request.GET.category == 'clothing' %}active{% endif %}">Clothing</a>
-            <a href="?category=essentials{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}"
-                class="tab-btn {% if request.GET.category == 'essentials' %}active{% endif %}">Essentials</a>
+            <a href="?category=Trekking{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}"
+                class="tab-btn {% if request.GET.category == 'Trekking' %}active{% endif %}">Trekking</a>
+            <a href="?category=Camping{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}"
+                class="tab-btn {% if request.GET.category == 'Camping' %}active{% endif %}">Camping</a>
+            <a href="?category=Climbing{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}"
+                class="tab-btn {% if request.GET.category == 'Climbing' %}active{% endif %}">Climbing</a>
+            <a href="?category=Safety{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}"
+                class="tab-btn {% if request.GET.category == 'Safety' %}active{% endif %}">Safety</a>
         </div>
 
         <div class="vehicle-grid">

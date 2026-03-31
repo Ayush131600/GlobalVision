@@ -346,13 +346,11 @@
                     </div>
                 </div>
                 <a href="{% url 'account:blog' %}" class="{% if request.resolver_match.url_name == 'blog' %}active{% endif %}">Blog</a>
+
                 {% if user.is_authenticated %}
-                    {% if user.role == 'admin' or user.is_staff %}
-                        <a href="{% url 'dashboard_home' %}" class="cta-btn" style="background: #2c3e50;">Admin Panel</a>
-                    {% else %}
-                        <a href="{% url 'user_dashboard' %}" class="cta-btn" style="background: var(--accent);">Dashboard</a>
-                    {% endif %}
+                    <a href="{% url 'user_dashboard' %}" class="cta-btn" style="background: var(--accent);">Dashboard</a>
                 {% endif %}
+                
                 <a href="{% url 'account:contact' %}" class="cta-btn">Contact us</a>
             </nav>
 

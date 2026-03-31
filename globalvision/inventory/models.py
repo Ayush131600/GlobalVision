@@ -2,10 +2,9 @@ from django.db import models
 
 class Vehicle(models.Model):
     CATEGORY_CHOICES = [
-        ('Car', 'Car'),
-        ('Jeep', 'Jeep'),
-        ('Motorbike', 'Motorbike'),
-        ('Bicycle', 'Bicycle'),
+        ('Luxury', 'Luxury'),
+        ('Off Road', 'Off Road'),
+        ('Vans', 'Vans'),
     ]
     STATUS_CHOICES = [
         ('Available', 'Available'),
@@ -13,15 +12,12 @@ class Vehicle(models.Model):
         ('Maintenance', 'Maintenance'),
     ]
     name = models.CharField(max_length=200)
-    category = models.CharField(max_length=20, choices=CATEGORY_CHOICES, default='Car')
+    category = models.CharField(max_length=20, choices=CATEGORY_CHOICES, default='Luxury')
     description = models.TextField()
     price_per_day = models.DecimalField(max_digits=10, decimal_places=2)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Available')
     image = models.ImageField(upload_to='vehicles/', blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        db_table = 'dashboard_vehicle'
 
     def __str__(self):
         return self.name
@@ -46,8 +42,6 @@ class Equipment(models.Model):
     image = models.ImageField(upload_to='equipment/', blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
-    class Meta:
-        db_table = 'dashboard_equipment'
 
     def save(self, *args, **kwargs):
         if self.stock <= 0:

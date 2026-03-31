@@ -13,18 +13,6 @@ class Migration(migrations.Migration):
         migrations.DeleteModel(
             name='AboutPage',
         ),
-        migrations.RemoveField(
-            model_name='blogpost',
-            name='author',
-        ),
-        migrations.RemoveField(
-            model_name='booking',
-            name='user',
-        ),
-        migrations.RemoveField(
-            model_name='booking',
-            name='vehicle',
-        ),
         migrations.DeleteModel(
             name='ContactMessage',
         ),

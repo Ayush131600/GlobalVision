@@ -40,91 +40,175 @@
 
     .search-card {
       background: white;
-      border-radius: 0;
+      border-radius: 16px;
       display: flex;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-      overflow: hidden;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      border: 1px solid rgba(255,255,255,0.2);
     }
 
     .card-info {
       padding: 30px;
       flex: 1;
       border-right: 1px solid #f1f5f9;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      border-top-left-radius: 16px;
+      border-bottom-left-radius: 16px;
     }
 
     .card-info h3 {
-      font-size: 18px;
-      color: #1e293b;
-      margin-bottom: 5px;
+      font-size: 20px;
+      color: #0f172a;
+      margin-bottom: 8px;
+      font-weight: 700;
     }
 
     .card-info p {
-      font-size: 12px;
+      font-size: 13px;
       color: #64748b;
       max-width: 250px;
+      line-height: 1.5;
     }
 
     .card-categories {
       display: flex;
-      padding: 30px;
-      gap: 40px;
-      align-items: center;
+      padding: 0;
+      gap: 0;
+      align-items: stretch;
+      flex: 2;
     }
 
     .cat-item {
       text-align: center;
-      color: #1e293b;
+      color: #334155;
       cursor: pointer;
-      transition: 0.3s;
+      transition: all 0.3s ease;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 20px 10px;
+      border-right: 1px solid #f1f5f9;
     }
 
     .cat-item:hover {
       color: var(--primary);
+      background: #f8fafc;
+      transform: translateY(-2px);
     }
 
     .cat-item i {
-      font-size: 24px;
+      font-size: 26px;
       display: block;
-      margin-bottom: 8px;
+      margin-bottom: 12px;
       color: #64748b;
+      transition: all 0.3s ease;
+    }
+
+    .cat-item:hover i {
+      color: var(--primary);
     }
 
     .cat-item span {
-      font-size: 12px;
+      font-size: 13px;
       font-weight: 600;
     }
 
     .rent-now-split {
-      background: var(--secondary);
-      width: 130px;
+      background: linear-gradient(135deg, var(--secondary) 0%, #1e40af 100%);
+      width: 140px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       color: white;
       cursor: pointer;
-      transition: 0.3s;
+      transition: all 0.3s ease;
       position: relative;
+      border-top-right-radius: 16px;
+      border-bottom-right-radius: 16px;
     }
 
     .rent-now-split:hover {
-      background: #3b6d94;
+      background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%);
+      box-shadow: inset 0 0 10px rgba(0,0,0,0.2);
     }
 
     .rent-now-split i {
-      font-size: 24px;
-      margin-bottom: 5px;
+      font-size: 26px;
+      margin-bottom: 8px;
+      transition: transform 0.3s ease;
+    }
+
+    .rent-now-split:hover i {
+      transform: scale(1.1);
     }
 
     .rent-now-split span {
-      font-size: 12px;
-      font-weight: 600;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
     }
 
     .rent-now-split small {
       font-size: 10px;
-      opacity: 0.8;
-      margin-top: 5px;
+      opacity: 0.9;
+      margin-top: 6px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* DROPDOWN STYLES */
+    .dropdown-menu {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      left: auto;
+      width: 180px;
+      background: white;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+      border-radius: 12px;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(15px);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 200;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      border: 1px solid #e2e8f0;
+    }
+
+    .dropdown-menu.active {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(10px);
+    }
+
+    .dropdown-menu a {
+      color: #334155;
+      padding: 14px 20px;
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      text-align: left;
+      border-bottom: 1px solid #f1f5f9;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .dropdown-menu a:last-child {
+      border-bottom: none;
+    }
+
+    .dropdown-menu a:hover {
+      background: #f8fafc;
+      color: #1d4ed8;
+      padding-left: 24px;
     }
 
     /* WHAT WE DO */
@@ -279,58 +363,130 @@
       line-height: 1.5;
     }
 
-    /* RENT IT SECTION */
+    /* RENT IT SECTION (BENTO GRID) */
     .rent-it-section {
-      background: #4b81af;
-      padding: 80px 0;
-      color: white;
+      background: #f8fafc;
+      padding: 100px 0;
     }
 
-    .rent-it-section h2 {
-      font-size: 32px;
-      margin-bottom: 40px;
-      text-transform: uppercase;
-      font-weight: 400;
+    .rent-it-header {
+      margin-bottom: 50px;
     }
 
-    .category-grid {
+    .rent-it-header h2 {
+      font-size: 36px;
+      color: #0f172a;
+      font-weight: 800;
+      margin: 0;
+      letter-spacing: -0.5px;
+    }
+
+    .rent-it-header p {
+      color: #64748b;
+      font-size: 16px;
+      margin-top: 10px;
+      max-width: 600px;
+    }
+
+    .category-bento {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 25px;
+      grid-template-rows: repeat(2, 250px);
+      gap: 20px;
     }
 
-    .cat-card {
-      border-radius: 20px;
-      overflow: hidden;
-      height: 350px;
+    .bento-card {
       position: relative;
+      border-radius: 24px;
+      overflow: hidden;
       cursor: pointer;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+      text-decoration: none !important;
+      display: block;
     }
 
-    .cat-card img {
+    .bento-card:hover {
+      box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    }
+
+    .bento-card img {
       width: 100%;
       height: 100%;
       object-fit: cover;
-      transition: 0.5s;
+      transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    .cat-card:hover img {
-      transform: scale(1.1);
+    .bento-card:hover img {
+      transform: scale(1.08);
     }
 
-    .cat-overlay {
+    .bento-card-1 {
+      grid-column: span 2;
+      grid-row: span 2;
+    }
+
+    .bento-card-2 {
+      grid-column: span 2;
+      grid-row: span 1;
+    }
+
+    .bento-card-3 {
+      grid-column: span 1;
+      grid-row: span 1;
+    }
+
+    .bento-card-4 {
+      grid-column: span 1;
+      grid-row: span 1;
+    }
+
+    .bento-overlay {
       position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      padding: 20px;
-      background: linear-gradient(transparent, rgba(0, 0, 0, 0.6));
-      text-align: center;
+      inset: 0;
+      background: linear-gradient(to top, rgba(15, 23, 42, 0.95) 0%, rgba(15, 23, 42, 0.4) 40%, rgba(15, 23, 42, 0) 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 35px;
+      color: white;
     }
 
-    .cat-overlay h4 {
-      font-size: 14px;
-      font-weight: 500;
+    .bento-overlay h4 {
+      font-size: 28px;
+      font-weight: 800;
+      margin-bottom: 8px;
+      transform: translateY(15px);
+      transition: transform 0.4s ease;
+      color: white;
+    }
+
+    .bento-overlay p {
+      font-size: 15px;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.4s ease;
+      color: #cbd5e1;
+      margin: 0;
+      line-height: 1.5;
+    }
+
+    .bento-card-3 .bento-overlay h4,
+    .bento-card-4 .bento-overlay h4 {
+      font-size: 20px;
+    }
+    
+    .bento-card-3 .bento-overlay,
+    .bento-card-4 .bento-overlay {
+      padding: 25px;
+    }
+
+    .bento-card:hover .bento-overlay h4 {
+      transform: translateY(0);
+    }
+
+    .bento-card:hover .bento-overlay p {
+      opacity: 1;
+      transform: translateY(0);
     }
 
     /* FOOTER */
@@ -511,34 +667,39 @@
 
   <section class="rent-it-section">
     <div class="container">
-      <h2>RENT IT</h2>
-      <div class="category-grid">
-        <a href="{% url 'account:rent_equipment' %}?category=clothing" class="cat-card">
-          <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=2070&auto=format&fit=crop"
-            alt="Trekking Shoes">
-          <div class="cat-overlay">
-            <h4>Trekking Shoes</h4>
+      <div class="rent-it-header">
+        <div>
+          <h2>Explore Categories</h2>
+          <p>Find the perfect, expertly-maintained gear for your next great adventure.</p>
+        </div>
+      </div>
+      <div class="category-bento">
+        <a href="{% url 'account:rent_equipment' %}?category=Camping" class="bento-card bento-card-1">
+          <img src="https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?q=80&w=2070&auto=format&fit=crop" alt="Tents & Shelters">
+          <div class="bento-overlay">
+            <h4>Tents & Shelters</h4>
+            <p>Durable, lightweight tents designed for ultimate protection in any weather condition.</p>
           </div>
         </a>
-        <a href="{% url 'account:rent_equipment' %}?category=gear" class="cat-card">
-          <img src="https://images.unsplash.com/photo-1551632811-561732d1e306?q=80&w=2070&auto=format&fit=crop"
-            alt="Trekking Bag">
-          <div class="cat-overlay">
-            <h4>Trekking Bag</h4>
+        <a href="{% url 'account:rent_equipment' %}?category=Trekking" class="bento-card bento-card-2">
+          <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=2070&auto=format&fit=crop" alt="Trekking Shoes">
+          <div class="bento-overlay">
+            <h4>Trekking Footwear</h4>
+            <p>Premium boots optimized for tough terrains and long hikes.</p>
           </div>
         </a>
-        <a href="{% url 'account:rent_equipment' %}?category=gear" class="cat-card">
-          <img src="https://images.unsplash.com/photo-1544735230-c128445789bb?q=80&w=2070&auto=format&fit=crop"
-            alt="Trekking Sticks">
-          <div class="cat-overlay">
-            <h4>Trekking Sticks</h4>
+        <a href="{% url 'account:rent_equipment' %}?category=Trekking" class="bento-card bento-card-3">
+          <img src="https://images.unsplash.com/photo-1551632811-561732d1e306?q=80&w=2070&auto=format&fit=crop" alt="Backpacks">
+          <div class="bento-overlay">
+            <h4>Backpacks</h4>
+            <p>Spacious, ergonomic and reliable.</p>
           </div>
         </a>
-        <a href="{% url 'account:rent_equipment' %}?category=essentials" class="cat-card">
-          <img src="https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?q=80&w=2070&auto=format&fit=crop"
-            alt="Tents">
-          <div class="cat-overlay">
-            <h4>Tents</h4>
+        <a href="{% url 'account:rent_equipment' %}?category=Climbing" class="bento-card bento-card-4">
+          <img src="https://images.unsplash.com/photo-1522163182402-834f871fd851?q=80&w=2070&auto=format&fit=crop" alt="Climbing & Trekking Gear">
+          <div class="bento-overlay">
+            <h4>Advanced Gear</h4>
+            <p>Tools for higher elevations.</p>
           </div>
         </a>
       </div>

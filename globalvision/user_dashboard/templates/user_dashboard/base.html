@@ -262,7 +262,9 @@
 <body>
     <aside class="sidebar">
         <div class="sidebar-header">
-            <h2>GLOBAL <span>VISION</span></h2>
+            <a href="{% url 'home' %}" style="text-decoration: none; color: inherit;">
+                <h2>GLOBAL <span>VISION</span></h2>
+            </a>
         </div>
         <nav class="sidebar-menu">
             <a href="{% url 'user_dashboard' %}" class="menu-item {% if request.resolver_match.url_name == 'user_dashboard' %}active{% endif %}">

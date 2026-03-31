@@ -24,8 +24,6 @@ class BlogPost(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    class Meta:
-        db_table = 'dashboard_blogpost'
 
     def save(self, *args, **kwargs):
         if not self.slug:

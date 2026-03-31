@@ -9,8 +9,6 @@ class AboutPage(models.Model):
     stat_team = models.IntegerField(default=0, verbose_name="Team Members")
     updated_at = models.DateTimeField(auto_now=True)
 
-    class Meta:
-        db_table = 'dashboard_aboutpage'
 
     def __str__(self):
         return "About Us Content"
@@ -24,7 +22,6 @@ class TeamMember(models.Model):
 
     class Meta:
         ordering = ['display_order']
-        db_table = 'dashboard_teammember'
 
     def __str__(self):
         return self.name
@@ -42,4 +39,3 @@ class SiteSettings(models.Model):
 
     class Meta:
         verbose_name = "Site Settings"
-        db_table = 'dashboard_sitesettings'

@@ -30,8 +30,9 @@ class BlogPostForm(forms.ModelForm):
 class UserProfileForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ['user_name', 'email', 'phone_no', 'dob', 'address']
+        fields = ['user_name', 'email', 'phone_no', 'dob', 'address', 'profile_photo']
         widgets = {
             'dob': forms.DateInput(attrs={'type': 'date'}),
             'address': forms.Textarea(attrs={'rows': 3}),
+            'profile_photo': forms.FileInput(attrs={'class': 'd-none', 'id': 'profilePhotoUpload', 'accept': 'image/*'}),
         }

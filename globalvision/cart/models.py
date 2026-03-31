@@ -33,8 +33,12 @@ class CartItem(models.Model):
         db_table = 'account_cartitem'
 
     def __str__(self):
-        return f"{self.quantity} x {self.content_object}"
+        if self.content_object:
+            return f"{self.quantity} x {self.content_object}"
+        return f"{self.quantity} x Unknown Product"
 
     @property
     def total_price(self):
-        return self.content_object.price_per_day * self.days * self.quantity
+        if self.content_object:
+            return self.content_object.price_per_day * self.days * self.quantity
+        return 0

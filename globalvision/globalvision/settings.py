@@ -22,6 +22,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'unfold',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -29,7 +30,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'account',
-    'dashboard',
     'inventory',
     'blog',
     'contacts',
@@ -151,5 +151,83 @@ EMAIL_HOST_USER = 'visiong546@gmail.com'
 EMAIL_HOST_PASSWORD = 'rsjoswudftoxqcpp'
 DEFAULT_FROM_EMAIL = f'GlobalVision <{EMAIL_HOST_USER}>'
 
-
+# Unfold Admin Configuration
+UNFOLD = {
+    "SITE_HEADER": "Global Vision Admin",
+    "SITE_TITLE": "Global Vision Admin",
+    "SITE_SYMBOL": "explore_nearby",  
+    "SHOW_HISTORY": True,
+    "SHOW_VIEW_ON_SITE": True,
+    "COLORS": {
+        "primary": {
+            "50": "239 246 255",
+            "100": "219 234 254",
+            "200": "191 219 254",
+            "300": "147 197 253",
+            "400": "96 165 250",
+            "500": "37 99 235",  # Slightly more professional blue
+            "600": "29 78 216",
+            "700": "30 64 175",
+            "800": "30 58 138",
+            "900": "23 37 84",
+            "950": "15 23 42",
+        },
+    },
+    "SIDEBAR": {
+        "show_search": True,
+        "show_all_applications": False,
+        "navigation": [
+            {
+                "title": "Platform Core",
+                "items": [
+                    {
+                        "title": "Vehicles",
+                        "icon": "directions_car",
+                        "link": "/admin/inventory/vehicle/",
+                    },
+                    {
+                        "title": "Equipments",
+                        "icon": "hiking",
+                        "link": "/admin/inventory/equipment/",
+                    },
+                    {
+                        "title": "Reservations",
+                        "icon": "calendar_month",
+                        "link": "/admin/bookings/booking/",
+                    },
+                    {
+                        "title": "Blog Editorial",
+                        "icon": "auto_stories",
+                        "link": "/admin/blog/blogpost/",
+                    },
+                ],
+            },
+            {
+                "title": "Communications",
+                "items": [
+                    {
+                        "title": "Inbound Queries",
+                        "icon": "mail",
+                        "link": "/admin/contacts/contactmessage/",
+                    },
+                ],
+            },
+            {
+                "title": "System Settings",
+                "items": [
+                    {
+                        "title": "Access Control",
+                        "icon": "security",
+                        "link": "/admin/account/user/",
+                    },
+                    {
+                        "title": "Static Pages",
+                        "icon": "web_stories",
+                        "link": "/admin/cms/aboutpage/",
+                    },
+                ],
+            }
+        ],
+    },
+}
 

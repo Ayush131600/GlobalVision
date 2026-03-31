@@ -8,11 +8,17 @@ from inventory.models import Vehicle, Equipment
 from blog.models import BlogPost
 from contacts.models import ContactMessage
 from cms.models import AboutPage, SiteSettings, TeamMember
-from dashboard.forms import VehicleForm, EquipmentForm, BlogPostForm
+# from dashboard.forms import VehicleForm, EquipmentForm, BlogPostForm
 from .forms import UserProfileForm
+from functools import wraps
 
 
 def login(request):
+    if request.user.is_authenticated:
+        if request.user.role == 'admin' or request.user.is_staff:
+            return redirect('admin:index')
+        return redirect('home')
+        
     if request.method == "POST":
         login_input = request.POST.get("user_name")
         password = request.POST.get("password")
@@ -56,7 +62,7 @@ def admin_login(request):
 
         if user is not None and user.role == 'admin':
             auth_login(request, user)
-            return redirect("dashboard_home")
+            return redirect("admin:index")
         else:
             messages.error(
                 request,
@@ -71,6 +77,9 @@ def admin_login(request):
 
 
 def register(request):
+    if request.user.is_authenticated:
+        return redirect('home')
+
     if request.method == "POST":
         user_name = request.POST.get("user_name")
         email = request.POST.get("email")
@@ -164,14 +173,14 @@ def is_admin(user):
 @login_required
 def profile_view(request):
     if request.method == 'POST':
-        form = UserProfileForm(request.POST, instance=request.user)
+        form = UserProfileForm(request.POST, request.FILES, instance=request.user)
         if form.is_valid():
             form.save()
             return redirect('account:profile')
     else:
         form = UserProfileForm(instance=request.user)
     
-    base_template = 'account/admin_dashboard_base.html' if request.user.role == 'admin' else 'account/base.html'
+    base_template = 'account/base.html'
     return render(request, 'account/profile.html', {
         'form': form,
         'base_template': base_template

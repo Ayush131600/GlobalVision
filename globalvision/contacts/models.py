@@ -16,8 +16,6 @@ class ContactMessage(models.Model):
     is_read = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
-    class Meta:
-        db_table = 'dashboard_contactmessage'
 
     def __str__(self):
         return f"Message from {self.name} - {self.subject}"

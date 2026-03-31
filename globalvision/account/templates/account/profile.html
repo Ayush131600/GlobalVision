@@ -1,48 +1,131 @@
 {% extends base_template %}
 {% load static %}
 
-{% block title %}Profile Settings — Global Vision{% endblock %}
-{% block page_title %}Security & Profile{% endblock %}
-
-{% block dashboard_content %}
-<div class="row justify-content-center">
-    <div class="col-lg-10">
-        <div class="card border-0 shadow-lg mt-6" style="background: white; border-radius: 24px;">
-             <div class="card-body p-8 md-p-12">
-                 <div class="mb-10 border-bottom pb-8">
-                     <h1 class="h3 font-black text-slate-800 m-0">Technical Environment Settings</h1>
-                     <p class="text-sm font-medium text-slate-400 mt-1">Configure your administrative credentials and environment parameters.</p>
-                 </div>
-                 {% include "account/profile_form_snippet.html" %}
-             </div>
-        </div>
-    </div>
-</div>
-{% endblock %}
+{% block title %}Account Settings — Global Vision{% endblock %}
 
 {% block content %}
-<div class="profile-container-frontend py-20" style="background: #f8fafc; min-height: 100vh;">
-    <div class="container" style="max-width: 800px;">
-        <div class="card border-0 shadow-2xl" style="background: white; border-radius: 32px;">
-             <div class="card-body p-10 md-p-16">
-                 <div class="d-flex align-items-center justify-content-between mb-10 border-bottom pb-8">
-                     <div>
-                         <h1 class="h2 font-black text-slate-900 m-0">Account Settings</h1>
-                         <p class="text-sm font-medium text-slate-400 mt-1">Manage your identity and platform integration.</p>
-                     </div>
-                     <div class="d-none d-md-flex w-14 h-14 bg-slate-50 rounded-circle align-items-center justify-content-center text-slate-200">
-                         <i class="fa-solid fa-gear fa-xl"></i>
-                     </div>
-                 </div>
-                 
+<div class="premium-profile-page">
+    <div class="premium-bg-decorations">
+        <div class="decor-circle decor-1"></div>
+        <div class="decor-circle decor-2"></div>
+    </div>
+    
+    <div class="container position-relative z-1" style="max-width: 900px; padding: 60px 15px;">
+        <div class="premium-profile-card">
+            <div class="card-header-premium">
+                <div class="header-content">
+                    <h1 class="page-title">Account Settings</h1>
+                    <p class="page-subtitle">Manage your credentials, preferences, and platform identity.</p>
+                </div>
+            </div>
+            
+            <div class="card-body-premium">
                  {% include "account/profile_form_snippet.html" %}
-             </div>
+            </div>
         </div>
     </div>
 </div>
-{% endblock %}
 
 <style>
-    .shadow-2xl { box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.08) !important; }
-    .w-14 { width: 56px; } .h-14 { height: 56px; }
+    /* Premium Profile Wrapper */
+    .premium-profile-page {
+        position: relative;
+        background: #f8fafc;
+        min-height: 100vh;
+        overflow: hidden;
+    }
+    
+    /* Background dynamic blobs */
+    .premium-bg-decorations {
+        position: absolute;
+        width: 100%; height: 100%;
+        top: 0; left: 0;
+        z-index: 0;
+        pointer-events: none;
+        overflow: hidden;
+    }
+    .decor-circle {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(80px);
+        opacity: 0.6;
+        animation: float 15s infinite ease-in-out alternate;
+    }
+    .decor-1 {
+        width: 600px; height: 600px;
+        background: linear-gradient(135deg, #0ea5e920, #3b82f630);
+        top: -100px; left: -150px;
+    }
+    .decor-2 {
+        width: 500px; height: 500px;
+        background: linear-gradient(135deg, #8b5cf620, #d946ef20);
+        bottom: -50px; right: -100px;
+        animation-delay: -5s;
+    }
+    @keyframes float {
+        0% { transform: translateY(0) scale(1); }
+        100% { transform: translateY(40px) scale(1.05); }
+    }
+
+    /* Main Card */
+    .premium-profile-card {
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255,255,255,0.6);
+        border-radius: 32px;
+        box-shadow: 0 40px 80px -20px rgba(15, 23, 42, 0.1), 0 0 0 1px rgba(255,255,255,0.5) inset;
+        overflow: hidden;
+    }
+    
+    .card-header-premium {
+        padding: 48px 48px 32px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid rgba(15, 23, 42, 0.05);
+    }
+    
+    .header-content .page-title {
+        font-size: 2.25rem;
+        font-weight: 900;
+        color: #0f172a;
+        margin: 0;
+        letter-spacing: -0.05em;
+    }
+    .header-content .page-subtitle {
+        color: #64748b;
+        font-size: 1.1rem;
+        margin-top: 8px;
+        font-weight: 500;
+    }
+    
+    .header-icon {
+        width: 64px; height: 64px;
+        background: linear-gradient(135deg, #0ea5e9, #6366f1);
+        border-radius: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: white;
+        font-size: 24px;
+        box-shadow: 0 15px 30px -10px rgba(99, 102, 241, 0.5);
+        transform: rotate(-5deg);
+        transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .premium-profile-card:hover .header-icon {
+        transform: rotate(5deg) scale(1.05);
+    }
+
+    .card-body-premium {
+        padding: 40px 48px 48px;
+    }
+
+    @media (max-width: 768px) {
+        .card-header-premium, .card-body-premium {
+            padding: 30px 24px;
+        }
+        .header-icon { display: none; }
+        .header-content .page-title { font-size: 1.75rem; }
+    }
 </style>
+{% endblock %}

@@ -20,14 +20,13 @@ from account.views import home
 from django.contrib import admin
 from django.urls import path, include 
 
-from dashboard.views import admin_login_view
+from django.views.generic.base import RedirectView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('admin-login/', RedirectView.as_view(url='/admin/login/', permanent=True)),
     path('account/', include('account.urls')),
     path('', home, name='home'), 
-    path('admin-login/', admin_login_view, name='admin_login'),
-    path('dashboard/', include('dashboard.urls')),
     path('dashboard/user/', include('user_dashboard.urls')),
     path('cart/', include('cart.urls')),
     path('notifications/', include('notifications.urls')),

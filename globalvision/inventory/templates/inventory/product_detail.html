@@ -3,7 +3,34 @@
 
 {% block title %}{{ product.name }} | Global Vision{% endblock %}
 
-{% block extra_css %}
+{% block content %}
+<!-- Flatpickr CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<style>
+.flatpickr-custom-input {
+    width: 100%;
+    padding: 12px 15px 12px 40px !important;
+    border: 2px solid #e2e8f0;
+    border-radius: 10px;
+    outline: none;
+    font-weight: 600;
+    cursor: pointer;
+    background: white !important;
+    color: var(--text-dark);
+}
+.date-input-wrapper {
+    position: relative;
+    width: 100%;
+}
+.date-input-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--primary);
+    z-index: 5;
+    pointer-events: none;
+}
 ul {
             list-style: none;
         }
@@ -149,9 +176,7 @@ ul {
         }
 
         /* ========== FOOTER ========== */
-{% endblock %}
-
-{% block content %}
+</style>
 <div class="product-details">
         <div class="container product-grid">
             <div class="product-image-container">
@@ -167,9 +192,9 @@ ul {
                 <h1>{{ product.name }}</h1>
                 <span class="price-tag">Rs. {{ product.price_per_day }} / Day</span>
 
-                <div class="description">
+                <!-- <div class="description">
                     {{ product.description }}
-                </div>
+                </div> -->
 
                 <div class="rent-card">
                     <h3>Rent Options</h3>
@@ -177,12 +202,18 @@ ul {
                         {% csrf_token %}
                         <div class="form-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
                             <div>
-                                <label>Start Date</label>
-                                <input type="date" name="start_date" required>
+                                <label style="color: var(--text-dark); font-weight: 800; font-size: 13px; text-transform: uppercase;">Start Date</label>
+                                <div class="date-input-wrapper">
+                                    <input type="text" id="start_date_picker" class="flatpickr-custom-input" name="start_date" required placeholder="Select Start Date">
+                                    <i class="fa-regular fa-calendar date-input-icon"></i>
+                                </div>
                             </div>
                             <div>
-                                <label>End Date</label>
-                                <input type="date" name="end_date" required>
+                                <label style="color: var(--text-dark); font-weight: 800; font-size: 13px; text-transform: uppercase;">End Date</label>
+                                <div class="date-input-wrapper">
+                                    <input type="text" id="end_date_picker" class="flatpickr-custom-input" name="end_date" required placeholder="Select End Date">
+                                    <i class="fa-regular fa-calendar-check date-input-icon"></i>
+                                </div>
                             </div>
                         </div>
 
@@ -200,5 +231,37 @@ ul {
 {% endblock %}
 
 {% block extra_scripts %}
+<!-- Flatpickr JS -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Initialize Start Date Picker
+        const startPicker = flatpickr("#start_date_picker", {
+            minDate: "today",
+            dateFormat: "Y-m-d",
+            altInput: true,
+            altFormat: "F j, Y",
+            allowInput: true,
+            disableMobile: "true",
+            altInputClass: "flatpickr-custom-input",
+            onChange: function(selectedDates, dateStr, instance) {
+                // When start date changes, set it as the minimum date for end date
+                if (selectedDates.length > 0) {
+                    endPicker.set('minDate', selectedDates[0]);
+                }
+            }
+        });
 
+        // Initialize End Date Picker
+        const endPicker = flatpickr("#end_date_picker", {
+            minDate: "today",
+            dateFormat: "Y-m-d",
+            altInput: true,
+            altFormat: "F j, Y",
+            allowInput: true,
+            disableMobile: "true",
+            altInputClass: "flatpickr-custom-input"
+        });
+    });
+</script>
 {% endblock %}
