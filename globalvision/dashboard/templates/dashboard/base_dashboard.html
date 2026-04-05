@@ -116,6 +116,9 @@
             <a href="{% url 'equipment_list' %}" class="nav-link rounded-3 {% if 'equipment' in request.path %}active{% endif %}">
                 <i class="fa-solid fa-screwdriver-wrench" style="width:20px;"></i> Equipment
             </a>
+            <a href="{% url 'booking_overview' %}" class="nav-link rounded-3 {% if 'booking' in request.path %}active{% endif %}">
+                <i class="fa-solid fa-calendar-days" style="width:20px;"></i> Booking Timeline
+            </a>
             
             <div style="font-size:10px; font-weight:900; opacity:0.3; padding:24px 16px 8px; text-transform:uppercase; letter-spacing:0.2em;">System</div>
             <a href="{% url 'blog_list' %}" class="nav-link rounded-3 {% if 'blog' in request.path %}active{% endif %}">

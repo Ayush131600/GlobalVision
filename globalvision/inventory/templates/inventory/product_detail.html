@@ -137,10 +137,13 @@ ul {
         }
 
         .btn-group {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
+            display: flex;
             gap: 15px;
             margin-top: 30px;
+        }
+
+        .btn-group .btn {
+            flex: 1;
         }
 
         .btn {
@@ -218,9 +221,11 @@ ul {
                         </div>
 
                         <div class="btn-group">
+                            {% if product_type == 'equipment' %}
                             <button type="submit" class="btn btn-cart">
                                 <i class="fa-solid fa-cart-plus"></i> Add to Cart
                             </button>
+                            {% endif %}
                             <button type="submit" class="btn btn-rent">Rent Now</button>
                         </div>
                     </form>

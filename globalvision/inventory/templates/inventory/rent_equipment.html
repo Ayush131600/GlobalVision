@@ -237,7 +237,7 @@
                 <div class="vehicle-info">
                     <div class="vehicle-title">{{ item.name }}</div>
                     <div class="vehicle-price">Rs. {{ item.price_per_day }} / day</div>
-                    <a href="{% url 'account:product_detail' 'equipment' item.id %}" class="book-btn">Rent Now</a>
+                    <a href="{% url 'account:product_detail' 'equipment' item.id %}" class="book-btn">Add to Cart</a>
                 </div>
             </div>
             {% empty %}

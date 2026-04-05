@@ -658,7 +658,7 @@
         <div class="product-info">
           <div class="product-title">{{ item.name }}</div>
           <div class="product-price">Rs. {{ item.price_per_day }} / day</div>
-          <a href="{% url 'account:product_detail' 'equipment' item.id %}" class="product-btn">Rent Now</a>
+          <a href="{% url 'account:product_detail' 'equipment' item.id %}" class="book-btn">Add to Cart</a>
         </div>
       </div>
       {% endfor %}

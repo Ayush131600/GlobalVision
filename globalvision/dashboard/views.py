@@ -206,6 +206,35 @@ def about_editor(request):
         'team_members': team_members
     })
 
+from django.http import JsonResponse
+
+@admin_required
+def booking_overview(request):
+    return render(request, 'dashboard/booking_overview.html')
+
+@admin_required
+def booking_events_api(request):
+    bookings = Booking.objects.all()
+    events = []
+    
+    for b in bookings:
+        item_name = b.item.name if b.item else "Unknown Item"
+        is_vehicle = b.content_type.model == 'vehicle'
+        
+        events.append({
+            'title': f"{'🚗' if is_vehicle else '🛠️'} {item_name} ({b.user.user_name})",
+            'start': b.start_date.isoformat(),
+            'end': (b.end_date).isoformat(), # FullCalendar end date is exclusive, but for day-based it usually works 
+            'color': '#008fa0' if is_vehicle else '#f59e0b',
+            'extendedProps': {
+                'user': b.user.user_name,
+                'status': b.status,
+                'type': 'Vehicle' if is_vehicle else 'Equipment'
+            }
+        })
+    
+    return JsonResponse(events, safe=False)
+
 @admin_required
 def site_settings(request):
     settings_obj = SiteSettings.objects.first()

@@ -28,5 +28,9 @@ urlpatterns = [
     path('about/', views.about_editor, name='about_editor'),
     path('settings/', views.site_settings, name='site_settings'),
     
+    # Booking Overview
+    path('bookings/overview/', views.booking_overview, name='booking_overview'),
+    path('api/bookings/events/', views.booking_events_api, name='booking_events_api'),
+    
     path('logout/', views.admin_logout_view, name='admin_logout'),
 ]

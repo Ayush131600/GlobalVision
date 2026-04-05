@@ -15,6 +15,9 @@ from functools import wraps
 
 def login(request):
     if request.user.is_authenticated:
+        next_url = request.GET.get('next') or request.POST.get('next')
+        if next_url:
+            return redirect(next_url)
         if request.user.role == 'admin' or request.user.is_staff:
             return redirect('admin:index')
         return redirect('home')
@@ -39,6 +42,11 @@ def login(request):
 
         if user is not None:
             auth_login(request, user)
+            next_url = request.GET.get('next') or request.POST.get('next')
+            if next_url:
+                return redirect(next_url)
+            if user.role == 'admin' or user.is_staff:
+                return redirect('admin:index')
             return redirect("home")
         else:
             messages.error(

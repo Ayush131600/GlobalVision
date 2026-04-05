@@ -157,7 +157,7 @@
             {% endfor %}
             {% endif %}
 
-            <form method="POST">
+            <form method="POST" action="{{ request.get_full_path }}">
                 {% csrf_token %}
 
                 <input type="text" name="user_name" placeholder="Username or Email" required>
