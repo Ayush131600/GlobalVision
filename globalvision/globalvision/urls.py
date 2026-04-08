@@ -29,6 +29,7 @@ urlpatterns = [
     path('', home, name='home'), 
     path('dashboard/user/', include('user_dashboard.urls')),
     path('cart/', include('cart.urls')),
+    path('bookings/', include('bookings.urls')),
     path('notifications/', include('notifications.urls')),
     path('summernote/', include('django_summernote.urls')),
 ]

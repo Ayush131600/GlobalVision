@@ -1,0 +1,184 @@
+{% extends 'user_dashboard/base.html' %}
+
+{% block title %}Redirecting to eSewa - Global Vision{% endblock %}
+
+{% block content %}
+<div class="payment-redirect-container">
+    <div class="payment-card">
+        <div class="esewa-logo">eSewa</div>
+        <div class="status-badge">Secure Payment</div>
+        
+        <h2>Redirecting to eSewa...</h2>
+        <p>Please wait while we set up your secure payment session for your rental booking.</p>
+        
+        <div class="payment-details">
+            <div class="detail-row">
+                <span>Transaction ID:</span>
+                <span class="value">{{ transaction.transaction_uuid }}</span>
+            </div>
+            <div class="detail-row total">
+                <span>Total Amount:</span>
+                <span class="value">Rs. {{ formatted_amount }}</span>
+            </div>
+        </div>
+        
+        <div class="loader-container">
+            <div class="loader"></div>
+            <div class="loader-text">Initializing Gateway...</div>
+        </div>
+        
+        <p class="warning-text">Do not refresh this page or click the back button.</p>
+
+        <!-- eSewa Payment Form (Automatically Submitted) -->
+        <form action="{{ esewa_url }}" method="POST" id="esewa-form">
+            <input type="hidden" name="amount" value="{{ formatted_amount }}">
+            <input type="hidden" name="tax_amount" value="{{ formatted_zero }}">
+            <input type="hidden" name="total_amount" value="{{ formatted_amount }}">
+            <input type="hidden" name="transaction_uuid" value="{{ transaction.transaction_uuid }}">
+            <input type="hidden" name="product_code" value="{{ product_code }}">
+            <input type="hidden" name="product_service_charge" value="0">
+            <input type="hidden" name="product_delivery_charge" value="0">
+            <input type="hidden" name="success_url" value="{{ success_url }}">
+            <input type="hidden" name="failure_url" value="{{ failure_url }}">
+            <input type="hidden" name="signed_field_names" value="{{ signed_field_names }}">
+            <input type="hidden" name="signature" value="{{ signature }}">
+            
+            <noscript>
+                <div style="text-align: center; margin-top: 20px;">
+                    <p>JavaScript is disabled. Please click the button below to proceed to eSewa.</p>
+                    <button type="submit" class="btn-proceed">Proceed to eSewa</button>
+                </div>
+            </noscript>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Automatically submit the form after a short delay
+    window.onload = function() {
+        setTimeout(function() {
+            document.getElementById('esewa-form').submit();
+        }, 800); // 0.8s delay (faster than sample but lets user see the info)
+    };
+</script>
+
+<style>
+    .payment-redirect-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 70vh;
+        padding: 40px 20px;
+        background: #f8fafc;
+    }
+    .payment-card {
+        background: #ffffff;
+        padding: 40px;
+        border-radius: 20px;
+        box-shadow: 0 20px 50px rgba(0,0,0,0.05);
+        text-align: center;
+        max-width: 450px;
+        width: 100%;
+        border: 1px solid #e2e8f0;
+        position: relative;
+    }
+    .esewa-logo {
+        color: #48b04b;
+        font-size: 38px;
+        font-weight: 900;
+        margin-bottom: 8px;
+        letter-spacing: -1px;
+    }
+    .status-badge {
+        display: inline-block;
+        background: #ecfdf5;
+        color: #10b981;
+        font-size: 12px;
+        font-weight: 700;
+        padding: 4px 12px;
+        border-radius: 20px;
+        margin-bottom: 24px;
+        text-transform: uppercase;
+    }
+    .payment-card h2 {
+        font-size: 20px;
+        color: #1e293b;
+        margin-bottom: 12px;
+        font-weight: 700;
+    }
+    .payment-card p {
+        color: #64748b;
+        font-size: 14px;
+        line-height: 1.6;
+        margin-bottom: 24px;
+    }
+    .payment-details {
+        background: #f1f5f9;
+        padding: 20px;
+        border-radius: 12px;
+        margin-bottom: 30px;
+    }
+    .detail-row {
+        display: flex;
+        justify-content: space-between;
+        font-size: 13px;
+        margin-bottom: 8px;
+        color: #475569;
+    }
+    .detail-row.total {
+        margin-top: 12px;
+        padding-top: 12px;
+        border-top: 1px solid #cbd5e1;
+        font-weight: 800;
+        color: #1e293b;
+        font-size: 16px;
+    }
+    .detail-row .value {
+        font-family: monospace;
+        color: #0f172a;
+    }
+    .loader-container {
+        margin: 30px 0;
+    }
+    .loader {
+        border: 3px solid #e2e8f0;
+        border-top: 3px solid #48b04b;
+        border-radius: 50%;
+        width: 44px;
+        height: 44px;
+        animation: spin 0.8s linear infinite;
+        margin: 0 auto 12px;
+    }
+    .loader-text {
+        font-size: 12px;
+        color: #48b04b;
+        font-weight: 600;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+    }
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    .warning-text {
+        font-size: 13px !important;
+        color: #94a3b8 !important;
+        margin-top: 24px !important;
+        font-style: italic;
+    }
+    .btn-proceed {
+        background: #48b04b;
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 700;
+        transition: all 0.2s;
+    }
+    .btn-proceed:hover {
+        background: #3a8e3d;
+        transform: translateY(-1px);
+    }
+</style>
+{% endblock %}

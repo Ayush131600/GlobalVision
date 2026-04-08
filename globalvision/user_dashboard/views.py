@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.db import transaction
 from django.utils import timezone
 from .decorators import user_required
-from bookings.models import Booking
+from bookings.models import Booking, Transaction
 from cart.models import Cart, CartItem
 from contacts.models import ContactMessage
 from inventory.models import Vehicle, Equipment
@@ -225,33 +225,41 @@ def cart_checkout(request):
             return redirect('user_cart')
             
     try:
+        import uuid
+        
         with transaction.atomic():
+            # Create a master Transaction record
+            total_sum = sum(item.total_price for item in items)
+            tx = Transaction.objects.create(
+                user=request.user,
+                total_amount=total_sum,
+                status='Pending'
+            )
+            
+            # Use standard UUID format with dashes (working sample)
+            tx.transaction_uuid = str(uuid.uuid4())
+            tx.save()
+
             for item in items:
-                booking = Booking.objects.create(
+                Booking.objects.create(
                     user=request.user,
+                    transaction=tx,
                     content_type=item.content_type,
                     object_id=item.object_id,
                     start_date=item.start_date,
                     end_date=item.end_date,
                     total_price=item.total_price,
-                    status='Pending'
-                )
-                
-                # Trigger notification for each booking
-                item_name = item.content_object.name if item.content_object else "Item"
-                create_notification(
-                    user=request.user,
-                    title="Booking Confirmed",
-                    message=f"Your booking for {item_name} from {item.start_date} to {item.end_date} is now pending confirmation. Total: ${item.total_price}",
-                    type='booking',
-                    link='/dashboard/user/bookings/'
+                    status='Pending',
+                    payment_status='Unpaid'
                 )
             
             # Clear cart
             items.delete()
             
-        messages.success(request, "Bookings created successfully. Our team will contact you for confirmation.")
-        return redirect('user_bookings')
+        return redirect('initiate_esewa_payment', transaction_id=tx.id)
+    except Exception as e:
+        messages.error(request, f"An error occurred during checkout: {str(e)}")
+        return redirect('user_cart')
     except Exception as e:
         messages.error(request, f"An error occurred during checkout: {str(e)}")
         return redirect('user_cart')
