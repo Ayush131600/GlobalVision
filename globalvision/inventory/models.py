@@ -16,8 +16,21 @@ class Vehicle(models.Model):
     description = models.TextField()
     price_per_day = models.DecimalField(max_digits=10, decimal_places=2)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Available')
+    stock = models.IntegerField(default=1)
     image = models.ImageField(upload_to='vehicles/', blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def save(self, *args, **kwargs):
+        if self.stock <= 0:
+            self.status = 'Rented' if self.status == 'Rented' else 'Maintenance' if self.status == 'Maintenance' else 'Rented'
+            # Actually, if stock is 0, it should probably be 'Rented' or 'Not Available'.
+            # The current status choices are 'Available', 'Rented', 'Maintenance'.
+            # If stock is 0, we can set it to 'Rented' (as in all units are rented).
+            if self.status == 'Available':
+                self.status = 'Rented'
+        elif self.status == 'Rented' and self.stock > 0:
+            self.status = 'Available'
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.name
