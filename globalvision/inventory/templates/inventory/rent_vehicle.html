@@ -219,6 +219,9 @@
             <div class="vehicle-card" data-url="{% url 'account:product_detail' 'vehicle' vehicle.id %}"
                 onclick="navigateToProduct(this)">
                 <span class="badge">{{ vehicle.get_category_display }}</span>
+                {% if vehicle.stock <= 0 %}
+                <span class="badge" style="top: 45px; background: #ef4444;">Stock Out</span>
+                {% endif %}
                 {% if vehicle.image %}
                 <img src="{{ vehicle.image.url }}" class="vehicle-img" alt="{{ vehicle.name }}">
                 {% else %}
@@ -228,7 +231,11 @@
                 <div class="vehicle-info">
                     <div class="vehicle-title">{{ vehicle.name }}</div>
                     <div class="vehicle-price">Rs. {{ vehicle.price_per_day }} / day</div>
+                    {% if vehicle.stock > 0 %}
                     <a href="{% url 'account:product_detail' 'vehicle' vehicle.id %}" class="book-btn">Rent Now</a>
+                    {% else %}
+                    <a href="#" class="book-btn" style="background: #94a3b8; cursor: not-allowed;" onclick="event.stopPropagation()">Stock Out</a>
+                    {% endif %}
                 </div>
             </div>
             {% empty %}

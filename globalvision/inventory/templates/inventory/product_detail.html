@@ -193,6 +193,11 @@ ul {
 
             <div class="product-info">
                 <h1>{{ product.name }}</h1>
+                {% if product.stock <= 0 %}
+                <span class="stock-badge" style="background: #ef4444; color: white; padding: 5px 12px; border-radius: 6px; font-weight: 700; font-size: 14px; display: inline-block; margin-bottom: 15px;">Stock Out</span>
+                {% else %}
+                <span class="stock-badge" style="background: #10b981; color: white; padding: 5px 12px; border-radius: 6px; font-weight: 700; font-size: 14px; display: inline-block; margin-bottom: 15px;">In Stock ({{ product.stock }} units)</span>
+                {% endif %}
                 <span class="price-tag">Rs. {{ product.price_per_day }} / Day</span>
 
                 <!-- <div class="description">
@@ -221,12 +226,16 @@ ul {
                         </div>
 
                         <div class="btn-group">
-                            {% if product_type == 'equipment' %}
-                            <button type="submit" class="btn btn-cart">
-                                <i class="fa-solid fa-cart-plus"></i> Add to Cart
-                            </button>
+                            {% if product.stock > 0 %}
+                                {% if product_type == 'equipment' %}
+                                <button type="submit" class="btn btn-cart">
+                                    <i class="fa-solid fa-cart-plus"></i> Add to Cart
+                                </button>
+                                {% endif %}
+                                <button type="submit" class="btn btn-rent">Rent Now</button>
+                            {% else %}
+                                <button type="button" class="btn btn-rent" style="background: #94a3b8; cursor: not-allowed;" disabled>Stock Out</button>
                             {% endif %}
-                            <button type="submit" class="btn btn-rent">Rent Now</button>
                         </div>
                     </form>
                 </div>

@@ -13,7 +13,7 @@ class UserAdmin(BaseUserAdmin, ModelAdmin):
         ("System Permissions", {"fields": ("groups", "user_permissions")}),
         ("Audit Logs", {"fields": ("last_login", "created_at")}),
     )
-    readonly_fields = ("created_at", "last_login")
+    re0adonly_fields = ("created_at", "last_login")
     list_display = ("user_name", "email", "role", "is_staff")
     list_filter = ("role", "is_staff", "is_superuser", "is_active")
     search_fields = ("user_name", "email")

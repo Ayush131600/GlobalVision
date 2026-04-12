@@ -3,6 +3,10 @@ from django.conf import settings
 from .models import Transaction, Booking
 from .utils import generate_esewa_signature, format_amount, verify_esewa_payment
 from django.contrib import messages
+from notifications.utils import create_notification
+from django.template.loader import render_to_string
+from django.core.mail import EmailMultiAlternatives
+from django.utils.html import strip_tags
 
 def initiate_esewa_payment(request, transaction_id):
     transaction = get_object_or_404(Transaction, id=transaction_id, user=request.user)
@@ -67,7 +71,38 @@ def esewa_success(request):
             # Link bookings
             tx.bookings.update(payment_status='Paid', status='Confirmed')
             
+            
             messages.success(request, f"Payment successful! Transaction ID: {data.get('transaction_code')}")
+            
+            # Send Premium HTML Email
+            try:
+                subject = 'Payment Confirmation - GlobalVision'
+                html_content = render_to_string('bookings/emails/payment_success.html', {
+                    'user': tx.user,
+                    'transaction': tx,
+                    'dashboard_url': request.build_absolute_uri('/user-dashboard/overview/')
+                })
+                text_content = strip_tags(html_content)
+                
+                email = EmailMultiAlternatives(
+                    subject,
+                    text_content,
+                    settings.DEFAULT_FROM_EMAIL,
+                    [tx.user.email]
+                )
+                email.attach_alternative(html_content, "text/html")
+                email.send()
+            except Exception as e:
+                print(f"Failed to send HTML email: {e}")
+
+            # Send in-app notification (without duplicate email)
+            create_notification(
+                user=tx.user,
+                title='Payment Successful',
+                message=f'Your payment of Rs. {tx.total_amount} was successful.',
+                type='general',
+                send_email=False
+            )
         else:
             messages.error(request, "Payment verification failed.")
             
