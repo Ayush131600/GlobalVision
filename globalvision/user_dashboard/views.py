@@ -52,7 +52,7 @@ def user_profile(request):
                 user.profile_photo = request.FILES.get('profile_photo')
             
             user.save()
-            messages.success(request, "Profile updated successfully.")
+            messages.success(request, "Profile is successfully updated.")
             return redirect('user_profile')
             
         elif 'change_password' in request.POST:
@@ -187,9 +187,16 @@ def cancel_booking(request, pk):
 
 @user_required
 def remove_from_cart(request, pk):
-    cart_item = get_object_or_404(CartItem, pk=pk, cart__user=request.user)
-    cart_item.delete()
-    messages.success(request, "Item removed from cart.")
+    if request.method != 'POST':
+        return redirect('user_cart')
+    # Ensure the user's cart exists
+    cart, _ = Cart.objects.get_or_create(user=request.user)
+    try:
+        cart_item = CartItem.objects.get(pk=pk, cart=cart)
+        cart_item.delete()
+        messages.success(request, "Item removed from cart.")
+    except CartItem.DoesNotExist:
+        messages.error(request, "Item not found in your cart.")
     return redirect('user_cart')
 
 @user_required
@@ -257,9 +264,6 @@ def cart_checkout(request):
             items.delete()
             
         return redirect('initiate_esewa_payment', transaction_id=tx.id)
-    except Exception as e:
-        messages.error(request, f"An error occurred during checkout: {str(e)}")
-        return redirect('user_cart')
     except Exception as e:
         messages.error(request, f"An error occurred during checkout: {str(e)}")
         return redirect('user_cart')

@@ -26,6 +26,23 @@
     </div>
 </div>
 
+<!-- Toast Notification -->
+{% if messages %}
+    {% for message in messages %}
+        {% if 'success' in message.tags %}
+        <div id="profileToast" class="profile-toast-popup">
+            <div class="profile-toast-icon"><i class="fa-solid fa-circle-check"></i></div>
+            <div class="profile-toast-body">
+                <div class="profile-toast-title">Success</div>
+                <div class="profile-toast-message">{{ message }}</div>
+            </div>
+            <button class="profile-toast-close" onclick="dismissProfileToast()" aria-label="Close">&times;</button>
+            <div class="profile-toast-progress" id="profileToastProgress"></div>
+        </div>
+        {% endif %}
+    {% endfor %}
+{% endif %}
+
 <style>
     /* Premium Profile Wrapper */
     .premium-profile-page {
@@ -127,5 +144,95 @@
         .header-icon { display: none; }
         .header-content .page-title { font-size: 1.75rem; }
     }
+
+    /* ── Profile Toast ── */
+    .profile-toast-popup {
+        position: fixed;
+        top: 24px;
+        right: 24px;
+        z-index: 99999;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 18px 24px;
+        border-radius: 16px;
+        background: linear-gradient(135deg, #10b981, #059669);
+        color: #fff;
+        font-size: 0.97rem;
+        font-weight: 700;
+        box-shadow: 0 20px 60px -10px rgba(16, 185, 129, 0.55), 0 4px 16px rgba(0,0,0,0.12);
+        min-width: 300px;
+        max-width: 420px;
+        transform: translateX(120%);
+        opacity: 0;
+        transition: transform 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.35s ease;
+        overflow: hidden;
+    }
+    .profile-toast-popup.show { transform: translateX(0); opacity: 1; }
+    .profile-toast-popup.hide { transform: translateX(120%); opacity: 0; }
+    .profile-toast-icon {
+        width: 38px; height: 38px;
+        background: rgba(255,255,255,0.25);
+        border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        flex-shrink: 0; font-size: 1.1rem;
+    }
+    .profile-toast-body { flex: 1; }
+    .profile-toast-title {
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.09em;
+        opacity: 0.8;
+        margin-bottom: 3px;
+    }
+    .profile-toast-message { font-size: 0.97rem; }
+    .profile-toast-close {
+        background: none; border: none;
+        color: rgba(255,255,255,0.75);
+        font-size: 1.2rem; cursor: pointer;
+        padding: 0 4px; line-height: 1;
+        transition: color 0.2s;
+    }
+    .profile-toast-close:hover { color: #fff; }
+    .profile-toast-progress {
+        position: absolute;
+        bottom: 0; left: 0;
+        height: 4px;
+        background: rgba(255,255,255,0.4);
+        border-radius: 0 0 16px 16px;
+        width: 100%;
+        transform-origin: left;
+    }
 </style>
+
+<script>
+(function () {
+    const toast = document.getElementById('profileToast');
+    const progress = document.getElementById('profileToastProgress');
+    if (!toast) return;
+
+    const DURATION = 4000;
+
+    requestAnimationFrame(() => requestAnimationFrame(() => toast.classList.add('show')));
+
+    if (progress) {
+        progress.style.transition = `transform ${DURATION}ms linear`;
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+            progress.style.transform = 'scaleX(0)';
+        }));
+    }
+
+    const timer = setTimeout(dismissProfileToast, DURATION);
+
+    function dismissProfileToast() {
+        clearTimeout(timer);
+        if (!toast) return;
+        toast.classList.remove('show');
+        toast.classList.add('hide');
+        setTimeout(() => toast.remove(), 500);
+    }
+
+    window.dismissProfileToast = dismissProfileToast;
+})();
+</script>
 {% endblock %}

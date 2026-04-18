@@ -121,6 +121,22 @@ def register(request):
             )
             return redirect("account:register")
 
+        if not phone_no.isdigit():
+            messages.error(
+                request,
+                "Phone number must contain only digits",
+                extra_tags="error"
+            )
+            return redirect("account:register")
+
+        if not (10 <= len(phone_no) <= 15):
+            messages.error(
+                request,
+                "Phone number should be between 10 and 15 digits",
+                extra_tags="error"
+            )
+            return redirect("account:register")
+
         if User.objects.filter(phone_no=phone_no).exists():
             messages.error(
                 request,
@@ -184,6 +200,7 @@ def profile_view(request):
         form = UserProfileForm(request.POST, request.FILES, instance=request.user)
         if form.is_valid():
             form.save()
+            messages.success(request, "User details successfully updated.", extra_tags="success")
             return redirect('account:profile')
     else:
         form = UserProfileForm(instance=request.user)
