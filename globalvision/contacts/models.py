@@ -14,6 +14,8 @@ class ContactMessage(models.Model):
     message = models.TextField()
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Open')
     is_read = models.BooleanField(default=False)
+    reply_message = models.TextField(blank=True, null=True)
+    replied_at = models.DateTimeField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
 

@@ -4,10 +4,13 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from django.db.models import Q
 from .models import User
-from inventory.models import Vehicle, Equipment
+from inventory.models import Vehicle, Equipment, Review
+from inventory.forms import ReviewForm
 from blog.models import BlogPost
 from contacts.models import ContactMessage
 from cms.models import AboutPage, SiteSettings, TeamMember
+from bookings.models import Booking, get_unavailable_dates
+from django.contrib.contenttypes.models import ContentType
 # from dashboard.forms import VehicleForm, EquipmentForm, BlogPostForm
 from .forms import UserProfileForm
 from functools import wraps
@@ -377,9 +380,19 @@ def product_detail(request, product_type, product_id):
     else:
         product = get_object_or_404(Equipment, id=product_id)
     
+    unavailable_dates = get_unavailable_dates(product)
+    
+    # Fetch reviews
+    content_type = ContentType.objects.get_for_model(product)
+    reviews = Review.objects.filter(content_type=content_type, object_id=product.id)
+    review_form = ReviewForm()
+    
     context = {
         'product': product,
-        'product_type': product_type
+        'product_type': product_type,
+        'unavailable_dates': unavailable_dates,
+        'reviews': reviews,
+        'review_form': review_form
     }
     return render(request, 'inventory/product_detail.html', context)
 

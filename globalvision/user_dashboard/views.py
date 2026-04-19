@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.db import transaction
 from django.utils import timezone
 from .decorators import user_required
-from bookings.models import Booking, Transaction
+from bookings.models import Booking, Transaction, is_item_available
 from cart.models import Cart, CartItem
 from contacts.models import ContactMessage
 from inventory.models import Vehicle, Equipment
@@ -207,6 +207,11 @@ def update_cart_dates(request, pk):
         end_date = request.POST.get('end_date')
         
         if start_date and end_date:
+            # Check availability
+            if not is_item_available(cart_item.content_object, start_date, end_date):
+                messages.error(request, f"Sorry, {cart_item.content_object.name} is already booked for these dates.")
+                return redirect('user_cart')
+                
             cart_item.start_date = start_date
             cart_item.end_date = end_date
             cart_item.save()
@@ -218,24 +223,38 @@ def update_cart_dates(request, pk):
 
 @user_required
 def cart_checkout(request):
-    cart = get_object_or_404(Cart, user=request.user)
-    items = cart.items.all()
-    
-    if not items:
-        messages.error(request, "Your cart is empty.")
+    if request.method != 'POST':
         return redirect('user_cart')
         
-    # Validate dates
+    selected_item_ids = request.POST.getlist('selected_items')
+    if not selected_item_ids:
+        messages.error(request, "Please select at least one item to proceed with booking.")
+        return redirect('user_cart')
+        
+    cart = get_object_or_404(Cart, user=request.user)
+    # Only process selected items
+    items = cart.items.filter(pk__in=selected_item_ids)
+    
+    if not items.exists():
+        messages.error(request, "Selected items not found in your cart.")
+        return redirect('user_cart')
+        
+    # Validate dates and availability for selected items
     for item in items:
         if not item.start_date or not item.end_date:
             messages.error(request, f"Please select rental dates for {item.content_object.name}.")
             return redirect('user_cart')
+        
+        if not is_item_available(item.content_object, item.start_date, item.end_date):
+            messages.error(request, f"Sorry, {item.content_object.name} is already booked for your selected dates ({item.start_date} to {item.end_date}).")
+            return redirect('user_cart')
             
     try:
         import uuid
+        from django.db import transaction as db_transaction
         
-        with transaction.atomic():
-            # Create a master Transaction record
+        with db_transaction.atomic():
+            # Create a master Transaction record for selected items
             total_sum = sum(item.total_price for item in items)
             tx = Transaction.objects.create(
                 user=request.user,
@@ -243,7 +262,6 @@ def cart_checkout(request):
                 status='Pending'
             )
             
-            # Use standard UUID format with dashes (working sample)
             tx.transaction_uuid = str(uuid.uuid4())
             tx.save()
 
@@ -260,7 +278,7 @@ def cart_checkout(request):
                     payment_status='Unpaid'
                 )
             
-            # Clear cart
+            # Clear ONLY the selected items from the cart
             items.delete()
             
         return redirect('initiate_esewa_payment', transaction_id=tx.id)

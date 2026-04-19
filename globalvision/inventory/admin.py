@@ -1,6 +1,6 @@
 from django.contrib import admin
 from unfold.admin import ModelAdmin
-from .models import Vehicle, Equipment
+from .models import Vehicle, Equipment, Review
 
 @admin.register(Vehicle)
 class VehicleAdmin(ModelAdmin):
@@ -35,3 +35,11 @@ class EquipmentAdmin(ModelAdmin):
             "fields": ("price_per_day", "stock", "status", "created_at"),
         }),
     )
+
+@admin.register(Review)
+class ReviewAdmin(ModelAdmin):
+    model_icon = 'rate_review'
+    list_display = ('user', 'content_object', 'created_at')
+    list_filter = ('created_at',)
+    search_fields = ('comment', 'user__user_name')
+    readonly_fields = ('created_at',)

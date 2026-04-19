@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.contrib.contenttypes.models import ContentType
 from .models import Cart, CartItem
 from inventory.models import Vehicle, Equipment
+from bookings.models import Booking, is_item_available
 
 def add_to_cart(request, product_type, product_id):
     # If user is not authenticated, save their selection to session and redirect
@@ -64,6 +65,14 @@ def add_to_cart(request, product_type, product_id):
     if end_date:
         cart_item.end_date = end_date
     
+    # NEW: Check if the item is available for these dates
+    if start_date and end_date:
+        if not is_item_available(product, start_date, end_date):
+            messages.error(request, f"Sorry, {product.name} is already booked for the selected dates.")
+            if item_created:
+                cart_item.delete()
+            return redirect('account:product_detail', product_type=product_type, product_id=product_id)
+
     cart_item.save()
 
     if not item_created:

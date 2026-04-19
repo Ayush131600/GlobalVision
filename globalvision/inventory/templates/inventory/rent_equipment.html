@@ -230,6 +230,8 @@
                 <span class="badge">{{ item.get_category_display }}</span>
                 {% if item.stock <= 0 %}
                 <span class="badge" style="top: 45px; background: #ef4444;">Stock Out</span>
+                {% elif item.is_rented_today %}
+                <span class="badge" style="top: 45px; background: #f59e0b;">Currently Booked</span>
                 {% endif %}
                 {% if item.image %}
                 <img src="{{ item.image.url }}" class="vehicle-img" alt="{{ item.name }}">
@@ -241,7 +243,11 @@
                     <div class="vehicle-title">{{ item.name }}</div>
                     <div class="vehicle-price">Rs. {{ item.price_per_day }} / day</div>
                     {% if item.stock > 0 %}
-                    <a href="{% url 'account:product_detail' 'equipment' item.id %}" class="book-btn">Add to Cart</a>
+                        {% if item.is_rented_today %}
+                        <a href="#" class="book-btn" style="background: #94a3b8; cursor: not-allowed;" onclick="event.stopPropagation()">Unavailable</a>
+                        {% else %}
+                        <a href="{% url 'account:product_detail' 'equipment' item.id %}" class="book-btn">Add to Cart</a>
+                        {% endif %}
                     {% else %}
                     <a href="#" class="book-btn" style="background: #94a3b8; cursor: not-allowed;" onclick="event.stopPropagation()">Stock Out</a>
                     {% endif %}

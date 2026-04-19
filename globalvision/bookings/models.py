@@ -70,3 +70,71 @@ class Booking(models.Model):
 
     def __str__(self):
         return f"Booking #{self.id} - {self.user}"
+
+def get_unavailable_dates(item):
+    """Returns a list of dates (strings) where the item is fully booked."""
+    from datetime import date, timedelta
+    from django.db.models import Count
+    
+    today = date.today()
+    # Check for the next 6 months to keep it performant
+    check_days = 180
+    
+    # Pre-fetch overlapping bookings to avoid DB hits in loop
+    bookings = Booking.objects.filter(
+        content_type=ContentType.objects.get_for_model(item),
+        object_id=item.id,
+        status__in=['Confirmed', 'Active'],
+        end_date__gte=today
+    )
+    
+    unavailable_dates = []
+    
+    # Optimize: If stock is 1, any date between start and end is unavailable
+    if item.stock == 1:
+        for b in bookings:
+            curr = max(b.start_date, today)
+            while curr <= b.end_date:
+                unavailable_dates.append(curr.strftime('%Y-%m-%d'))
+                curr += timedelta(days=1)
+    else:
+        # For multiple stock, we need to count for each day
+        for i in range(check_days):
+            current_date = today + timedelta(days=i)
+            count = bookings.filter(start_date__lte=current_date, end_date__gte=current_date).count()
+            if count >= item.stock:
+                unavailable_dates.append(current_date.strftime('%Y-%m-%d'))
+                
+    return sorted(list(set(unavailable_dates)))
+
+def is_item_available(item, start_date, end_date):
+    """Checks if the item is available for the given date range."""
+    from datetime import datetime
+    
+    if isinstance(start_date, str):
+        start_date = datetime.strptime(start_date, '%Y-%m-%d').date()
+    if isinstance(end_date, str):
+        end_date = datetime.strptime(end_date, '%Y-%m-%d').date()
+        
+    # Get all overlapping bookings
+    bookings = Booking.objects.filter(
+        content_type=ContentType.objects.get_for_model(item),
+        object_id=item.id,
+        status__in=['Confirmed', 'Active']
+    ).filter(
+        models.Q(start_date__lte=end_date) & models.Q(end_date__gte=start_date)
+    )
+    
+    if item.stock == 1:
+        return not bookings.exists()
+    
+    # Check each day in range
+    from datetime import timedelta
+    curr = start_date
+    while curr <= end_date:
+        count = bookings.filter(start_date__lte=curr, end_date__gte=curr).count()
+        if count >= item.stock:
+            return False
+        curr += timedelta(days=1)
+        
+    return True

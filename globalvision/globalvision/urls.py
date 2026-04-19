@@ -31,6 +31,7 @@ urlpatterns = [
     path('cart/', include('cart.urls')),
     path('bookings/', include('bookings.urls')),
     path('notifications/', include('notifications.urls')),
+    path('inventory/', include('inventory.urls')),
     path('summernote/', include('django_summernote.urls')),
 ]
 
